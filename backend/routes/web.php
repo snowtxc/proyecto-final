@@ -6,6 +6,7 @@ use App\Http\Controllers\ProcesoController;
 use App\Http\Controllers\EtapaController;
 use App\Http\Controllers\ComponenteController;
 use App\Http\Controllers\ComponenteImagenController;
+use App\Http\Controllers\ParteController;
 
 
 
@@ -53,12 +54,19 @@ Route::prefix('api')->group(function () {
         Route::post('/componentes', 'create');
         Route::put('/componentes/{id}', 'update');
         Route::delete('/componentes/{id}', 'delete');
+        Route::get('/componentes/{componenteId}/imagenes/{imageId}', 'getImage');
         Route::post('/componentes/{id}/imagenes', 'addImageById');
-        Route::delete('/componentes/{componenteId}/imagenes/{imageId}/remover', 'removeImageById');
+        Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
+
     });
 
-
-
+    /*PARTE ENDPOINTS*/
+    Route::controller(ParteController::class)->group(function () {
+        Route::get('/partes', 'list');
+        Route::post('/partes', 'create');
+        Route::put('/partes/{id}', 'update');
+        Route::delete('/partes/{id}', 'delete');
+    });
 
 
 

@@ -14,4 +14,5 @@ class TipoParteController extends BaseController
     {
         return TipoParte::all();
     }
+
 }

@@ -15,7 +15,8 @@ class Parte extends Model
         'DireccionIp',
         'Descripcion',
         'Imagen',
-        'tipo_parte_id'
+        'tipo_parte_id',
+        'componente_id'
     ];
 
     public function tipoParte()
