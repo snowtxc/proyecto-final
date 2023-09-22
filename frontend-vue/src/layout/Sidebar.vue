@@ -65,6 +65,19 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
                         <router-link
+                            to="/usuarios"
+                            tag="li"
+                            class="nav-item"
+                        >
+                            <div class="nav-item-hold">
+                                <i class="i-Find-User text-3xl"></i>
+                                <p>Usuarios</p>
+                            </div>
+                        </router-link>
+
+
+                        <!--
+                        <router-link
                             to="/components/button"
                             tag="li"
                             class="nav-item"
@@ -107,7 +120,7 @@ let handleWindowResize = () => {
                                 <i class="i-File-Word text-3xl"></i>
                                 <p>Doc</p>
                             </div>
-                        </a>
+                        </a> -->
                     </ul>
                 </perfect-scrollbar>
             </div>
