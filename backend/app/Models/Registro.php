@@ -14,9 +14,9 @@ class Registro extends Model
         'Marca',
     ];
 
-    public function parte()
+    public function componente()
     {
-        return $this->belongsTo(Parte::class);
+        return $this->belongsTo(Componente::class);
     }
 
 

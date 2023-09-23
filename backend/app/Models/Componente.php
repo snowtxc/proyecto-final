@@ -11,7 +11,9 @@ class Componente extends Model
 
     protected $fillable = [
         'Nombre',
-        'Path',
+        'Descripcion',
+        'Unidad',
+        'DireccionIp',
         'etapa_id',
         'grupo_id'
     ];
@@ -34,6 +36,16 @@ class Componente extends Model
     public function imagenes()
     {
         return $this->hasMany(ComponenteImagen::class);
+    }
+
+    public function tipoComponente()
+    {
+        return $this->belongsTo(TipoComponente::class);
+    }
+
+    public function registros()
+    {
+        return $this->hasMany(Registro::class);
     }
 
 }

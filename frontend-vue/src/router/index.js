@@ -14,6 +14,8 @@ const routes = [
             title: 'Home',
         },
 
+        
+
         children: [
             {
                 path: '/dashboards',
@@ -47,6 +49,17 @@ const routes = [
                     },
                 ],
             },
+
+            {
+                path: '/dispositivos',
+                name: 'dispositivos',
+                component: () => import('../views/dispositivos/IndexPage.vue'),
+                meta: {
+                    title: 'Dispositivos',
+                },
+    
+            },
+
             {
                 path: '/profile',
                 name: 'profile',

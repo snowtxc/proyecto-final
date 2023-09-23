@@ -16,6 +16,13 @@ return new class extends Migration
         Schema::create('componentes', function (Blueprint $table) {
             $table->id();
             $table->string("Nombre");
+            $table->string("Descripcion");
+            $table->string("Unidad");
+            $table->string("DireccionIp");
+
+
+            $table->unsignedBigInteger('tipo_componente_id');
+            $table->foreign('tipo_componente_id')->references('id')->on('tipo_componentes');
 
             $table->unsignedBigInteger('etapa_id');
             $table->foreign('etapa_id')->references('id')->on('etapas');

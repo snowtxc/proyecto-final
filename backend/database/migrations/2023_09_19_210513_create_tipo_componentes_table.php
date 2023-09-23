@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('permisos', function (Blueprint $table) {
-            $table->unsignedBigInteger('id', false)->primary();
+        Schema::create('tipo_componentes', function (Blueprint $table) {
+            $table->id();
             $table->string("Nombre");
             $table->timestamps();
         });
@@ -25,10 +25,8 @@ return new class extends Migration
      *
      * @return void
      */
-
-
     public function down()
     {
-        Schema::dropIfExists('permisos');
+        Schema::dropIfExists('tipo_componentes');
     }
 };

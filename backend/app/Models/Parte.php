@@ -11,23 +11,12 @@ class Parte extends Model
 
     protected $fillable = [
         'Nombre',
-        'Unidad',
-        'DireccionIp',
         'Descripcion',
         'Imagen',
-        'tipo_parte_id',
         'componente_id'
     ];
 
-    public function tipoParte()
-    {
-        return $this->belongsTo(TipoParte::class);
-    }
 
-    public function registros()
-    {
-        return $this->hasMany(Registro::class);
-    }
 
     public function  componente()
     {

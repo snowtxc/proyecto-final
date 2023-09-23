@@ -5,20 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Permiso extends Model
+class TipoComponente extends Model
 {
     use HasFactory;
-    public $autoincrement = false;
-
     protected $fillable = [
-        'Nombre'
+        'Nombre',
     ];
 
-    public function roles(): BelongsToMany
+    public function componentes()
     {
-        return $this->belongsToMany(Rol::class);
+        return $this->hasMany(Componente::class);
     }
-
 
 
 }
