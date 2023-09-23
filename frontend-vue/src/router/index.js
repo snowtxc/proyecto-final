@@ -76,6 +76,12 @@ const routes = [
                     },
                 ],
             },
+
+            { 
+                path: '/usuarios', 
+                name: 'ListaUsuarios',
+                component: ()=> import("../views/usuarios/ListadoUsuarios.vue"),
+            }
         ],
     },
 
@@ -83,6 +89,8 @@ const routes = [
     { path: '/signUp', component: SignUp },
 
     { path: '/:path(.*)', component: NotFound },
+
+
 ]
 
 const router = createRouter({

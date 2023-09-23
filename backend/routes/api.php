@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\UsuarioController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,13 +28,14 @@ Route::group([
     Route::post('/me', [UsuarioController::class, 'me']);
 });
 
-Route::group([],function () {
-    Route::get('/listar', [UsuarioController::class, "getUsers"]);
+Route::group(["prefix" => 'usuarios'],function () {
+    Route::get('/', [UsuarioController::class, "getUsers"]);
+    Route::get('/', [UsuarioController::class, 'index']);
+    Route::post('/', [UsuarioController::class, 'nuevo']);
+    Route::get('/id}', [UsuarioController::class, 'buscar']);
+    Route::put('/{id}', [UsuarioController::class, 'editar']);
+    Route::delete('/{id}', [UsuarioController::class, 'eliminar']);
 });
-
-    
-
-
 
 
 
