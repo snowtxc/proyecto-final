@@ -48,16 +48,16 @@ const router = useRouter();
 const email = ref('');
 const password = ref('');
 const showErrorBanner = ref(false);
-const errors = {
+const errors = ref({
   email: '',
   password: '',
-};
+});
 
 const signIn = () => {
-  errors.email = validateEmail(email.value) ? '' : 'Ingrese un correo';
-  errors.password = password.value ? '' : 'Ingrese una contraseña';
+  errors.value.email = validateEmail(email.value) ? '' : 'Ingrese un correo';
+  errors.value.password = password.value ? '' : 'Ingrese una contraseña';
 
-  if (!errors.email && !errors.password) {
+  if (!errors.value.email && !errors.value.password) {
     makeAPICall();
   }
 };
@@ -68,7 +68,6 @@ const validateEmail = (email) => {
 };
 
 const makeAPICall = async () => {
-  console.log($appStore);
   try {
     const response = await $appStore.login(email.value, password.value);
     showErrorBanner.value = false;

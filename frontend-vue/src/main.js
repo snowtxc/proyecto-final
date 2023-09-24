@@ -13,7 +13,13 @@ import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 import VueApexCharts from "vue3-apexcharts";
 
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+
 const pinia = createPinia();
+
+pinia.use(piniaPluginPersistedstate);
+
 
 // globally call 
 

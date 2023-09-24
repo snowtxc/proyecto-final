@@ -106,7 +106,6 @@ export default{
         getUsuarios(){
             this.usuarios = [];
             UsuarioController.listaUsuarios().then((response) => {
-                console.log(response);
                 if(response.status == 200){
                     this.usuarios = response.data;
                 }

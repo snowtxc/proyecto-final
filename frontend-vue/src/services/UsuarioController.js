@@ -1,10 +1,9 @@
-import axios from "axios";
+import axios from "./axios";
 
-const URL = "http://localhost:8000/api/usuarios";
 
 export default{
     listaUsuarios() {
-        return axios.get(URL);
+        return axios.get("usuarios");
     },
 
     nuevoUsuario(name, email, pass) {
@@ -13,11 +12,11 @@ export default{
             email: email,
             password: pass
         }
-        return axios.post(URL, body);
+        return axios.post("usuarios", body);
     },
 
     buscarUsuario(id){
-        return axios.get(URL + '/' + id);
+        return axios.get("usuarios/"+id);
     },
 
     editarUsuario(id, name, email, pass) {
@@ -26,11 +25,12 @@ export default{
             email: email,
             password: pass
         }
-        return axios.put(URL + '/' + id, body);
+        return axios.put("usuarios/"+id, body);
     },
 
     eliminarUsuario(id) {
-        return axios.delete(URL + '/' + id);
+        return axios.delete("usuarios/"+id);
     }
+
 
 }

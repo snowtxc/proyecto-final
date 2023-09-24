@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '../views/NotFound.vue'
 import store from '../store'
 import SignIn from '../views/sessions/SignIn.vue'
-import SignUp from '../views/sessions/SignUp.vue'
+import SignUp from '../views/sessions/SignUp.vue';
+
 
 const routes = [
     {
@@ -13,9 +14,6 @@ const routes = [
         meta: {
             title: 'Home',
         },
-
-        
-
         children: [
             {
                 path: '/dashboards',
@@ -85,7 +83,7 @@ const routes = [
         ],
     },
 
-    { path: '/signIn', component: SignIn },
+    { path: '/signIn', name: 'SignIn', component: SignIn },
     { path: '/signUp', component: SignUp },
 
     { path: '/:path(.*)', component: NotFound },
@@ -110,4 +108,4 @@ router.afterEach(() => {
     }
 })
 
-export default router
+export default router;

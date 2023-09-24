@@ -1,7 +1,11 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
+
+import { appStore } from '../store/app';
+
+const $appStore = appStore();
 
 let store = useStore()
 let route = useRoute()
