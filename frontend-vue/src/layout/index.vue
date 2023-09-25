@@ -16,7 +16,6 @@ const loading = ref(true);
 
 onBeforeMount(()=>{
     $appStore.setGlobalLoading(true);
-    console.log("hola")
     axios.get("auth/isLogged").then((res)=>{
         $appStore.setGlobalLoading(false);
         loading.value = false;

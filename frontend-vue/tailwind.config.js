@@ -6,7 +6,7 @@ module.exports = {
             colors: {
                 transparent: 'transparent',
                 current: 'currentColor',
-                primary: '#8b5cf6',
+                primary: '#25CEDE',
                 success: '#10b981',
                 danger: '#ef4444',
                 warning: '#f59e0b',

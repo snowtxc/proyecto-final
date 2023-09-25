@@ -61,18 +61,18 @@ const routes = [
             {
                 path: '/profile',
                 name: 'profile',
-                component: () => import('../views/profile/index.vue'),
+                component: () => import('../views/profile/ProfileTwo.vue'),
                 meta: {
                     title: 'Profile',
                 },
-                children: [
-                    {
-                        path: 'profileTwo',
-                        name: 'ProfileTwo',
-                        component: () =>
-                            import('../views/profile/ProfileTwo.vue'),
-                    },
-                ],
+                // children: [
+                //     {
+                //         path: 'profileTwo',
+                //         name: 'ProfileTwo',
+                //         component: () =>
+                //             import('../views/profile/ProfileTwo.vue'),
+                //     },
+                // ],
             },
 
             { 

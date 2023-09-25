@@ -23,10 +23,13 @@ const sideBarToggle = () => {
     }
 }
 
-
 const onLogout = ()=>{
     $appStore.logout();
     $router.push({name: 'SignIn'});   
+}
+
+const myProfile = ()=>{
+    $router.push({name: 'profile'});   
 }
 
 
@@ -799,26 +802,15 @@ const onLogout = ()=>{
                     <div class="">
                         <MenuItem v-slot="{ active }">
                             <button
+                                @click="myProfile"
                                 :class="[
                                     active
-                                        ? 'bg-purple-500 text-white'
+                                        ? 'bg-[#25CEDE] text-white'
                                         : 'text-gray-900',
                                     'group flex  items-center w-full px-4 py-2 text-sm',
                                 ]"
                             >
-                                Account Settings
-                            </button>
-                        </MenuItem>
-                        <MenuItem v-slot="{ active }">
-                            <button
-                                :class="[
-                                    active
-                                        ? 'bg-purple-500 text-white'
-                                        : 'text-gray-900',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                            >
-                                Billing History
+                                Mi Perfil
                             </button>
                         </MenuItem>
                         <MenuItem v-slot="{ active }">
@@ -826,12 +818,12 @@ const onLogout = ()=>{
                                  @click="onLogout"
                                 :class="[
                                     active
-                                        ? 'bg-purple-500 text-white'
+                                        ? 'bg-[#25CEDE] text-white'
                                         : 'text-gray-900',
                                     'group flex  items-center w-full px-4 py-2 text-sm',
                                 ]"
                             >
-                                Sign Out
+                                Cerrar sesion
                             </button>
                         </MenuItem>
                     </div>
