@@ -4,8 +4,14 @@ import { Switch } from '@headlessui/vue'
 import HeaderSearch from '../components/HeaderSearch.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useStore } from 'vuex'
+import { appStore } from '../store/app'
+import { useRouter } from 'vue-router'
 
 let store = useStore()
+
+const $appStore = appStore();
+
+const $router = useRouter();
 
 const sideBarToggle = () => {
     let sidenav = store.state.largeSidebar.sidebarToggleProperties.isSideNavOpen
@@ -16,6 +22,14 @@ const sideBarToggle = () => {
         store.commit('largeSidebar/toggleSidebarProperties')
     }
 }
+
+
+const onLogout = ()=>{
+    $appStore.logout();
+    $router.push({name: 'SignIn'});   
+}
+
+
 </script>
 
 <template>
@@ -809,6 +823,7 @@ const sideBarToggle = () => {
                         </MenuItem>
                         <MenuItem v-slot="{ active }">
                             <button
+                                 @click="onLogout"
                                 :class="[
                                     active
                                         ? 'bg-purple-500 text-white'

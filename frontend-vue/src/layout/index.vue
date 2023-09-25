@@ -1,18 +1,34 @@
 <script setup>
+import {onBeforeMount,ref } from "vue";
 import { useStore } from 'vuex'
 import Header from './Header.vue'
 import Sidebar from './Sidebar.vue'
-import Footer from './Footer.vue'
+import Footer from './Footer.vue';
+import GlobalLoading from "../components/GlobalLoading.vue";
+import axios from "../services/axios";
+
+import { appStore } from '../store/app';
+
 
 let store = useStore();
+const $appStore = appStore();
+const loading = ref(true);
 
+onBeforeMount(()=>{
+    $appStore.setGlobalLoading(true);
+    console.log("hola")
+    axios.get("auth/isLogged").then((res)=>{
+        $appStore.setGlobalLoading(false);
+        loading.value = false;
+    })
 
-
+})
 
 </script>
 
 <template>
-  <div class="app-admin-wrap-layout-2">
+  <GlobalLoading></GlobalLoading>
+  <div class="app-admin-wrap-layout-2" v-if="!loading">
     <Header />
     <Sidebar />
     <div :class="store.state.largeSidebar.sidebarToggleProperties.isSideNavOpen === true ? '': 'full'" class="main-content-wrap">
@@ -28,7 +44,6 @@ let store = useStore();
     </div>
   </div>
 </template>
-
 
 <style lang="scss" scoped>
     .app-admin-wrap-layout-2 {

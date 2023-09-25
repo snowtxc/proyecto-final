@@ -61,6 +61,14 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
+    public function isLogged()
+    {
+        return response()->json(['message' => 'Is authenticated']);
+    }
+
+
+
+
     /**
      * Refresh a token.
      *
@@ -102,7 +110,7 @@ class UsuarioController extends Controller
     {
         return Auth::guard();
     }
-  
+
     public function index()
     {
         return User::all();
