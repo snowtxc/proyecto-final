@@ -30,6 +30,13 @@ export default{
 
     eliminarUsuario(id) {
         return axios.delete("usuarios/"+id);
+    },
+
+    checkEmail(email){
+        const body = {
+            email: email
+        }
+        return axios.post('checkEmail', body);
     }
 
 

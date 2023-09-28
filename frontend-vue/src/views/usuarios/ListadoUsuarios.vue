@@ -20,7 +20,7 @@
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                     <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
-                        <table class="table-3 dataTable-table max-w-full w-full">
+                        <table v-if="usuarios.length > 0" class="table-3 dataTable-table max-w-full w-full">
                             <thead>
                                 <tr class="">
                                     <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold px-4">
@@ -58,7 +58,7 @@
                                     <BaseBtn 
                                         rounded
                                         class="border border-primary text-primary hover:bg-primary hover:text-white"
-                                        @click="confirmarEliminacion(user.id)"
+                                        @click="this.userDelete = user.id, this.showConfirmationModal = true"
                                         >
                                         Eliminar
                                     </BaseBtn>
@@ -66,6 +66,9 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <p class="px-4 py-3" v-if="usuarios.length == 0"> No se encontraron usuarios</p>
+                                
                     </div>
                     <div class="dataTable-bottom">
                         <div class="dataTable-info">
@@ -80,13 +83,31 @@
         </BaseCard>
     </div>
 
-    <DetalleUsuario v-if="showModalUsuario" :show="showModalUsuario" :userId="selectedUser" @onClose="showModalUsuario = false" @onConfirm="onConfirmEvent"></DetalleUsuario>
+    <DetalleUsuario 
+        v-if="showModalUsuario" 
+        :show="showModalUsuario" 
+        :userId="selectedUser" 
+        @onClose="showModalUsuario = false" 
+        @onConfirm="onConfirmEvent">
+    </DetalleUsuario>
+    <ConfirmationModal
+      v-if="showConfirmationModal"
+      :show="showConfirmationModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      @confirm="eliminar"
+      @cancel="cancelar"
+    />
 </template>
 
 <script>
 
 import UsuarioController from '../../services/UsuarioController'
 import DetalleUsuario from './DetalleUsuario.vue'
+import ConfirmationModal from '../../components/ConfirmationModal.vue';
+import { appStore } from "@/store/app.js";
+
+const $appStore = appStore();
 
 export default{
 
@@ -94,11 +115,16 @@ export default{
         return {
             usuarios : [],
             selectedUser : 0,
-            showModalUsuario: false
+            showModalUsuario: false,
+            showConfirmationModal: false,
+            modalTitle: "Confirmación",
+            modalMessage: "¿Estás seguro de que deseas eliminar este usuario?",
+            userDelete: null,
         }
     },
 
-    beforeMount(){
+    created(){
+        $appStore.setGlobalLoading(true);
         this.getUsuarios();
     },
 
@@ -107,36 +133,39 @@ export default{
             this.usuarios = [];
             UsuarioController.listaUsuarios().then((response) => {
                 if(response.status == 200){
-                    this.usuarios = response.data;
+                this.usuarios = response.data;
                 }
+                $appStore.setGlobalLoading(false);
             })
         },
-
-        verUsuario(id){
-            this.selectedUser = id;
-            this.showModalUsuario = true;
-        },
-
         onConfirmEvent(){
+            this.getUsuarios();
             this.showModalUsuario = false; 
             this.selectedUser = 0;
-            this.getUsuarios();
+        },
+        async eliminar(){
+            $appStore.setGlobalLoading(true);
+            UsuarioController.eliminarUsuario(this.userDelete).then((response) =>{
+                if (response.status === 200) {
+                    this.getUsuarios();
+                }else{
+                    $appStore.setGlobalLoading(false);
+                    //mensaje de error
+                    console.error("Error al eliminar usuario:", error);
+                }
+            });
+            this.showConfirmationModal = false;
+            this.userDelete = null;
         },
 
-        confirmarEliminacion(id) {
-            const confirmacion = window.confirm('¿Estás seguro de que deseas eliminar este usuario?');
-            
-            if (confirmacion) {
-                UsuarioController.eliminarUsuario(id).then((response) => {
-                    if (response.status == 200){
-                        this.getUsuarios();
-                    }
-                });
-            }
-        },
+        cancelar(){
+            this.userDelete = null;
+            this.showConfirmationModal = false;
+        }
     },
     components:{
-        DetalleUsuario
+        DetalleUsuario,
+        ConfirmationModal
     }
 
 
@@ -148,7 +177,7 @@ export default{
 <style scoped>
 .end-align {
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
   align-items: center !important;
 }
 

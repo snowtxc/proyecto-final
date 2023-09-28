@@ -25,9 +25,10 @@
                                 <label class="text-base text-gray" for="">Email</label>
                             </div>
                             <div class="mb-3"> 
-                                <input v-model="email" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="email" placeholder="">
+                                <input v-model="email" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="email" placeholder="" @blur="checkEmail" >
                             </div>
-                            <div class="mb-3">
+                            <span v-if="emailExists" class="px-2 py-2 text-red-500 text-xs"> {{ this.errorEmail }}</span>
+                        <!--    <div class="mb-3">
                                 <label class="text-base text-gray" for="">Password</label>
                             </div>
                             <div class="mb-3"> 
@@ -38,7 +39,7 @@
                             </div>
                             <div class="mb-3">    
                                 <input v-model="confirmPass" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="password" placeholder="">
-                            </div>
+                            </div> -->
                             <div class="mb-3">   
                                 <BaseBtn rounded block class="bg-purple-500 text-white px-4 py-2" type="submit">Guardar cambios</BaseBtn>
                             </div>
@@ -56,6 +57,9 @@
 <script>
 
 import UsuarioController from '../../services/UsuarioController'
+import { appStore } from "@/store/app.js";
+
+const $appStore = appStore();
 
 export default{
 
@@ -64,7 +68,9 @@ export default{
             name: "",
             email: "",
             password: "",
-            confirmPass: ""
+            confirmPass: "",
+            emailExists: false,
+            errorEmail: ""
 
         }
     },
@@ -73,8 +79,9 @@ export default{
         userId: Number
     },
 
-    beforeMount(){
+    created(){
         if(this.userId != 0){
+            $appStore.setGlobalLoading(true);
             this.getUsuario();
         }
         
@@ -90,13 +97,16 @@ export default{
                     this.email = data.email;
                     this.password = data.password;
                 }
+                $appStore.setGlobalLoading(false);
             })
         },
 
         guardarUsuario(){
-            if (this.confirmPass == this.password){
+            if (!this.emailExists){
+                $appStore.setGlobalLoading(true);
                 if(this.userId != 0){
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.password).then((response) => {
+                        console.log(response);
                         if(response.status == 200){
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
@@ -104,7 +114,8 @@ export default{
                     });
                 }else{
                     UsuarioController.nuevoUsuario(this.name, this.email, this.password).then((response) => {
-                        if(response.status == 200){
+                        console.log(response);
+                        if(response.status == 201){
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
                         }
@@ -112,7 +123,7 @@ export default{
                 }
                 
             }else{
-                console.log('error password');
+                //mensaje de error 
             }
         },
 
@@ -121,6 +132,26 @@ export default{
             this.email = "";
             this.password = "";
             this.confirmPass = "";
+        },
+
+        checkEmail(){
+            if(this.userId == 0){
+                UsuarioController.checkEmail(this.email).then((response) => {
+                    if(response.status == 200){
+                        this.emailExists = false;
+                    }else{
+                        if(response.data.message == "The email has already been taken."){
+                            this.errorEmail = "El correo electrónico ya está en uso."
+                        }else{
+                            this.errorEmail = "Ingrese un correo electrónico válido";
+                        }
+                        this.emailExists = true;
+                    }
+                })
+                .catch((error) => {
+                    this.emailExists = true;
+                });
+            }
         }
     }
 
@@ -145,7 +176,7 @@ export default{
 
 .end-align {
   display: flex !important;
-  justify-content: end !important;
+  justify-content: flex-end !important;
   align-items: center !important;
 }
 
