@@ -6,16 +6,31 @@ use Illuminate\Http\Request;
 
 use App\Models\Etapa;
 use Validator;
+use App\Http\Middleware\JwtMiddleware;
 
 class EtapaController extends Controller
 {
-    public function list(){
-        return Etapa::all();
+
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(JwtMiddleware::class, ['except' => []]);
+    }
+
+    public function list($procesoId){
+        $etapas = Etapa::where('proceso_id', $procesoId)->get();
+    
+        return $etapas;
     }
 
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
+            "Descripcion" => "required",
             "proceso_id" => "required|exists:procesos,id"
         ]);
 
@@ -29,6 +44,7 @@ class EtapaController extends Controller
     public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
+            "Descripcion" => "required",
             "proceso_id" => "required|exists:procesos,id"
         ]);
 

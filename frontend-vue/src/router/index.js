@@ -62,23 +62,19 @@ const routes = [
                 path: '/profile',
                 name: 'profile',
                 component: () => import('../views/profile/ProfileTwo.vue'),
-                meta: {
-                    title: 'Profile',
-                },
-                // children: [
-                //     {
-                //         path: 'profileTwo',
-                //         name: 'ProfileTwo',
-                //         component: () =>
-                //             import('../views/profile/ProfileTwo.vue'),
-                //     },
-                // ],
+                
             },
 
             { 
                 path: '/usuarios', 
                 name: 'ListaUsuarios',
                 component: ()=> import("../views/usuarios/ListadoUsuarios.vue"),
+            },
+
+            { 
+                path: '/procesos', 
+                name: 'ListaProcesos',
+                component: ()=> import("../views/procesos/ListadoProcesos.vue"),
             }
         ],
     },

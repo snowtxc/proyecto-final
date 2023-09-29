@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('etapas', function (Blueprint $table) {
             $table->id();
             $table->string("Nombre");
+            $table->string("Descripcion")->nullable();
             $table->unsignedBigInteger('proceso_id');
             $table->foreign('proceso_id')->references('id')->on('procesos');
             $table->timestamps();
