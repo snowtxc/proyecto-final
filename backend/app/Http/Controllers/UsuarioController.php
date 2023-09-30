@@ -122,7 +122,8 @@ class UsuarioController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->rol = $request->rol;
+        //$user->password = bcrypt($request->password);
         $user->save();
 
         return $user;
@@ -138,6 +139,7 @@ class UsuarioController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->rol = $request->rol;
         
         if(isset($request->password) && $request->password != ''){
             $user->password = bcrypt($request->password);

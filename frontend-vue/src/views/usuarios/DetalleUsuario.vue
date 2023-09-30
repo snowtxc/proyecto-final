@@ -28,7 +28,19 @@
                                 <input v-model="email" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="email" placeholder="" @blur="checkEmail" >
                             </div>
                             <span v-if="emailExists" class="px-2 py-2 text-red-500 text-xs"> {{ this.errorEmail }}</span>
-                        <!--    <div class="mb-3">
+                            <div class="mb-3">
+                                <label class="text-base text-gray" for="">Rol</label>
+                            </div>
+                            <div class="mb-3">
+                                <select v-model="selectedRol" id="rol" name="rol" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full">
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="Operador">Operador</option>
+                                    <option value="Observador">Observador</option>
+                                </select>
+                            </div>
+                        
+                        
+                            <!--    <div class="mb-3">
                                 <label class="text-base text-gray" for="">Password</label>
                             </div>
                             <div class="mb-3"> 
@@ -67,10 +79,9 @@ export default{
         return {
             name: "",
             email: "",
-            password: "",
-            confirmPass: "",
             emailExists: false,
-            errorEmail: ""
+            errorEmail: "",
+            selectedRol: "observador"
 
         }
     },
@@ -95,7 +106,7 @@ export default{
                     const data = response.data;
                     this.name = data.name;
                     this.email = data.email;
-                    this.password = data.password;
+                    this.selectedRol = data.rol;
                 }
                 $appStore.setGlobalLoading(false);
             })
@@ -105,7 +116,7 @@ export default{
             if (!this.emailExists){
                 $appStore.setGlobalLoading(true);
                 if(this.userId != 0){
-                    UsuarioController.editarUsuario(this.userId, this.name, this.email, this.password).then((response) => {
+                    UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
                         console.log(response);
                         if(response.status == 200){
                             this.resetForm();
@@ -113,7 +124,7 @@ export default{
                         }
                     });
                 }else{
-                    UsuarioController.nuevoUsuario(this.name, this.email, this.password).then((response) => {
+                    UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
                         console.log(response);
                         if(response.status == 201){
                             this.resetForm();
@@ -130,8 +141,7 @@ export default{
         resetForm(){
             this.name = "";
             this.email = "";
-            this.password = "";
-            this.confirmPass = "";
+            this.selectedRol = "observador";
         },
 
         checkEmail(){

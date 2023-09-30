@@ -29,6 +29,9 @@
                                     <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                         Email
                                     </th>
+                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
+                                        Rol
+                                    </th>
                                     <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"></th>
                                     <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"></th>
                                 </tr>
@@ -44,6 +47,9 @@
 
                                 <td>
                                     {{ user.email }}
+                                </td>
+                                <td>
+                                    {{ user.rol }}
                                 </td>
                                 <td>
                                     <BaseBtn 
@@ -68,7 +74,7 @@
                         </table>
 
                         <p class="px-4 py-3" v-if="usuarios.length == 0"> No se encontraron usuarios</p>
-                                
+                    
                     </div>
                     <div class="dataTable-bottom">
                         <div class="dataTable-info">
