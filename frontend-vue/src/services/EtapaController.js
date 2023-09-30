@@ -19,10 +19,11 @@ export default{
         return axios.get("etapas/"+id);
     },
 
-    editarEtapa(id, nombre, descripcion) {
+    editarEtapa(id, nombre, descripcion, proceso_id) {
         const body = {
             Nombre: nombre,
-            Descripcion: descripcion
+            Descripcion: descripcion,
+            proceso_id: proceso_id
         }
         return axios.put("etapas/"+id, body);
     },

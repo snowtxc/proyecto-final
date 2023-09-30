@@ -53,7 +53,7 @@ class EtapaController extends Controller
         }
         $etapa = Etapa::find($id);
 
-        if(isset($group)){
+        if(isset($etapa)){
             $etapa->update($request->all());
             return $etapa;
         }

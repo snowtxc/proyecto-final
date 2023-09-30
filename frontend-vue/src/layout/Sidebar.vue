@@ -156,7 +156,7 @@ let handleWindowResize = () => {
 
 <style lang="scss" scoped>
 .nav-item.router-link-exact-active {
-    @apply text-purple-500;
+    @apply text-primary;
 
     &:after {
         content: '';
@@ -166,7 +166,7 @@ let handleWindowResize = () => {
         bottom: -15px;
         right: -15px;
         transform: rotate(45deg);
-        @apply bg-purple-500;
+        @apply bg-primary;
     }
 }
 .submenuLi {
@@ -222,7 +222,7 @@ let handleWindowResize = () => {
                 cursor: pointer;
                 &:hover {
                     .nav-item-hold {
-                        @apply text-purple-500;
+                        @apply text-primary;
                     }
                     &:after {
                         content: '';
@@ -232,12 +232,12 @@ let handleWindowResize = () => {
                         bottom: -15px;
                         right: -15px;
                         transform: rotate(45deg);
-                        @apply bg-purple-500;
+                        @apply bg-primary;
                     }
                 }
 
                 &.active {
-                    @apply text-purple-500;
+                    @apply text-primary;
 
                     &:after {
                         content: '';
@@ -247,7 +247,7 @@ let handleWindowResize = () => {
                         bottom: -15px;
                         right: -15px;
                         transform: rotate(45deg);
-                        @apply bg-purple-500;
+                        @apply bg-primary;
                     }
                 }
                 border-bottom: 1px solid #dee2e6;
@@ -307,7 +307,7 @@ let handleWindowResize = () => {
                 // &.active {
                 //     a {
                 //         background-color: #f3f4f6;
-                //         @apply text-purple-500;
+                //         @apply text-primary;
                 //     }
                 // }
                 a {
@@ -320,10 +320,10 @@ let handleWindowResize = () => {
                     transition: 0.15s all ease-in;
                     &:hover {
                         background-color: #f3f4f6;
-                        @apply text-purple-500;
+                        @apply text-primary;
                     }
                     &.router-link-active.router-link-exact-active {
-                        @apply text-purple-500;
+                        @apply text-primary;
                     }
                 }
                 ul.submenu {
