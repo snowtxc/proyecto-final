@@ -86,7 +86,8 @@
 <script>
 
 import UsuarioController from '../../services/UsuarioController'
-import DetalleUsuario from './DetalleUsuario.vue'
+import DetalleUsuario from './DetalleUsuario.vue';
+
 
 export default{
 

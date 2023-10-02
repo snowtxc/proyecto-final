@@ -59,6 +59,23 @@ const routes = [
             },
 
             {
+                path: '/dispositivos/nuevo',
+                name: 'nuevoDispositivo',
+                component: () => import('../views/dispositivos/DevicePage.vue'),
+
+            },
+
+            
+            {
+                path: '/dispositivos/:id/editar',
+                name: 'editarDispositivo',
+                component: () => import('../views/dispositivos/DevicePage.vue'),
+            },
+
+
+
+
+            {
                 path: '/profile',
                 name: 'profile',
                 component: () => import('../views/profile/index.vue'),

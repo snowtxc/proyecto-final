@@ -51,4 +51,14 @@ class ProcesoController extends Controller
         return response()->json(['error' => 'Proceso no encontrado'], 404);
     }
 
+
+    public function getEtapasByProcess($id){
+        $process =  Proceso::find($id);
+        if(!isset($process)){
+            return response()->json(['error' => 'Proceso no encontrado'], 404);
+        }
+        return response()->json($process->etapas, 200);
+    }
+
+
 }

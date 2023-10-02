@@ -8,22 +8,19 @@ import BaseCard from './components/Base/BaseCard.vue'
 import BaseBtn from './components/Base/BaseBtn.vue'
 import { createPinia } from 'pinia'
 
-// perfectscrollbar plugins 
 import PerfectScrollbar from 'vue3-perfect-scrollbar'
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css'
 import VueApexCharts from "vue3-apexcharts";
 
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
+import Notifications from '@kyvg/vue3-notification'
+
 
 const pinia = createPinia();
 
 pinia.use(piniaPluginPersistedstate);
 
-
-// globally call 
-
-// app.component('BaseBtn', BaseBtn)
 
 
 createApp(App)
@@ -34,5 +31,6 @@ createApp(App)
     .use(store)
     .use(router)
     .use(pinia)
+    .use(Notifications)
     .mount('#app')
     

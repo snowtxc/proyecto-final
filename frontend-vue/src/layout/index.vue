@@ -3,7 +3,6 @@ import {onBeforeMount,ref } from "vue";
 import { useStore } from 'vuex'
 import Header from './Header.vue'
 import Sidebar from './Sidebar.vue'
-import Footer from './Footer.vue';
 import GlobalLoading from "../components/GlobalLoading.vue";
 import axios from "../services/axios";
 
@@ -37,8 +36,6 @@ onBeforeMount(()=>{
                 <div>
                     <router-view />
                 </div>
-                
-                <Footer />
             </div>
         </main>
     </div>

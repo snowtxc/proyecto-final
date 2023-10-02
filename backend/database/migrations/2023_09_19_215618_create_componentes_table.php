@@ -27,9 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('etapa_id');
             $table->foreign('etapa_id')->references('id')->on('etapas');
 
-            $table->unsignedBigInteger('grupo_id')->nullable();
-            $table->foreign('grupo_id')->references('id')->on('grupos');
-            $table->timestamps();
+
         });
     }
 

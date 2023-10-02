@@ -18,10 +18,4 @@ class Proceso extends Model
         return $this->hasMany(Etapa::class);
     }
 
-    public function etapaActual()
-    {
-        return $this->hasOne(Etapa::class);
-    }
-
-
 }

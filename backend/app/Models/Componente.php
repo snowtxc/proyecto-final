@@ -15,7 +15,7 @@ class Componente extends Model
         'Unidad',
         'DireccionIp',
         'etapa_id',
-        'grupo_id'
+        "tipo_componente_id"
     ];
 
     public function partes()

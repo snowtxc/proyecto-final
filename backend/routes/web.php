@@ -8,6 +8,7 @@ use App\Http\Controllers\ComponenteController;
 use App\Http\Controllers\ComponenteImagenController;
 use App\Http\Controllers\ParteController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\TipoComponenteController;
 
 
 
@@ -72,6 +73,8 @@ Route::prefix('api')->group(function () {
         Route::post('/procesos', 'create');
         Route::put('/procesos/{id}', 'update');
         Route::delete('/procesos/{id}', 'delete');
+        Route::get('/procesos/{id}/etapas', 'getEtapasByProcess');
+
     });
 
      /*ETAPA  ENDPOINTS*/
@@ -82,9 +85,18 @@ Route::prefix('api')->group(function () {
         Route::delete('/etapas/{id}', 'delete');
     });
 
+    /*COMPONENTE  ENDPOINTS*/
+    Route::controller(TipoComponenteController::class)->group(function () {
+        Route::get('/tipos_componentes', 'list');
+        Route::post('/tipos_componentes', 'create');
+    });
+
+
+
      /*COMPONENTE  ENDPOINTS*/
      Route::controller(ComponenteController::class)->group(function () {
         Route::get('/componentes', 'list');
+        Route::get('/componentes/{id}', 'getById');
         Route::post('/componentes', 'create');
         Route::put('/componentes/{id}', 'update');
         Route::delete('/componentes/{id}', 'delete');
