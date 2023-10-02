@@ -16,7 +16,13 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 import Notifications from '@kyvg/vue3-notification'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
 
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+import { faPenToSquare, faRectangleXmark, faTrashCan, faSquarePlus } from '@fortawesome/free-regular-svg-icons'
+
+library.add(faTrashCan, faPenToSquare, faRectangleXmark, faSquarePlus)
 const pinia = createPinia();
 
 pinia.use(piniaPluginPersistedstate);
@@ -24,6 +30,7 @@ pinia.use(piniaPluginPersistedstate);
 
 
 createApp(App)
+    .component('font-awesome-icon', FontAwesomeIcon)
     .component('BaseCard', BaseCard)
     .component('BaseBtn', BaseBtn)
     .use(PerfectScrollbar)

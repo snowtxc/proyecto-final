@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\JwtMiddleware;
+use Illuminate\Validation\Rule;
 
 class UsuarioController extends Controller
 {
@@ -121,7 +122,8 @@ class UsuarioController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->rol = $request->rol;
+        //$user->password = bcrypt($request->password);
         $user->save();
 
         return $user;
@@ -137,7 +139,12 @@ class UsuarioController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->rol = $request->rol;
+        
+        if(isset($request->password) && $request->password != ''){
+            $user->password = bcrypt($request->password);
+        }
+        
         $user->save();
 
         return $user;
@@ -150,4 +157,19 @@ class UsuarioController extends Controller
 
         return response()->json(['message' => 'Usuario eliminado']);
     }
+
+    public function checkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users'),
+            ],
+        ]);
+    
+        return response()->json(['message' => 'El correo electrónico está disponible']);
+    }
+
+
 }

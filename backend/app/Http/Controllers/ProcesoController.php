@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Proceso;
 use Validator;
+use App\Http\Middleware\JwtMiddleware;
 
 class ProcesoController extends Controller
 {
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(JwtMiddleware::class, ['except' => []]);
+    }
+
     public function list(){
         return Proceso::all();
     }
@@ -38,9 +49,7 @@ class ProcesoController extends Controller
             return $process;
         }
         return response()->json(['error' => 'Proceso no encontrado'], 404);
-
     }
-
 
     public function delete($id){
         $process =  Proceso::find($id);

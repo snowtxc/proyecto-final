@@ -13,13 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('etapas', function (Blueprint $table) {
-            $table->id();
-            $table->string("Nombre");
-            $table->string("Descripcion")->nullable();
-            $table->unsignedBigInteger('proceso_id');
-            $table->foreign('proceso_id')->references('id')->on('procesos');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('rol')->default('user');
         });
     }
 
@@ -30,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('etapas');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('rol'); 
+        });
     }
 };

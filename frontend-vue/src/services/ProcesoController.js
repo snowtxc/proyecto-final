@@ -1,16 +1,47 @@
 import axios from "./axios";
 
+
 export default{
-    async getAll() {
-       const response  = await axios.get("procesos");
-       const { data } = response;
-       return data;
+    listaProcesos() {
+        return axios.get("procesos");
     },
 
-    async getProcesosByEtapa(id) {
-        const url = `procesos/${id}/etapas`;       ;
-        const response  = await axios.get(url);
+    nuevoProceso(nombre, descripcion) {
+        const body = {
+            Nombre: nombre,
+            Descripcion: descripcion
+        }
+        return axios.post("procesos", body);
+    },
+
+    buscarProceso(id){
+        return axios.get("procesos/"+id);
+    },
+
+    editarProceso(id, nombre, descripcion) {
+        const body = {
+            Nombre: nombre,
+            Descripcion: descripcion
+        }
+        return axios.put("procesos/"+id, body);
+    },
+
+    eliminarProceso(id) {
+        return axios.delete("procesos/"+id);
+    },
+
+    async getAll() {
+        const response  = await axios.get("procesos");
         const { data } = response;
         return data;
-    }
+     },
+ 
+     async getProcesosByEtapa(id) {
+         const url = `procesos/${id}/etapas`;       ;
+         const response  = await axios.get(url);
+         const { data } = response;
+         return data;
+     }
+
+
 }

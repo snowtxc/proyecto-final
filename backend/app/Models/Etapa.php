@@ -10,6 +10,7 @@ class Etapa extends Model
     use HasFactory;
     protected $fillable = [
         'Nombre',
+        'Descripcion',
         "proceso_id"
     ];
 

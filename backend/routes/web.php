@@ -47,12 +47,13 @@ Route::prefix('api')->group(function () {
         Route::post('/auth/refresh','refresh');
         Route::get('/auth/isLogged','isLogged');
         Route::post("/auth/me", 'me');
-        Route::get('/usuarios',  "getUsers");
+       // Route::get('/usuarios',  "getUsers");
         Route::get('/usuarios', 'index');
         Route::post('/usuarios', 'nuevo');
         Route::get('/usuarios/{id}', 'buscar');
         Route::put('/usuarios/{id}', 'editar');
         Route::delete('/usuarios/{id}', 'eliminar');
+        Route::post('/checkEmail', 'checkEmail');
     });
 
     /*USUARIO ENDPOINTS*/
