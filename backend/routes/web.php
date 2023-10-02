@@ -99,7 +99,7 @@ Route::prefix('api')->group(function () {
         Route::get('/componentes', 'list');
         Route::get('/componentes/{id}', 'getById');
         Route::post('/componentes', 'create');
-        Route::put('/componentes/{id}', 'update');
+        Route::post('/componentes/{id}', 'update');
         Route::delete('/componentes/{id}', 'delete');
         Route::get('/componentes/{componenteId}/imagenes/{imageId}', 'getImage');
         Route::post('/componentes/{id}/imagenes', 'addImageById');

@@ -92,7 +92,10 @@ class ComponenteController extends Controller
             $imagenesPath = [];
             foreach($imagenes as $imagen){
                 $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($imagen->Path);
-                array_push($imagenesPath, $pathImage);
+                array_push($imagenesPath,
+                    ["id" => $imagen->id,
+                    "Path" => $pathImage,
+                    "Nombre" => $imagen->Nombre]);
             }
             $proceso_id = $etapa->proceso_id;
             $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($tipoComponente->Imagen);
@@ -114,10 +117,11 @@ class ComponenteController extends Controller
     }
 
     public function update(Request $request, $id){
+
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
-            'Descripcion' => ['required','min:10'],
-            "grupo_id" => "required|exists:procesos,id",
+            'Descripcion' => 'required',
+            "tipo_componente_id" => 'required',
             "etapa_id" => "required|integer"
         ]);
 
@@ -125,7 +129,7 @@ class ComponenteController extends Controller
             return response()->json($validator->errors());
         }
         $componente = Componente::find($id);
-        if(isset($group)){
+        if(isset($componente)){
             $componente->update($request->all());
             return $componente;
         }
@@ -157,7 +161,6 @@ class ComponenteController extends Controller
         $body = $request->all();
         $file = $body['Imagen'];
 
-
         $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
         $pathUploaded = FileHelper::uploadFile($file, 'public',$fileName);
 
@@ -165,9 +168,14 @@ class ComponenteController extends Controller
             'Path' => $pathUploaded,
             'Nombre' => $fileName
         ]);
+        $path = FileHelper::getRealPath($imageRow->Path);
+        $fullPath =  env('APP_URL').":".env("APP_PORT").$path;
 
-
-        return response()->json(['ok' => $imageRow], 200);
+        return response()->json(
+            ["id"=> $imageRow->id
+            ,"Path" => $fullPath,
+            "Nombre" => $imageRow->Nombre,],
+        200);
     }
 
 
@@ -181,6 +189,9 @@ class ComponenteController extends Controller
             return response()->json(['error' => 'Imagen de Componente no encontrado'], 404);
         }
         FileHelper::deleteFile($image->Path);
+
+        $image->delete();
+
         return response()->json(['success' => 'Imagen de Componente borrada'], 200);
 
     }
