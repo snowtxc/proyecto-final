@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ProcesoController;
+use App\Http\Controllers\EtapaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +33,20 @@ Route::group(["prefix" => 'usuarios'],function () {
     Route::get('/id}', [UsuarioController::class, 'buscar']);
     Route::put('/{id}', [UsuarioController::class, 'editar']);
     Route::delete('/{id}', [UsuarioController::class, 'eliminar']);
+});
+
+Route::group(["prefix" => 'procesos'],function () {
+    Route::get('/', [ProcesoController::class, "list"]);
+    Route::post('/', [ProcesoController::class, "create"]);
+    Route::put('/{id}', [ProcesoController::class, 'update']);
+    Route::delete('/{id}', [ProcesoController::class, 'delete']);
+});
+
+Route::group(["prefix" => 'etapas'],function () {
+    Route::get('/{procesoId}', [EtapaController::class, "list"]);
+    Route::post('/', [EtapaController::class, "create"]);
+    Route::put('/{id}', [EtapaController::class, 'update']);
+    Route::delete('/{id}', [EtapaController::class, 'delete']);
 });
 
 
