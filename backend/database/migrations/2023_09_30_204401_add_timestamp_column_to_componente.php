@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('componente_imagens', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('componente_id');
-            $table->foreign('componente_id')->references('id')->on('componentes')->onDelete('cascade');
-            $table->timestamps();
+        Schema::table('componentes', function (Blueprint $table) {
+           $table->timestamps();
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('componente_imagens');
+        Schema::table('componentes', function (Blueprint $table) {
+            //
+        });
     }
 };

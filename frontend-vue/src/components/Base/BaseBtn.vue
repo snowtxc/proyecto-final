@@ -1,23 +1,28 @@
 <script setup>
+
+const emit = defineEmits(['click']);
 const props = defineProps({
     block: Boolean,
     sm: Boolean,
     xl: Boolean,
     icon: Boolean,
     rounded: Boolean,
-    icon: Boolean
+    maxWidth: String,
+    
 })
 </script>
 <template>
     <button
+        @click="emit('click')"
         type="button"
-        class="btn  rounded font-normal leading-4 ripple"
+        class="btn rounded font-normal leading-4 ripple bg-primary text-white  hover:bg-primary-dark"
         :class="[
             props.block ? 'block w-full' : 'inline-block',
             props.sm ? 'sm' : '',
             props.xl ? 'xl' : '',
             props.rounded ? 'rounded-full' : '',
-            props.icon ? 'p-2 flex items-center justify-center' : 'py-2 px-5'
+            props.icon ? 'p-2 flex items-center justify-center' : 'py-2 px-5',
+            maxWidth ? `max-w-[${maxWidth}]` : '' 
         ]"
     >
         <slot />

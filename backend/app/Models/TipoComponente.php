@@ -10,6 +10,7 @@ class TipoComponente extends Model
     use HasFactory;
     protected $fillable = [
         'Nombre',
+        'Imagen'
     ];
 
     public function componentes()

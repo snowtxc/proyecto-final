@@ -3,7 +3,6 @@ import {onBeforeMount,ref } from "vue";
 import { useStore } from 'vuex'
 import Header from './Header.vue'
 import Sidebar from './Sidebar.vue'
-import Footer from './Footer.vue';
 import GlobalLoading from "../components/GlobalLoading.vue";
 import axios from "../services/axios";
 
@@ -32,8 +31,10 @@ onBeforeMount(()=>{
     <Sidebar />
     <div :class="store.state.largeSidebar.sidebarToggleProperties.isSideNavOpen === true ? '': 'full'" class="main-content-wrap">
         <main>
-            <div class="main-content-wrap flex flex-col flex-grow print-area pt-10 h-[900px]">
-                <router-view />
+            <div class="main-content-wrap flex flex-col flex-grow print-area pt-10">
+                <div>
+                    <router-view />
+                </div>
             </div>
         </main>
     </div>
