@@ -12,6 +12,7 @@ use App\Http\Controllers\TipoComponenteController;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -109,10 +110,13 @@ Route::prefix('api')->group(function () {
 
     /*PARTE ENDPOINTS*/
     Route::controller(ParteController::class)->group(function () {
-        Route::get('/partes', 'list');
-        Route::post('/partes', 'create');
-        Route::put('/partes/{id}', 'update');
-        Route::delete('/partes/{id}', 'delete');
+        Route::get('/componentes/{componenteId}/partes', 'list');
+        Route::post('/componentes/{componenteId}/partes', 'create');
+        Route::put('/componentes/{componenteId}/partes/{id}', 'update');
+        Route::delete('/componentes/{componenteId}/partes/{id}', 'delete');
+        Route::get('/componentes/{componenteId}/partes/{id}', 'getById');
+        Route::post('/componentes/{componenteId}/partes/{id}/notas', 'addNota');
+        Route::get('/componentes/{componenteId}/partes/{id}/notas', 'listNotas');
     });
 
 
