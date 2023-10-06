@@ -34,7 +34,7 @@ class UsuarioController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ($token = $this->guard()->attempt($credentials)) {
-            $user = Auth::guard('api')->user();
+            $user = Auth::user();
             return compact('user', 'token');
         }
 
@@ -140,11 +140,11 @@ class UsuarioController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->rol = $request->rol;
-        
+
         if(isset($request->password) && $request->password != ''){
             $user->password = bcrypt($request->password);
         }
-        
+
         $user->save();
 
         return $user;
@@ -167,7 +167,7 @@ class UsuarioController extends Controller
                 Rule::unique('users'),
             ],
         ]);
-    
+
         return response()->json(['message' => 'El correo electrónico está disponible']);
     }
 

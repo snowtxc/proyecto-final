@@ -13,16 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('partes', function (Blueprint $table) {
+        Schema::create('parte_notas', function (Blueprint $table) {
             $table->id();
-            $table->string("Nombre");
             $table->string("Descripcion");
-            $table->unsignedBigInteger('componente_id');
-            $table->foreign('componente_id')->references('id')->on('componentes');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedBigInteger('parte_id');
+            $table->foreign('parte_id')->references('id')->on('partes');
+
             $table->timestamps();
         });
-
-
     }
 
     /**
@@ -32,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partes');
+        Schema::dropIfExists('parte_notas');
     }
 };
