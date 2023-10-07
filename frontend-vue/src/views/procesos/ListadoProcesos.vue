@@ -75,7 +75,7 @@
                             </div>
                         </Card>
                         <spinner :show="showSpinnerEtapas"></spinner>
-                        <Card v-if="showSpinnerEtapas == false" v-for="etapa in listaEtapas" :key="etapa.id"
+                        <Card v-if="showSpinnerEtapas == false" v-for="etapa in listaEtapas" :key="etapa.id" @click="navigateToEtapas(etapa.id);"
                             class="h-14 w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white">
                             <div class="flex flex-row items-center justify-between">
                                 <p class="font-bold text-xl">{{ etapa.Nombre }}</p>
@@ -194,6 +194,9 @@ import EtapaController from '@/services/EtapaController.js';
 import Modal from '../components/Modals/Modal.vue';
 import spinner from '../components/spinner/spinner.vue';
 import ConfrimModal from '../components/Modals/ConfirmModal.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const showModal = ref(false);
 const showModalEtapas = ref(false);
@@ -436,6 +439,11 @@ const eliminarProceso = async (etapasList) => {
     } catch (error) {
         console.error('Error al eliminar la etapa:', error);
     }
+};
+
+const navigateToEtapas = (etapaId) => {
+    const procesoId = listaProcesos.value[selectedCardIndex.value].id;
+  router.push({ name: 'editarEtapa', params: { procesoId, etapaId } });
 };
 
 </script>
