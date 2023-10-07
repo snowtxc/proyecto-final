@@ -24,4 +24,9 @@ class Etapa extends Model
         return $this->hasMany(Componente::class);
     }
 
+    public function nodos()
+    {
+        return $this->hasMany(Nodo::class);
+    }
+
 }

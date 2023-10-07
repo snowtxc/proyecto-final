@@ -48,4 +48,9 @@ class Componente extends Model
         return $this->hasMany(Registro::class);
     }
 
+    public function  nodo()
+    {
+        return $this->hasOne(Nodo::class);
+    }
+
 }

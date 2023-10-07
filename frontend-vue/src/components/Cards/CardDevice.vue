@@ -1,5 +1,5 @@
 <template>
-    <div  @click="emit('onSelect')" class="card flex flex-col  hover:bg-gray-500 dark:text-white group  cursor-pointer" :class="props.selected ? 'bg-gray-500 text-white': 'bg-white'">
+    <div  @click="emit('onSelect')" class="card flex flex-col  hover:bg-gray-100 dark:text-white group  cursor-pointer" :class="props.selected ? 'bg-[#25CEDE] text-white': 'bg-white'">
     <div class="card-body">
         <div class="flex align-center">
             <img :src="props.image" alt="Image" class=" w-16 h-16 object-cover" />

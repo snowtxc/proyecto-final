@@ -13,18 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('componentes', function (Blueprint $table) {
+        Schema::create('nodos', function (Blueprint $table) {
             $table->id();
-            $table->string("Nombre");
-            $table->string("Descripcion");
-            $table->string("Unidad");
-            $table->string("DireccionIp");
-
-            $table->unsignedBigInteger('tipo_componente_id');
-            $table->foreign('tipo_componente_id')->references('id')->on('tipo_componentes');
+            $table->string("Posicion");
 
             $table->unsignedBigInteger('etapa_id');
             $table->foreign('etapa_id')->references('id')->on('etapas');
+
+            $table->unsignedBigInteger('componente_id');
+            $table->foreign('componente_id')->references('id')->on('componentes');
+
+            $table->timestamps();
         });
     }
 
@@ -35,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('componentes');
+        Schema::dropIfExists('nodos');
     }
 };

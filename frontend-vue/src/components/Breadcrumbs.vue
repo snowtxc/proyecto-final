@@ -1,8 +1,7 @@
 <script setup>
-const props = defineProps({
-    parentTitle: String,
-    subParentTitle: String
-})
+    const props = defineProps({
+        parentTitle: String,
+    })
 </script>
 
 <template>
