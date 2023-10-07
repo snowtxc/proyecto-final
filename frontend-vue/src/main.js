@@ -40,4 +40,3 @@ createApp(App)
     .use(pinia)
     .use(Notifications)
     .mount('#app')
-    

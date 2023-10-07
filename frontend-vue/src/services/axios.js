@@ -10,7 +10,7 @@ const $appStore =  appStore();
 
 const instance = axios.create({
   baseURL: 'http://localhost:8000/api/',
-  timeout: 5000
+  timeout: 10000
 });
 
 // Agrega un interceptor para configurar el encabezado en cada solicitud

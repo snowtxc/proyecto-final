@@ -20,59 +20,41 @@
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                     <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
-                        <table v-if="usuarios.length > 0" class="table-3 dataTable-table max-w-full w-full">
-                            <thead>
-                                <tr class="">
-                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold px-4">
-                                        Nombre
-                                    </th>
-                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
-                                        Email
-                                    </th>
-                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
-                                        Rol
-                                    </th>
-                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"></th>
-                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover:bg-gray-500 cursor-pointer"
-                                    v-for="(user, index) in usuarios"
-                                    :key="index"
-                                >
-                                <td class="px-4 py-3">
-                                    {{ user.name }}
-                                </td>
 
-                                <td>
-                                    {{ user.email }}
-                                </td>
-                                <td>
-                                    {{ user.rol }}
-                                </td>
-                                <td>
-                                    <BaseBtn 
-                                        rounded
-                                        class="border border-primary text-primary hover:bg-primary hover:text-white"
-                                        @click="this.selectedUser = user.id, this.showModalUsuario = true"
-                                        >
-                                        Ver
-                                    </BaseBtn>
-                                </td>
-                                <td>
-                                    <BaseBtn 
-                                        rounded
-                                        class="border border-primary text-primary hover:bg-primary hover:text-white"
-                                        @click="this.userDelete = user.id, this.showConfirmationModal = true"
-                                        >
-                                        Eliminar
-                                    </BaseBtn>
-                                </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <ul v-if="usuarios.length > 0">
+                            <li v-for="(user, index) in usuarios" :key="index" >
+                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center mb-4 md:flex-row">
+                                    <img
+                                        class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full"
+                                        :src= "user.imagen ? user.imagen : '/src/assets/images/user.png'"
+                                        alt=""
+                                    />
+                                    <div class="flex-grow md:text-left">
+                                        <h5>
+                                            <p
+                                                class="text-gray-800"
+                                            >
+                                                {{ user.name }}  -  {{ user.rol }}
+                                            </p>
+                                        </h5>
+                                        <p class="text-gray-400 text-xs mb-3 md:mb-0">
+                                            {{ user.email }}
+                                        </p>
+                                    </div>
+                                   
+                                        <font-awesome-icon 
+                                            :icon="['far', 'pen-to-square']" 
+                                            @click="this.selectedUser = user.id, this.showModalUsuario = true" 
+                                            class="w-5 h-5 m-4 hover:text-primary"/>
+                                        <font-awesome-icon 
+                                            :icon="['far', 'trash-can']" 
+                                            @click="this.userDelete = user.id, this.showConfirmationModal = true" 
+                                            class="w-5 h-5 m-4 hover:text-primary"/>
+                                </div>
+                            </li>
 
+
+                        </ul>
                         <p class="px-4 py-3" v-if="usuarios.length == 0"> No se encontraron usuarios</p>
                     
                     </div>
@@ -126,6 +108,7 @@ export default{
             modalTitle: "Confirmación",
             modalMessage: "¿Estás seguro de que deseas eliminar este usuario?",
             userDelete: null,
+            userLogged: $appStore.getUserData
         }
     },
 
@@ -152,6 +135,7 @@ export default{
         async eliminar(){
             $appStore.setGlobalLoading(true);
             UsuarioController.eliminarUsuario(this.userDelete).then((response) =>{
+                console.log(response);
                 if (response.status === 200) {
                     this.getUsuarios();
                 }else{
@@ -186,5 +170,6 @@ export default{
   justify-content: flex-end !important;
   align-items: center !important;
 }
+
 
 </style>
