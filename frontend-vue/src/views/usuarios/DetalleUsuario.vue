@@ -31,29 +31,28 @@
                             <div class="mb-3">
                                 <label class="text-base text-gray" for="">Rol</label>
                             </div>
-                            <div class="mb-3">
+                            <!--div class="mb-3">
                                 <select v-model="selectedRol" id="rol" name="rol" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full">
                                     <option value="Administrador">Administrador</option>
                                     <option value="Operador">Operador</option>
                                     <option value="Observador">Observador</option>
                                 </select>
-                            </div>
-                        
-                        
-                            <!--    <div class="mb-3">
-                                <label class="text-base text-gray" for="">Password</label>
-                            </div>
-                            <div class="mb-3"> 
-                                <input v-model="password" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="password" placeholder="">
-                            </div>
+                            </div-->
+
                             <div class="mb-3">
-                                <label class="text-base text-gray" for="">Retype Password</label>
+                                <input type="radio" v-model="selectedRol" id="observador" name="rol" value="Observador" class="ml-4 mr-1 px-4 py-1 border border-gray focus:outline-none rounded-full">
+                                <label for="observador">Observador</label>
+                                
+                                <input type="radio" v-model="selectedRol" id="operador" name="rol" value="Operador" class="ml-4 mr-1 px-4 py-1 border border-gray focus:outline-none rounded-full">
+                                <label for="operador">Operador</label>
+
+                                <input type="radio" v-model="selectedRol" id="admin" name="rol" value="Administrador" class="ml-4 mr-1 px-4 py-1 border border-gray focus:outline-none rounded-full">
+                                <label for="admin">Administrador</label>
                             </div>
-                            <div class="mb-3">    
-                                <input v-model="confirmPass" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="password" placeholder="">
-                            </div> -->
+                        
+                        
                             <div class="mb-3">   
-                                <BaseBtn rounded block class="bg-purple-500 text-white px-4 py-2" type="submit">Guardar cambios</BaseBtn>
+                                <BaseBtn rounded block class="primary text-white px-4 py-2" type="submit">Guardar cambios</BaseBtn>
                             </div>
                         </form>
                     </div>
@@ -67,104 +66,101 @@
 
 <script>
 
+import { RadioGroup } from '@headlessui/vue';
 import UsuarioController from '../../services/UsuarioController'
 import { appStore } from "@/store/app.js";
 
 const $appStore = appStore();
 
 export default{
-
-    data(){
+    data() {
         return {
             name: "",
             email: "",
             emailExists: false,
             errorEmail: "",
-            selectedRol: "observador"
-
-        }
+            selectedRol: "Observador",
+            emailAnterior: ""
+        };
     },
     props: {
-        show:Boolean,
+        show: Boolean,
         userId: Number
     },
-
-    created(){
-        if(this.userId != 0){
+    created() {
+        if (this.userId != 0) {
             $appStore.setGlobalLoading(true);
             this.getUsuario();
         }
-        
     },
-
     methods: {
-        getUsuario(){
+        getUsuario() {
             UsuarioController.buscarUsuario(this.userId).then((response) => {
                 console.log(response);
-                if(response.status == 200){
+                if (response.status == 200) {
                     const data = response.data;
                     this.name = data.name;
                     this.email = data.email;
                     this.selectedRol = data.rol;
+                    this.emailAnterior = data.email;
                 }
                 $appStore.setGlobalLoading(false);
-            })
+            });
         },
-
-        guardarUsuario(){
-            if (!this.emailExists){
+        guardarUsuario() {
+            if (!this.emailExists) {
                 $appStore.setGlobalLoading(true);
-                if(this.userId != 0){
+                if (this.userId != 0) {
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
                         console.log(response);
-                        if(response.status == 200){
-                            this.resetForm();
-                            this.$emit('onConfirm', this.userId);
-                        }
-                    });
-                }else{
-                    UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
-                        console.log(response);
-                        if(response.status == 201){
+                        if (response.status == 200) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
                         }
                     });
                 }
-                
-            }else{
+                else {
+                    UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
+                        console.log(response);
+                        if (response.status == 201) {
+                            this.resetForm();
+                            this.$emit('onConfirm', this.userId);
+                        }
+                    });
+                }
+            }
+            else {
                 //mensaje de error 
             }
         },
-
-        resetForm(){
+        resetForm() {
             this.name = "";
             this.email = "";
             this.selectedRol = "observador";
         },
-
-        checkEmail(){
-            if(this.userId == 0){
+        checkEmail() {
+            if (this.email != this.emailAnterior) { //this.userId == 0 || (
                 UsuarioController.checkEmail(this.email).then((response) => {
-                    if(response.status == 200){
+                    if (response.status == 200) {
                         this.emailExists = false;
-                    }else{
-                        if(response.data.message == "The email has already been taken."){
-                            this.errorEmail = "El correo electrónico ya está en uso."
-                        }else{
+                    }
+                    else {
+                        if (response.data.message == "The email has already been taken.") {
+                            this.errorEmail = "El correo electrónico ya está en uso.";
+                        }
+                        else {
                             this.errorEmail = "Ingrese un correo electrónico válido";
                         }
                         this.emailExists = true;
                     }
                 })
-                .catch((error) => {
+                    .catch((error) => {
                     this.emailExists = true;
                 });
             }
         }
-    }
-
-
+    },
+    components: { RadioGroup }
 }
 
 

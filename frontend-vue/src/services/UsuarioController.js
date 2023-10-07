@@ -36,7 +36,7 @@ export default{
             email: email
         }
         return axios.post('checkEmail', body);
-    }
+    },
 
 
 }

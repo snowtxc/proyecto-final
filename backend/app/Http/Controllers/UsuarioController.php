@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+
 
 class UsuarioController extends Controller
 {
@@ -19,7 +24,7 @@ class UsuarioController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(JwtMiddleware::class, ['except' => ['login']]);
+        $this->middleware(JwtMiddleware::class, ['except' => ['login', 'setPassword']]);
     }
 
     /**
@@ -119,12 +124,30 @@ class UsuarioController extends Controller
 
     public function nuevo(Request $request)
     {
+        $password = Str::random(8);
+
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->rol = $request->rol;
-        //$user->password = bcrypt($request->password);
+        $user->password = bcrypt($password);
         $user->save();
+
+        // Generar un token de restablecimiento de contraseña
+        $token = Str::random(64);
+
+        // Almacenar el token en la tabla password_resets
+        DB::table('password_resets')->insert([
+            'email' => $user->email,
+            'token' => $token,
+            'created_at' => now(),
+        ]);
+
+        // Enviar el correo electrónico al usuario
+        Mail::send('emails.reset_password', [ 'token' => $token, 'name' => $request->name ], function ($message) use ($user) {
+            $message->to($user->email);
+            $message->subject('Restablecimiento de contraseña');
+        });
 
         return $user;
     }
@@ -169,6 +192,32 @@ class UsuarioController extends Controller
         ]);
     
         return response()->json(['message' => 'El correo electrónico está disponible']);
+    }
+
+    public function setPassword(Request $request)
+    {
+        if(!isset($request->token)){
+            return response()->json(['message' => 'Falta token'], 400);
+        }
+        
+        $reset = DB::table('password_resets')->where('token', $request->token)->first();
+
+        if (!$reset) {
+            return response()->json(['message' => 'Token inválido'], 400);
+        }
+
+        $user = User::where('email', $reset->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        DB::table('password_resets')->where('email', $user->email)->delete();
+
+        return response()->json(['message' => 'Contraseña actualizada con éxito']);
     }
 
 

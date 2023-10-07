@@ -3,6 +3,7 @@ import NotFound from '../views/NotFound.vue'
 import store from '../store'
 import SignIn from '../views/sessions/SignIn.vue'
 import SignUp from '../views/sessions/SignUp.vue';
+import ResetPassword from '../views/sessions/ResetPassword.vue'
 
 
 const routes = [
@@ -92,8 +93,15 @@ const routes = [
                 path: '/procesos', 
                 name: 'ListaProcesos',
                 component: ()=> import("../views/procesos/ListadoProcesos.vue"),
-            }
+            },
+
         ],
+    },
+
+    {
+        path: '/reset-password/:token',
+        name: 'reset-password',
+        component: ResetPassword
     },
 
     { path: '/signIn', name: 'SignIn', component: SignIn },

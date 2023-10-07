@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('componentes', function (Blueprint $table) {
-        //   $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('imagen')->default('');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('componentes', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('imagen'); 
         });
     }
 };
