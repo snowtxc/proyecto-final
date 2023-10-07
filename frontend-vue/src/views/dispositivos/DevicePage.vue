@@ -1,6 +1,6 @@
 <template>
     <BaseCard>
-        <Breadcrumbs parentTitle="Nuevo Dispositivo" />
+        <Breadcrumbs :parentTitle="title" />
         <div class="grid grid-cols-12 w-full gap-2 mb-5">
             <div class="col-span-5">
                 <div class="flex gap-5">
@@ -210,15 +210,26 @@
                         <div
                             v-for="image in images"
                             :key="image.index"
-                            @click="onSelectImage(image.index)"
                             class="col-span-4  h-48 flex justify-center items-center bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 hover:brightness-75"
                         >
-                            <img
+                            <button
+                                class="absolute top-2 left-2 text-red-500 cursor-pointer"
+                                @click="onDeleteImage(image)"
+                                v-if="image.src"
+                            >
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+
+                                
+                            <div  @click="onSelectImage(image.index)">
+                                <img
                                 v-if="image.src"
                                 class="w-full h-auto"
                                 :src="image.src"
-                            />
-                            <i class="fa-solid fa-image" v-else></i>
+                                />
+                                <i class="fa-solid fa-image" v-else></i>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -232,9 +243,11 @@
             </div>
         </div>
         <div class="flex justify-end mt-5">
-            <BaseBtn @click="onSubmit">CONFIRMAR </BaseBtn>
+            <BaseBtn @click="onSubmit"> {{ action == Action.CREAR ? 'CREAR' : 'EDITAR'}}  </BaseBtn>
         </div>
     </BaseCard>
+
+    <ConfirmationModal :show="showModalDelete" message="Seguro deseas eliminar este componente?" title="Eliminar Componente" @cancel="showModalDelete = false;" @confirm="submitDeleteImage"></ConfirmationModal>
 </template>
 
 <script setup>
@@ -251,8 +264,12 @@ import TipoComponenteController from '@/services/TipoComponenteController.js'
 import ComponenteController from '@/services/ComponenteController.js'
 
 import { useNotification } from '@kyvg/vue3-notification'
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
+
+import ConfirmationModal from '../../components/ConfirmationModal.vue'
 const { notify } = useNotification()
+
+import { Action } from '../../shared/enums/Action'
 
 const $route = useRoute();
 
@@ -276,6 +293,7 @@ const inputFile = ref(null)
 const indexImageSelected = ref(null)
 const submit = ref(false)
 const tipoComponenteSelected = ref(null);
+const imageSelected = ref(null);
 
 
 const dataDevice = ref({
@@ -290,44 +308,58 @@ const dataDevice = ref({
 const procesos = ref([])
 const etapas = ref([])
 const tiposComponentes = ref([])
-const loadingEtapas = ref(false)
+const loadingEtapas = ref(false);
+const action =  ref(null);
+const title = ref("");
+const showModalDelete = ref(false);
+
 
 const $v = useVuelidate(rules, dataDevice)
 
 const images = ref([
     {
+        id: null,
         index: 0,
         file: null,
         src: null,
     },
     {
+        id: null,
         index: 1,
         file: null,
         src: null,
     },
     {
+        id: null,
         index: 2,
         file: null,
         src: null,
     },
     {
+        id: null,
         index: 3,
         file: null,
         src: null,
     },
     {
+        id: null,
         index: 4,
         file: null,
         src: null,
     },
     {
+        id: null,
         index: 5,
         file: null,
         src: null,
     },
 ])
 
+
+
 onBeforeMount(async () => {
+    $route.name == 'editarDispositivo' ? action.value = Action.EDITAR : action.value = Action.CREAR;
+
     $appStore.setGlobalLoading(true)
     const [procesosData, tiposComponentesData] = await Promise.all([
         ProcesoController.getAll(),
@@ -340,15 +372,18 @@ onBeforeMount(async () => {
         const { id } = $route.params;
         const componenteData = await ComponenteController.getById(id);
         const { imagenes } = componenteData;
-        console.log(imagenes);
         loadImages(imagenes);
         dataDevice.value = componenteData;
         tipoComponenteSelected.value = tiposComponentes.value.find((tipoComponente) => tipoComponente.id == componenteData.tipo_componente_id);
         dataDevice.value.procesoId = componenteData.proceso_id;
         loadEtapasByProceso(componenteData.proceso_id);
         $appStore.setGlobalLoading(false);
+        title.value = `Editar Componente "${componenteData.Nombre}"`;
+
     }else{
         $appStore.setGlobalLoading(false);
+        title.value = `Nuevo Componente`;
+
     }
 })
 
@@ -358,20 +393,42 @@ const onSelectImage = (index) => {
 }
 
 const loadImages = (imagenes) =>{
-    imagenes.map((path ,index) => {
-        images.value[index].src = path;
+    imagenes.map((image ,index) => {
+        images.value[index].src = image.Path;
+        images.value[index].id = image.id;
     });
+    
 }
 
-const onFileSelected = ($event) => {
-    const file = $event.target.files[0]
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
+const uploadImage  = async(file)=>{
+    $appStore.setGlobalLoading(true);
+    const componenteID =  dataDevice.value.id;
+    const body = new FormData();
+    body.append('Imagen', file);
+    const  newImage  = await ComponenteController.addImage(componenteID, body);
+    $appStore.setGlobalLoading(false);
+    return newImage;
+}
 
-    images.value[indexImageSelected.value].file = file
-    reader.onload = () => {
-        images.value[indexImageSelected.value].src = reader.result
+const onFileSelected = async($event) => {
+    const file = $event.target.files[0];
+    if(action.value == Action.EDITAR){
+        const image =  await uploadImage(file);
+        images.value[indexImageSelected.value].file = file;
+        images.value[indexImageSelected.value].src = image.Path;
+        images.value[indexImageSelected.value].id = image.id;
+
+        console.log(images.value[indexImageSelected.value]);
+    }else{
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+
+        images.value[indexImageSelected.value].file = file
+        reader.onload = () => {
+            images.value[indexImageSelected.value].src = reader.result
+        }
     }
+    
 }
 
 const resetForm = () => {
@@ -381,43 +438,47 @@ const resetForm = () => {
     dataDevice.value.Descripcion = ''
     dataDevice.value.procesoId = null
     dataDevice.value.etapa_id = null
-    dataDevice.value.tipo_componente_id = null
+    dataDevice.value.tipo_componente_id = null;
 }
+
 
 const onSubmit = async () => {
     submit.value = true
     if ($v.value.$invalid) {
         return
     }
+    submit.value = false;
+    $appStore.setGlobalLoading(true);
 
-    submit.value = false
-
-    $appStore.setGlobalLoading(true)
-
-    const { etapa_id, Nombre, DireccionIp, Descripcion } = dataDevice.value;
-
+    const { etapa_id, Nombre, DireccionIp, Descripcion,tipo_componente_id } = dataDevice.value;
     const formData = new FormData();
     formData.append('etapa_id', etapa_id);
     formData.append('Nombre', Nombre);
     formData.append('DireccionIp', DireccionIp);
     formData.append('Descripcion', Descripcion);
-    formData.append('tipo_componente_id', dataDevice.value.tipo_componente_id);
+    formData.append('tipo_componente_id', tipo_componente_id);
     formData.append('Unidad', "Celsius");
+    if(action.value == Action.CREAR){
+        const imagenes =  images.value.filter((image) => image.file !== null);
+        imagenes.map((image) => formData.append('imagenes[]', image.file));
+    }
 
-
-    const imagenes =  images.value.filter((image) => image.file !== null);
-    imagenes.map((image) => formData.append('imagenes[]', image.file));
 
     try {
-        const componentCreated = await ComponenteController.create(formData);
+        const componente = action.value == Action.CREAR ? await ComponenteController.create(formData) : await ComponenteController.edit(dataDevice.value.id,formData);
         notify({
-            title: 'Dispositivo creado',
-            text: 'El dispositivo se ha creado correctamente',
+            title: action.value == Action.CREAR  ? 'Componente creado' : 'Dispositivo editado',
+            text:  action.value == Action.CREAR ? 'El componente se ha creado correctamente' : 'El componente se ha editado correctamente',
             type: 'success',
         })
+
+        action.value == Action.EDITAR ? changeTitulo(`Editar Componente "${componente.Nombre}"`) : null;
         $appStore.setGlobalLoading(false)
-        resetForm();
-        clearImages();
+        if(action.value == Action.CREAR){
+            resetForm();
+            clearImages();
+        }
+        
     } catch (e) {
         $appStore.setGlobalLoading(false)
         notify({
@@ -438,7 +499,7 @@ const loadEtapasByProceso = (idProceso) => {
 
 const onChangeProceso = ($event) => {
     const id = $event.target.value
-    dataDevice.value.etapaId = null
+    dataDevice.value.etapa_id = null;
     loadEtapasByProceso(id)
 }
 
@@ -454,4 +515,51 @@ const clearImages = ()=>{
         src: null
     }))
 }
+
+const onDeleteImage = (image)=>{
+    imageSelected.value = image;
+    showModalDelete.value = true;
+}
+
+const submitDeleteImage = async()=>{           
+    showModalDelete.value = false;
+    if(imageSelected.value){
+        const componenteID = dataDevice.value.id;
+        const imageID = imageSelected.value.id;
+        if(!imageID){
+            images.value[imageSelected.value.index].file = null;
+            images.value[imageSelected.value.index].src = null;
+            images.value[imageSelected.value.index].id = null;
+            imageSelected.value = null;
+            return;
+        }
+        $appStore.setGlobalLoading(true);
+        try{
+            const imageDeleted = await ComponenteController.deleteImage(componenteID,imageID)
+            images.value[imageSelected.value.index].file = null;
+            images.value[imageSelected.value.index].src = null;
+            images.value[imageSelected.value.index].id = null;
+            imageSelected.value = null;
+            $appStore.setGlobalLoading(false);
+            notify({
+                title: 'Imagen removida',
+                text: `La imagen ha sido removida correctamente`,
+                type: 'success'
+            })
+        }catch(e){
+            notify({
+                title: 'Error',
+                text: `Ocurrio un error al remover la imagen`,
+                type: 'error'
+            })
+            $appStore.setGlobalLoading(false);
+        }
+        
+    }
+}
+
+const changeTitulo = (value)=>{
+    title.value = value;
+}
+
 </script>

@@ -63,4 +63,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function notas(){
+        return $this->hasMany(ParteNotas::class);
+    }
+
+
 }

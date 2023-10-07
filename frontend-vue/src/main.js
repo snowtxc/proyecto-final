@@ -28,7 +28,7 @@ const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 
 
-
+ 
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
     .component('BaseCard', BaseCard)
