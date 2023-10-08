@@ -31,7 +31,6 @@ class ParteController extends Controller
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
-            'Descripcion' => '',
             "componente_id"  => 'required|numeric',
         ]);
 

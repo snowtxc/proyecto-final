@@ -3,8 +3,8 @@
     <button
         @click="openModal"
         class="flex justify-center items-center px-4 py-2 bg-primary text-white rounded">
-            <i class="fas fa-eye mr-2"></i>
-    </button>
+        <i class="fa-solid fa-note-sticky"></i>
+        </button>
 
 
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
@@ -14,27 +14,21 @@
       <div class="modal-content py-4 text-left px-6">
       
         <div class="flex flex-col">
-            <div class="flex justify-between items-center">
-                <Breadcrumb parentTitle='Informacion de la parte' />
+            <div class="flex justify-end items-center">
                 <button class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="show = false">  
                     <i class="fas fa-times"></i>
                 </button>
             </div>
+        
             
-
-            <div class="font-bold text-xl mb-2">{{ props.parteNombre }}</div>
-                <p class="text-gray-700 text-base">
-                    {{ props.parteDescripcion }}
-                </p>
-            
-            <div class="px-5 py-5 mt-5 shadow-md">
+            <div class="px-5 py-5 mt-5 ">
                 <div class="flex justify-center" v-if="loading">
                     <spinner :show="true" :width="12" height="12" ></spinner>
 
                 </div>
                 <div class="w-full" v-else>
                     <div class="flex justify-between items-center">
-                    <Breadcrumb parentTitle='Notas asociadas' />
+                    <Breadcrumb :parentTitle="title"/>
                     <BaseBtn @click="showModalFormNota = true">
                             Agregar nota
                             <i class="fa-solid fa-plus ml-2"></i>
@@ -123,8 +117,6 @@
 
     const props = defineProps({ 
         parteNombre : { required: true, type: String},
-        parteFechaCreacion:   { required: true, type: String},
-        parteDescripcion: { required: true, type: String},
         componenteId: { required: true, type: Number},
         parteId: {  required: true, type: Number},
     });
@@ -147,6 +139,7 @@
         page.value = 1;
         loading.value = true;
         hasMoreData.value = true;
+        console.log("hola")
         getNotas().then(()=>{
             loading.value = false;
         })
@@ -160,6 +153,10 @@
         Descripcion: { required , minLength: minLength(10)}
     }
 
+    const title =  computed(()=>{
+        return  `Notas asociadas a la parte "${props.parteNombre}""`;  
+    })
+
     const $v = useVuelidate(rules,formNewPart);
 
 
@@ -170,7 +167,8 @@
             const {data, countRows} = await ParteController.getNotas(COMPONENTE_ID, PARTE_ID,page.value);
             
             notasArr.value = [...notasArr.value, ...data];
-            if(notasArr.value.length >= countRows){
+            console.log(notasArr.value)
+            if(notasArr.value.length >= countRows || notasArr.value.length == 0){
                 hasMoreData.value = false;
             }
         }catch(e){
@@ -219,7 +217,7 @@
             const { created_at , ...data} = nota;
             return {
                 ...data,
-                Fecha: dayjs(created_at).format('DD/MM/YYYY HH:MM')
+                Fecha: dayjs(created_at).format('DD/MM/YYYY HH:mm A')
             }
         })
     })

@@ -114,8 +114,10 @@
                                                         No existe ninguna parte asociada al componente
                                                     </p>
                                      </div>
-                                    <table v-else
-                                        class="table-3 dataTable-table max-w-full w-full"
+
+                                     <div class="max-h-[50vh] overflow-y-auto" v-else>
+                                        <table 
+                                        class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto"
                                     >
                                         <thead>
                                             <tr class="">
@@ -129,18 +131,13 @@
                                                 >
                                                     Nombre de la parte
                                                 </th>
-                                                <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                >
-                                                    Descripcion
-                                                </th>
-
+                                               
                                                 
 
                                                 <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
+                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold "
                                                 >
-                                                    Acciones
+                                                  Acciones
                                                 </th>
                                             </tr>
                                         </thead>
@@ -159,16 +156,14 @@
                                                    {{  parte.Nombre }}
                                                 </td>
                                                 
-                                                <td class="py-5">
-                                                   {{  parte.Descripcion }}
-                                                </td>
+                                               
 
                                               
 
                                                 <td class="py-5">
-                                                    <div class="flex gap-2">
-                                                        <ModalPartInfo  :parteNombre="parte.Nombre" :parteDescripcion="parte.Descripcion"  :componenteId="props.deviceInfo.id" :parteId="parte.id"></ModalPartInfo>
- 
+                                                    <div class="flex  gap-2">
+                                                        
+                                                        <ModalPartNotas  :parteNombre="parte.Nombre" :componenteId="props.deviceInfo.id" :parteId="parte.id"></ModalPartNotas>
                                                         <button
                                                             @click="editPart(parte)"
                                                             class="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded"
@@ -191,6 +186,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    </div>
+                                    
                                 </div>
                                 
                             </div>
@@ -220,7 +217,7 @@ import ParteController from "../../services/ParteController";
 
 
 import ModalPartForm from '../Modals/ModalPartForm.vue';
-import ModalPartInfo from '../Modals/ModalPartInfo.vue';
+import ModalPartNotas from '../Modals/ModalPartNotas.vue';
 
 
 import ConfirmationModal from '../ConfirmationModal.vue';

@@ -48,7 +48,7 @@ Route::prefix('api')->group(function () {
         Route::post('/auth/refresh','refresh');
         Route::get('/auth/isLogged','isLogged');
         Route::post("/auth/me", 'me');
-       // Route::get('/usuarios',  "getUsers");
+        Route::post("/auth/changeMeProfileImage", 'changeMeProfileImage');
         Route::get('/usuarios', 'index');
         Route::post('/usuarios', 'nuevo');
         Route::get('/usuarios/{id}', 'buscar');

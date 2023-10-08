@@ -38,5 +38,12 @@ export default{
         return axios.post('checkEmail', body);
     },
 
+    async changeMeProfileImage(body){
+        
+        const response  = await  axios.post('auth/changeMeProfileImage', body);
+        const { data } =  response;
+        return data;
+    }
+
 
 }

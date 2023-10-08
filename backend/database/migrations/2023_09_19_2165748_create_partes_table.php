@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('partes', function (Blueprint $table) {
             $table->id();
             $table->string("Nombre");
-            $table->string("Descripcion");
             $table->unsignedBigInteger('componente_id');
             $table->foreign('componente_id')->references('id')->on('componentes');
             $table->timestamps();

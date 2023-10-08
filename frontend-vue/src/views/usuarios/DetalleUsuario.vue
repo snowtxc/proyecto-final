@@ -31,14 +31,7 @@
                             <div class="mb-3">
                                 <label class="text-base text-gray" for="">Rol</label>
                             </div>
-                            <!--div class="mb-3">
-                                <select v-model="selectedRol" id="rol" name="rol" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full">
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Operador">Operador</option>
-                                    <option value="Observador">Observador</option>
-                                </select>
-                            </div-->
-
+                        
                             <div class="mb-3">
                                 <input type="radio" v-model="selectedRol" id="observador" name="rol" value="Observador" class="ml-4 mr-1 px-4 py-1 border border-gray focus:outline-none rounded-full">
                                 <label for="observador">Observador</label>
@@ -66,7 +59,6 @@
 
 <script>
 
-import { RadioGroup } from '@headlessui/vue';
 import UsuarioController from '../../services/UsuarioController'
 import { appStore } from "@/store/app.js";
 
@@ -96,7 +88,6 @@ export default{
     methods: {
         getUsuario() {
             UsuarioController.buscarUsuario(this.userId).then((response) => {
-                console.log(response);
                 if (response.status == 200) {
                     const data = response.data;
                     this.name = data.name;
@@ -112,7 +103,6 @@ export default{
                 $appStore.setGlobalLoading(true);
                 if (this.userId != 0) {
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
-                        console.log(response);
                         if (response.status == 200) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
@@ -121,7 +111,6 @@ export default{
                 }
                 else {
                     UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
-                        console.log(response);
                         if (response.status == 201) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
@@ -160,7 +149,6 @@ export default{
             }
         }
     },
-    components: { RadioGroup }
 }
 
 
