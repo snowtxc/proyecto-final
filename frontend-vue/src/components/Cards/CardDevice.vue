@@ -22,8 +22,8 @@
         nombre: { required: true, type: String },
         value: { required: true, type: Number },
         image: { required: true, type: String },
-        selected: { required: true, type: Boolean},
-        ipAddress: {required: true, type:Boolean}
+        selected: { required: true, type: [Boolean,null]},
+        ipAddress: {required: true, type:String}
     })
 </script>
 

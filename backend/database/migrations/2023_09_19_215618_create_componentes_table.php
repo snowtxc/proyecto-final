@@ -23,7 +23,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_componente_id');
             $table->foreign('tipo_componente_id')->references('id')->on('tipo_componentes');
 
-            $table->unsignedBigInteger('etapa_id');
+            $table->unsignedBigInteger('etapa_id')->nullable();
             $table->foreign('etapa_id')->references('id')->on('etapas');
 
             $table->timestamps();

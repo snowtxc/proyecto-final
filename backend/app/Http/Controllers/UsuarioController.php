@@ -47,7 +47,7 @@ class UsuarioController extends Controller
                 "id" => $userInfo->id,
                 "name" => $userInfo->name,
                 "email" => $userInfo->email,
-                "profileImage" =>   isset($userInfo->profileImage) ?  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($userInfo->profileImage) : null,
+                "profileImage" =>   isset($userInfo->profileImage) ? FileHelper::getRealPath($userInfo->profileImage) : null,
                 "created_at" => $userInfo->created_at,
                 "updated_at" => $userInfo->updated_at,
             );
@@ -139,7 +139,7 @@ class UsuarioController extends Controller
                 "id" => $user->id,
                 "name" => $user->name,
                 "email" => $user->email,
-                "profileImage" =>   isset($user->profileImage) ?  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($user->profileImage) : null,
+                "profileImage" =>   isset($user->profileImage) ?  FileHelper::getRealPath($user->profileImage) : null,
                 "created_at" => $user->created_at,
                 "updated_at" => $user->updated_at,
             );
@@ -262,7 +262,7 @@ class UsuarioController extends Controller
         $user->profileImage = $image;
         $user->save();
 
-        $path =   env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($image);
+        $path =   FileHelper::getRealPath($image);
 
 
         return response()->json($path,200);

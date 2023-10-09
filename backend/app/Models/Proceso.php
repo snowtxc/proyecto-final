@@ -18,4 +18,8 @@ class Proceso extends Model
         return $this->hasMany(Etapa::class);
     }
 
+    public function users(){
+        return $this->belongsToMany(User::class, 'proceso_user');
+    }
+
 }

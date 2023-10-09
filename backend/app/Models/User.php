@@ -68,6 +68,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ParteNotas::class);
     }
 
+    public function procesos(){
+        return $this->belongsToMany(Proceso::class, 'proceso_user');
+    }
+
 
 
 }

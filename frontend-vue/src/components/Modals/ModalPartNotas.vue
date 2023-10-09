@@ -1,10 +1,15 @@
 <template>
-    
-    <button
-        @click="openModal"
-        class="flex justify-center items-center px-4 py-2 bg-primary text-white rounded">
-        <i class="fa-solid fa-note-sticky"></i>
-        </button>
+  
+  <font-awesome-icon
+    :icon="[
+        'far',
+        'sticky-note',
+    ]"
+    class="w-5 h-5 m-4 hover:text-primary"
+    @click="openModal"
+
+/>
+
 
 
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
@@ -48,7 +53,7 @@
                             </p>
                         </div>
                         <div v-else class="w-full flex flex-col gap-3">
-                            <CardParteNota  v-for="nota in notasFormatted" :key="nota.id" :nombreUsuario="nota.user.name" :descripcion="nota.Descripcion" :fecha="nota.Fecha"></CardParteNota>
+                            <CardParteNota  v-for="nota in notasFormatted" :key="nota.id" :nombreUsuario="nota.user.name" :perfilUsuario="nota.user.profileImage" :descripcion="nota.Descripcion" :fecha="nota.Fecha" ></CardParteNota>
                         </div>
                         <div class="w-full flex justify-center mt-2">
                             <infinite-loading
@@ -139,7 +144,6 @@
         page.value = 1;
         loading.value = true;
         hasMoreData.value = true;
-        console.log("hola")
         getNotas().then(()=>{
             loading.value = false;
         })
@@ -167,7 +171,9 @@
             const {data, countRows} = await ParteController.getNotas(COMPONENTE_ID, PARTE_ID,page.value);
             
             notasArr.value = [...notasArr.value, ...data];
-            console.log(notasArr.value)
+
+            console.log(notasArr.value.length)
+            console.log(countRows)
             if(notasArr.value.length >= countRows || notasArr.value.length == 0){
                 hasMoreData.value = false;
             }

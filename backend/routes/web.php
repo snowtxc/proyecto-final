@@ -77,6 +77,12 @@ Route::prefix('api')->group(function () {
         Route::put('/procesos/{id}', 'update');
         Route::delete('/procesos/{id}', 'delete');
         Route::get('/procesos/{id}/etapas', 'getEtapasByProcess');
+        Route::get("/procesos/{id}/usuarios", 'getUsersByProcess');
+        Route::get("/procesos/{id}/usuarios/notInProcess", 'getUsersNotInProcess');
+
+        Route::post("/procesos/{id}/usuarios", 'addUsersToProcess');
+        Route::delete("/procesos/{id}/usuarios/{userId}", 'removeUserFromProcess');
+
 
     });
 
