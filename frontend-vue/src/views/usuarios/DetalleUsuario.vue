@@ -19,25 +19,19 @@
                                 <label class="text-base text-gray" for="">Nombre</label>
                             </div>
                             <div class="mb-3"> 
-                                <input v-model="name" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="text" placeholder="">
+                                <input v-model="name" @input="validateName" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="text" placeholder="">
                             </div>
+                            <span v-if="errorName" class="px-2 py-2 text-red-500 text-xs"> {{ errorName }}</span>
                             <div class="mb-3">
                                 <label class="text-base text-gray" for="">Email</label>
                             </div>
                             <div class="mb-3"> 
-                                <input v-model="email" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="email" placeholder="" @blur="checkEmail" >
+                                <input v-model="email" @input="validateEmail" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="email" placeholder="" @change="checkEmail" :disabled="userId != 0">
                             </div>
-                            <span v-if="emailExists" class="px-2 py-2 text-red-500 text-xs"> {{ this.errorEmail }}</span>
+                            <span v-if="errorEmail" class="px-2 py-2 text-red-500 text-xs"> {{ this.errorEmail }}</span>
                             <div class="mb-3">
                                 <label class="text-base text-gray" for="">Rol</label>
                             </div>
-                            <!--div class="mb-3">
-                                <select v-model="selectedRol" id="rol" name="rol" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full">
-                                    <option value="Administrador">Administrador</option>
-                                    <option value="Operador">Operador</option>
-                                    <option value="Observador">Observador</option>
-                                </select>
-                            </div-->
 
                             <div class="mb-3">
                                 <input type="radio" v-model="selectedRol" id="observador" name="rol" value="Observador" class="ml-4 mr-1 px-4 py-1 border border-gray focus:outline-none rounded-full">
@@ -52,7 +46,7 @@
                         
                         
                             <div class="mb-3">   
-                                <BaseBtn rounded block class="primary text-white px-4 py-2" type="submit">Guardar cambios</BaseBtn>
+                                <BaseBtn :disabled="formInvalid" rounded block class="primary text-white px-4 py-2" type="submit">Guardar cambios</BaseBtn>
                             </div>
                         </form>
                     </div>
@@ -75,12 +69,11 @@ const $appStore = appStore();
 export default{
     data() {
         return {
-            name: "",
-            email: "",
-            emailExists: false,
-            errorEmail: "",
+            name: '',
+            email: '',
+            errorEmail: '',
             selectedRol: "Observador",
-            emailAnterior: ""
+            errorName: ''
         };
     },
     props: {
@@ -102,13 +95,14 @@ export default{
                     this.name = data.name;
                     this.email = data.email;
                     this.selectedRol = data.rol;
-                    this.emailAnterior = data.email;
                 }
                 $appStore.setGlobalLoading(false);
             });
         },
         guardarUsuario() {
-            if (!this.emailExists) {
+            if (this.formInvalid) {
+                return;
+            }
                 $appStore.setGlobalLoading(true);
                 if (this.userId != 0) {
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
@@ -128,38 +122,51 @@ export default{
                         }
                     });
                 }
-            }
-            else {
-                //mensaje de error 
-            }
         },
         resetForm() {
-            this.name = "";
-            this.email = "";
+            this.name = '';
+            this.email = '';
             this.selectedRol = "observador";
         },
-        checkEmail() {
-            if (this.email != this.emailAnterior) { //this.userId == 0 || (
-                UsuarioController.checkEmail(this.email).then((response) => {
-                    if (response.status == 200) {
-                        this.emailExists = false;
-                    }
-                    else {
-                        if (response.data.message == "The email has already been taken.") {
-                            this.errorEmail = "El correo electrónico ya está en uso.";
-                        }
-                        else {
-                            this.errorEmail = "Ingrese un correo electrónico válido";
-                        }
-                        this.emailExists = true;
-                    }
-                })
-                    .catch((error) => {
-                    this.emailExists = true;
-                });
+
+        validateName() {
+            this.errorName = this.name ? '' : 'Por favor ingrese el nombre del usuario';
+        },
+
+        validateEmail() {
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            if (!this.email) {
+                this.errorEmail = 'Por favor ingrese un correo electrónico.';
+                return;
             }
+
+            if (!emailPattern.test(this.email)) {
+                this.errorEmail = 'Por favor ingrese un correo electrónico válido.';
+                return;
+            }
+
+            if (this.userId === 0) {
+                UsuarioController.checkEmail(this.email)
+                    .then((response) => {
+                        if (response.status === 200) {
+                            this.errorEmail = '';
+                        } else {
+                            if (response.data.message === 'The email has already been taken.') {
+                                this.errorEmail = 'El correo electrónico ya está en uso.';
+                            }
+                        }
+                    })
+            }
+        },
+    },
+
+    computed: {
+        formInvalid() {
+            return this.name == '' || this.email == '' || this.errorName != '' || this.errorEmail != '' ;
         }
     },
+    
     components: { RadioGroup }
 }
 
