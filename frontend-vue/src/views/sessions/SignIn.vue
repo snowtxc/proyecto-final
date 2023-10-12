@@ -24,7 +24,7 @@
                           <BaseBtn block class="bg-[#25CEDE] mb-2 text-white  rounded-full" @click="signIn">Iniciar</BaseBtn>
                       </div>
                       <div class="text-center">
-                        <a class="hover:text-[#25CEDE] underline text-gray-600" href="/forgot-password">Forgot Password?</a>
+                        <a class="hover:text-[#25CEDE] underline text-gray-600" href="/forgot-password">Olvidaste tu contraseña?</a>
                       </div>
                     </form>
                 </div>
