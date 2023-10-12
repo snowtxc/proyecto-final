@@ -55,6 +55,7 @@ Route::prefix('api')->group(function () {
         Route::delete('/usuarios/{id}', 'eliminar');
         Route::post('/checkEmail', 'checkEmail');
         Route::post('/setPassword', 'setPassword');
+        Route::post('/forgotPassword', 'forgotPassword');
     });
 
     /*USUARIO ENDPOINTS*/

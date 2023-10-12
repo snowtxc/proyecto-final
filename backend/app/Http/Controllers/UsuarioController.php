@@ -24,7 +24,7 @@ class UsuarioController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(JwtMiddleware::class, ['except' => ['login', 'setPassword']]);
+        $this->middleware(JwtMiddleware::class, ['except' => ['login', 'setPassword', 'forgotPassword']]);
     }
 
     /**
@@ -133,17 +133,17 @@ class UsuarioController extends Controller
         $user->password = bcrypt($password);
         $user->save();
 
-        // Generar un token de restablecimiento de contraseña
+        //token de restablecimiento de contraseña
         $token = Str::random(64);
 
-        // Almacenar el token en la tabla password_resets
+        //Guardar el token en la tabla password_resets
         DB::table('password_resets')->insert([
             'email' => $user->email,
             'token' => $token,
             'created_at' => now(),
         ]);
 
-        // Enviar el correo electrónico al usuario
+        //enviar email
         Mail::send('emails.reset_password', [ 'token' => $token, 'name' => $request->name ], function ($message) use ($user) {
             $message->to($user->email);
             $message->subject('Restablecimiento de contraseña');
@@ -220,5 +220,33 @@ class UsuarioController extends Controller
         return response()->json(['message' => 'Contraseña actualizada con éxito']);
     }
 
+    public function forgotPassword(Request $request)
+    {
+        if(!isset($request->email)){
+            return response()->json(['message' => 'Falta token'], 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user){
+            return response()->json(['message' => 'No se encontró el usuario'], 400);
+        }
+
+        $token = Str::random(64);
+
+        DB::table('password_resets')->insert([
+            'email' => $user->email,
+            'token' => $token,
+            'created_at' => now(),
+        ]);
+
+        Mail::send('emails.reset_password', [ 'token' => $token, 'name' => $request->name ], function ($message) use ($user) {
+            $message->to($user->email);
+            $message->subject('Restablecimiento de contraseña');
+        });
+
+        return response()->json(['message' => 'Se envió un correo para reestablecer su contraseña'], 200);
+
+    }
 
 }
