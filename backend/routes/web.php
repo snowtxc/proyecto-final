@@ -9,6 +9,7 @@ use App\Http\Controllers\ComponenteImagenController;
 use App\Http\Controllers\ParteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TipoComponenteController;
+use App\Http\Controllers\AlarmaController;
 
 
 
@@ -125,6 +126,15 @@ Route::prefix('api')->group(function () {
         Route::post('/componentes/{componenteId}/partes/{id}/notas', 'addNota');
         Route::get('/componentes/{componenteId}/partes/{id}/notas', 'listNotas');
     });
+
+
+
+    /*ALARMA ENDPOINTS*/
+    Route::controller(AlarmaController::class)->group(function () {
+        Route::get('/alarmas', 'list');
+
+    });
+
 
 
 
