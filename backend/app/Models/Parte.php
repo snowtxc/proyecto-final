@@ -12,14 +12,14 @@ class Parte extends Model
     protected $fillable = [
         'Nombre',
         'Descripcion',
-        'Imagen',
         'componente_id'
     ];
-
-
-
     public function  componente()
     {
         return $this->belongsToMany(Componente::class);
+    }
+
+    public function notas(){
+        return $this->hasMany(ParteNotas::class);
     }
 }

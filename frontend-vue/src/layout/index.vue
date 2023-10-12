@@ -26,12 +26,12 @@ onBeforeMount(()=>{
 
 <template>
   <GlobalLoading></GlobalLoading>
-  <div class="app-admin-wrap-layout-2" v-if="!loading">
+  <div class="app-admin-wrap-layout-2  h-screen" v-if="!loading">
     <Header />
     <Sidebar />
     <div :class="store.state.largeSidebar.sidebarToggleProperties.isSideNavOpen === true ? '': 'full'" class="main-content-wrap">
         <main>
-            <div class="main-content-wrap flex flex-col flex-grow print-area pt-10">
+            <div class="main-content-wrap flex flex-col flex-grow print-area pt-32">
                 <div>
                     <router-view />
                 </div>
@@ -44,12 +44,11 @@ onBeforeMount(()=>{
 <style lang="scss" scoped>
     .app-admin-wrap-layout-2 {
         width: 100%;
-        height: 100%;
         .main-content-wrap {
             width: calc(100% - 120px);
+            height: 100%;
             margin-left: 90px;
             // min-height: 100vh;
-            margin-top: 80px;
             transition: all 0.24s ease-in-out;
             .main-content-body{
                 min-height: calc(100vh - 80px);

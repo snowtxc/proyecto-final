@@ -69,17 +69,31 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
 
+                         <router-link
+                            to="/procesos"
+                            tag="li"
+                            class="nav-item"
+                        >
+                            <div class="nav-item-hold">
+                                <i class="fa-solid fa-industry text-3xl"></i>
+                                <p>Procesos</p>
+                            </div>
+                        </router-link>
+
+
                         <router-link
                             to="/dispositivos"
                             tag="li"
                             class="nav-item"
                         >
                             <div class="nav-item-hold">
-                                <i class="i-Bar-Chart text-3xl"></i>
-                                <p>Dispositivo</p>
+                                <i class="fa-solid fa-microchip text-3xl"></i>
+                                <p>Dispositivos</p>
                             </div>
                         </router-link>
 
+                        
+                       
                         <router-link
                             to="/usuarios"
                             tag="li"
@@ -91,16 +105,6 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
 
-                        <router-link
-                            to="/procesos"
-                            tag="li"
-                            class="nav-item"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="i-Find-User text-3xl"></i>
-                                <p>Procesos</p>
-                            </div>
-                        </router-link>
 
                         <!--
                         <router-link

@@ -96,6 +96,17 @@ const routes = [
                 component: ()=> import("../views/procesos/ListadoProcesos.vue"),
             },
 
+            { 
+                path: '/diagrama', 
+                name: 'Diagrama',
+                component: ()=> import("../views/diagrama/Diagrama.vue"),
+            },
+
+            { 
+                path: '/etapas/:procesoId/:etapaId', 
+                name: 'editarEtapa',
+                component: ()=> import("../views/etapas/etapa.vue"),
+            }
         ],
     },
 
