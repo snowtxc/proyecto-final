@@ -48,7 +48,7 @@ Route::prefix('api')->group(function () {
         Route::post('/auth/refresh','refresh');
         Route::get('/auth/isLogged','isLogged');
         Route::post("/auth/me", 'me');
-       // Route::get('/usuarios',  "getUsers");
+        Route::post("/auth/changeMeProfileImage", 'changeMeProfileImage');
         Route::get('/usuarios', 'index');
         Route::post('/usuarios', 'nuevo');
         Route::get('/usuarios/{id}', 'buscar');
@@ -78,6 +78,12 @@ Route::prefix('api')->group(function () {
         Route::put('/procesos/{id}', 'update');
         Route::delete('/procesos/{id}', 'delete');
         Route::get('/procesos/{id}/etapas', 'getEtapasByProcess');
+        Route::get("/procesos/{id}/usuarios", 'getUsersByProcess');
+        Route::get("/procesos/{id}/usuarios/notInProcess", 'getUsersNotInProcess');
+
+        Route::post("/procesos/{id}/usuarios", 'addUsersToProcess');
+        Route::delete("/procesos/{id}/usuarios/{userId}", 'removeUserFromProcess');
+
 
     });
 

@@ -25,8 +25,8 @@
                             <li v-for="(user, index) in usuarios" :key="index" >
                                 <div v-if="user.id != userLogged.id" class="flex flex-col items-center mb-4 md:flex-row">
                                     <img
-                                        class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full"
-                                        :src= "user.imagen ? user.imagen : '/src/assets/images/user.png'"
+                                        class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
+                                        :src= "user.profileImage ? user.profileImage : imageProfileDefault"
                                         alt=""
                                     />
                                     <div class="flex-grow md:text-left">
@@ -150,6 +150,12 @@ export default{
         cancelar(){
             this.userDelete = null;
             this.showConfirmationModal = false;
+        }
+    },
+
+    computed:{
+        imageProfileDefault: ()=>{
+            return $appStore.getImageProfileDefault;
         }
     },
     components:{

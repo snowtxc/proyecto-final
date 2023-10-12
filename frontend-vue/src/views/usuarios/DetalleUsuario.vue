@@ -60,7 +60,6 @@
 
 <script>
 
-import { RadioGroup } from '@headlessui/vue';
 import UsuarioController from '../../services/UsuarioController'
 import { appStore } from "@/store/app.js";
 
@@ -89,7 +88,6 @@ export default{
     methods: {
         getUsuario() {
             UsuarioController.buscarUsuario(this.userId).then((response) => {
-                console.log(response);
                 if (response.status == 200) {
                     const data = response.data;
                     this.name = data.name;
@@ -106,7 +104,6 @@ export default{
                 $appStore.setGlobalLoading(true);
                 if (this.userId != 0) {
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
-                        console.log(response);
                         if (response.status == 200) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
@@ -115,7 +112,6 @@ export default{
                 }
                 else {
                     UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
-                        console.log(response);
                         if (response.status == 201) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);
@@ -168,6 +164,7 @@ export default{
     },
     
     components: { RadioGroup }
+
 }
 
 

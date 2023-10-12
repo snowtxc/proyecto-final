@@ -2,7 +2,7 @@
     <div  @click="emit('onSelect')" class="card flex flex-col  hover:bg-gray-100 dark:text-white group  cursor-pointer" :class="props.selected ? 'bg-[#25CEDE] text-white': 'bg-white'">
     <div class="card-body">
         <div class="flex align-center">
-            <img :src="props.image" alt="Image" class=" w-16 h-16 object-cover" />
+            <img :src="props.image" alt="Image" class=" w-16 h-16 object-fill" />
             <div class="m-auto">
                 <p :class="props.selected  ? 'text-white' : 'text-gray-400'">{{ props.nombre }}</p>
                 <p class="text-xl" :class="props.selected ? 'text-white' : 'text-primary'">{{ props.value }}</p>
@@ -22,8 +22,8 @@
         nombre: { required: true, type: String },
         value: { required: true, type: Number },
         image: { required: true, type: String },
-        selected: { required: true, type: Boolean},
-        ipAddress: {required: true, type:Boolean}
+        selected: { required: true, type: [Boolean,null]},
+        ipAddress: {required: true, type:String}
     })
 </script>
 

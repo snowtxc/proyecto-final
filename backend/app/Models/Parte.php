@@ -11,7 +11,6 @@ class Parte extends Model
 
     protected $fillable = [
         'Nombre',
-        'Descripcion',
         'componente_id'
     ];
     public function  componente()

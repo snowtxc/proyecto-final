@@ -10,6 +10,7 @@ use App\Models\ParteNotas;
 use Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\JwtMiddleware;
+use App\Helpers\FileHelper;
 
 
 
@@ -31,7 +32,6 @@ class ParteController extends Controller
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
-            'Descripcion' => '',
             "componente_id"  => 'required|numeric',
         ]);
 
@@ -53,7 +53,6 @@ class ParteController extends Controller
     public function update(Request $request, $componenteId, $id){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
-            'Descripcion' => 'required',
             "componente_id"  => 'required|numeric',
         ]);
 
@@ -113,14 +112,19 @@ class ParteController extends Controller
             $maxRows = $request->query('maxRows') != null ? $request->query('maxRows') : 5;
             $offset = $page == 1 ? 0 : (($page - 1) * $maxRows);
 
-            $query = ParteNotas::where("parte_id",$parteId)->orderBy('created_at','desc')->offset($offset)->limit($maxRows);
-
-            $notas  = $query->get();
-            $countRows = $query->count();
+            $notas = ParteNotas::where("parte_id",$parteId)->orderBy('created_at','desc')->offset($offset)->limit($maxRows)->get();
+            $countRows = ParteNotas::where("parte_id",$parteId)->orderBy('created_at','desc')->count();
             $result = array();
 
             foreach ($notas as $nota) {
-                $user = $nota->user;
+                $user =[
+                    "id" => $nota->user->id,
+                    "name" => $nota->user->name,
+                    "email" => $nota->user->email,
+                    "profileImage" =>   isset($nota->user->profileImage) ? FileHelper::getRealPath($nota->user->profileImage) : null,
+                    "created_at" => $nota->user->created_at,
+                    "updated_at" => $nota->user->updated_at];
+
                 $data= array_merge($nota->toArray(), ["user" => $user]);
                 array_push($result, $data);
             }
@@ -129,8 +133,8 @@ class ParteController extends Controller
 
 
     public function addNota(Request $request ,$componenteId, $parteId){
-        $user  = Auth::user();
-        $userID = $user->id;
+        $userInfo  = Auth::user();
+        $userID = $userInfo->id;
 
         $validator = Validator::make($request->all(), [
             'Descripcion' => 'required|min:10',
@@ -151,6 +155,15 @@ class ParteController extends Controller
             'Descripcion' => $body['Descripcion'],
             'user_id' => $userID,
         ]);
+
+        $user = [
+            "id" => $userInfo->id,
+            "name" => $userInfo->name,
+            "email" => $userInfo->email,
+            "profileImage" =>   isset($userInfo->profileImage) ?  FileHelper::getRealPath($userInfo->profileImage) : null,
+            "created_at" => $userInfo->created_at,
+            "updated_at" => $userInfo->updated_at
+        ];
         $result = array_merge($notaCreated->toArray(), ["user" => $user]);
         return response()->json( $result, 200);
     }

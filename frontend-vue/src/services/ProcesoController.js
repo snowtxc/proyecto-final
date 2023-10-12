@@ -41,6 +41,41 @@ export default{
          const response  = await axios.get(url);
          const { data } = response;
          return data;
+     },
+
+    async  getUsuariosByProceso(id) {
+        const url = `procesos/${id}/usuarios`;       ;
+        const response =  await  axios.get(url);
+        const {data } = response;
+        return data;
+     },
+
+
+     async addUsersToProcess(idProceso, usersIdArr) {
+        const  body = {
+             usersIdArr
+        }
+        const url = `procesos/${idProceso}/usuarios`;
+        const response =  await  axios.post(url,body);
+        const {data } = response;
+        return data;
+        
+     },
+
+
+     async removeUserFromProcess(idProceso, idUsuario) {
+        const url = `procesos/${idProceso}/usuarios/${idUsuario}`;       ;
+        const response =  await  axios.delete(url);
+        const {data } = response;
+        return data;
+     },
+
+
+     async getUsersNotInProcess(id) {
+        const url = `procesos/${id}/usuarios/notInProcess`;       ;
+        const response =  await  axios.get(url);
+        const {data } = response;
+        return data;
      }
 
 

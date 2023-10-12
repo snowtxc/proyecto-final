@@ -37,6 +37,7 @@
             </Card>
         </div>
         <div class="w-full flex flex-col">
+            
             <div class="ml-5 h-20 border-l-[1px] border-gray-300">
                 <p class="font-bold text-xl ml-5" v-if="dataDescripcion !== ''">
                     Descripcion:
@@ -45,12 +46,15 @@
                     {{ dataDescripcion }}
                 </p>
             </div>
-            <div class="w-full h-full flex ">
+
+            <div class="w-full flex flex-col justify-center h-full">
+                <p v-if="selectedCardIndex === null" class="text-center">Seleccione un proceso para ver su información.</p>
+
+                <div class="w-full h-full flex " v-else>
                 <div
                     class="w-full h-auto max-h-[730px] ml-5 border-l-[1px] border-gray-300 overflow-y-auto flex justify-center">
-                    <p v-if="selectedCardIndex === null">Seleccione un proceso para ver su información.</p>
                     <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
-                    <div v-else-if="selectedCardIndex !== null && listaEtapas.length === 0"
+                    <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                         class="w-full flex flex-col items-center p-5 space-y-5">
                         <Card
                             class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
@@ -90,7 +94,15 @@
                     </div>
 
                 </div>
+                <div class="w-full flex justify-center">
+                    <spinner :show="loadingUsers"></spinner>
+                    <ListUsuarioProcesos  v-if="!loadingUsers"  :procesoId="procesoIdSelected"  :usuarios="usuariosArr" @onRemoveUser="removeUserFromProcess" @onAddUsers="addUsers"></ListUsuarioProcesos>
+    
+                </div>
+                
             </div>
+            </div>
+            
         </div>
         <Modal :show="showModal" @closeModal="showModal = false">
             <div class="flex flex-col items-start mb-8">
@@ -195,6 +207,12 @@ import Modal from '../components/Modals/Modal.vue';
 import spinner from '../components/spinner/spinner.vue';
 import ConfrimModal from '../components/Modals/ConfirmModal.vue';
 import { useRouter } from 'vue-router';
+import { useNotification } from '@kyvg/vue3-notification'
+
+const { notify } = useNotification()
+
+
+import ListUsuarioProcesos from '../../components/List/ListUsuarioProcesos.vue';
 
 const router = useRouter();
 
@@ -210,6 +228,7 @@ const nombre = ref('');
 const descripcion = ref('');
 const etapaId = ref('');
 const procesoId = ref('');
+const procesoIdSelected = ref(null);
 const nombreEtapa = ref('');
 const descripcionEtapa = ref('');
 const dataDescripcion = ref('');
@@ -222,6 +241,9 @@ const listaProcesos = ref([]);
 const listaEtapas = ref([]);
 const listaProcesosBackup = ref([]);
 const searchTerm = ref('');
+
+const usuariosArr = ref([])
+const loadingUsers = ref(false);
 
 const $appstore = appStore();
 
@@ -240,7 +262,9 @@ const filterProcesos = () => {
 const selectCard = (index) => {
     selectedCardIndex.value = index;
     const procesoId = listaProcesos.value[index].id;
+    procesoIdSelected.value = procesoId;
     cargarEtapas(procesoId);
+    loadUsuariosByProceso(procesoId);
 };
 
 const openModalConfirm = (Id) => {
@@ -252,6 +276,20 @@ const openModalProcesosConfirm = (Id) => {
     procesoId.value = Id;
     showModalProcesosConfirm.value = true;
 };
+
+const loadUsuariosByProceso  = async(procesoId)=>{
+    loadingUsers.value = true;
+    try{
+        const usuarios = await ProcesoController.getUsuariosByProceso(procesoId);
+        usuariosArr.value = usuarios;
+        loadingUsers.value = false;
+
+    }catch(e){
+        loadingUsers.value = false;
+        console.log(e);
+    }
+    
+}
 
 const confirmDelete = () => {
     eliminarEtapa(etapaId.value);
@@ -446,6 +484,35 @@ const navigateToEtapas = (etapaId) => {
   router.push({ name: 'editarEtapa', params: { procesoId, etapaId } });
 };
 
+
+const removeUserFromProcess = async(userId) =>{
+    const procesoId = listaProcesos.value[selectedCardIndex.value].id;
+    $appstore.setGlobalLoading(true);
+    try{
+        const  userRemoved  = await  ProcesoController.removeUserFromProcess( procesoId,userId);
+        const index = usuariosArr.value.findIndex(user => user.id === userId);
+        usuariosArr.value.splice(index, 1);
+        $appstore.setGlobalLoading(false);
+        notify({
+            title: 'Success',
+            text: 'Usuario removido del proceso',
+            type: 'success'
+        })
+    }catch(e){
+        $appstore.setGlobalLoading(false);
+        notify({
+            title: 'Error',
+            text: 'No se pudo remover el usuario del proceso',
+            type: 'error'
+        })        
+
+    }
+}
+
+
+const addUsers  = async(users) =>{
+        usuariosArr.value = [...usuariosArr.value, ...users];
+}
 </script>
 
 

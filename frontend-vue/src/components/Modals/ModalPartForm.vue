@@ -7,9 +7,7 @@
                 <input v-model="form.Nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
                 <span v-if="submit && v$.Nombre.$invalid" class="text-red-500 text-xs"> Nombre es requerido</span>
-                <textarea v-model="form.Descripcion"
-                    class="w-full h-24 px-4 py-1 border border-gray focus:outline-none rounded" placeholder="Descripcion" />
-                    <span v-if="submit && v$.Descripcion.$invalid" class="text-red-500 text-xs"> Descripcion es requerido</span>
+                
 
 
             </div>
@@ -45,7 +43,6 @@
     const form = ref({
         id: 0,
         Nombre: '',
-        Descripcion: ''
     });
 
     const submit = ref(false);
@@ -55,7 +52,6 @@
 
     const rules = {
         Nombre: {required},
-        Descripcion: { required }
     }
 
     const v$  = useVuelidate(rules,form);
@@ -64,14 +60,12 @@
         if(props.action == Action.EDITAR && props.partData){
            form.value.id = props.partData.id;
            form.value.Nombre = props.partData.Nombre;
-           form.value.Descripcion =  props.partData.Descripcion;
            partName.value = props.partData.Nombre;  
         }
     })
 
     const clearForm = ()=>{
         form.value.Nombre = '';
-        form.value.Descripcion = '';
         v$.value.$reset();
     }
 

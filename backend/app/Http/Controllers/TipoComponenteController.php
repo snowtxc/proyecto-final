@@ -15,7 +15,7 @@ class TipoComponenteController extends Controller
         $tipos_componentes = TipoComponente::all();
         $result = [];
         foreach($tipos_componentes as $tipo_componente){
-            $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($tipo_componente->Imagen);
+            $pathImage =  FileHelper::getRealPath($tipo_componente->Imagen);
             array_push($result,
                 [
                     "Nombre" => $tipo_componente->Nombre,
