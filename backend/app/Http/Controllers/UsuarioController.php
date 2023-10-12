@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Validator;
+use App\Helpers\FileHelper;
 
 
 class UsuarioController extends Controller
@@ -39,7 +41,17 @@ class UsuarioController extends Controller
         $credentials = $request->only('email', 'password');
 
         if ($token = $this->guard()->attempt($credentials)) {
-            $user = Auth::user();
+            $userInfo = Auth::user();
+
+            $user =  array(
+                "id" => $userInfo->id,
+                "name" => $userInfo->name,
+                "email" => $userInfo->email,
+                "profileImage" =>   isset($userInfo->profileImage) ? FileHelper::getRealPath($userInfo->profileImage) : null,
+                "created_at" => $userInfo->created_at,
+                "updated_at" => $userInfo->updated_at,
+            );
+
             return compact('user', 'token');
         }
 
@@ -104,6 +116,7 @@ class UsuarioController extends Controller
     public function getUsers()
     {
         $users = User::all();
+
         return response()->json(['users' => $users], 200);
     }
 
@@ -119,7 +132,19 @@ class UsuarioController extends Controller
 
     public function index()
     {
-        return User::all();
+        $users = User::all();
+        $result = array();
+        foreach($users as $user){
+            $result[] = array(
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "profileImage" =>   isset($user->profileImage) ?  FileHelper::getRealPath($user->profileImage) : null,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at,
+            );
+        }
+        return $result;
     }
 
     public function nuevo(Request $request)
@@ -199,7 +224,7 @@ class UsuarioController extends Controller
         if(!isset($request->token)){
             return response()->json(['message' => 'Falta token'], 400);
         }
-        
+
         $reset = DB::table('password_resets')->where('token', $request->token)->first();
 
         if (!$reset) {
@@ -218,6 +243,29 @@ class UsuarioController extends Controller
         DB::table('password_resets')->where('email', $user->email)->delete();
 
         return response()->json(['message' => 'Contraseña actualizada con éxito']);
+    }
+
+    function changeMeProfileImage(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'profileImage' => 'required|file'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        $user  = Auth::user();
+        $userID = $user->id;
+        $body = $request->all();
+        if(isset($user->profileImage)){
+            FileHelper::deleteFile($user->profileImage);
+        }
+        $image = FileHelper::uploadFile($body['profileImage'], 'public/profiles',  uniqid().'.jpg');
+        $user->profileImage = $image;
+        $user->save();
+
+        $path =   FileHelper::getRealPath($image);
+
+
+        return response()->json($path,200);
     }
 
 

@@ -20,9 +20,9 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'profileImage',
         'password',
-        'rol',
-        'imagen'
+        'rol'
     ];
 
     /**
@@ -67,6 +67,11 @@ class User extends Authenticatable implements JWTSubject
     public function notas(){
         return $this->hasMany(ParteNotas::class);
     }
+
+    public function procesos(){
+        return $this->belongsToMany(Proceso::class, 'proceso_user');
+    }
+
 
 
 }

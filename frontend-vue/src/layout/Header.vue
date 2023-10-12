@@ -1,13 +1,19 @@
 <script setup>
-import { onMounted, ref, watch, watchEffect } from 'vue'
+import { onMounted, ref, watch, watchEffect ,computed} from 'vue'
 import { Switch } from '@headlessui/vue'
 import HeaderSearch from '../components/HeaderSearch.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useStore } from 'vuex'
 import { appStore } from '../store/app'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import { useNotification } from '@kyvg/vue3-notification'
 
-let store = useStore()
+import UsuarioController from "@/services/UsuarioController.js";
+
+const { notify } = useNotification();
+
+let store = useStore();
+const inputFile = ref(null);
 
 const $appStore = appStore();
 
@@ -31,6 +37,42 @@ const onLogout = ()=>{
 const myProfile = ()=>{
     $router.push({name: 'profile'});   
 }
+
+const changeProfileImage = ()=>{
+        inputFile.value.click();
+}
+
+const onAvatarSelected = async($event)=>{
+    const file = $event.target.files[0];
+    $appStore.setGlobalLoading(true);
+    try{
+        const body = new FormData();
+        body.append('profileImage', file);
+        const newProfileImageUrl =  await UsuarioController.changeMeProfileImage(body);
+        console.log(newProfileImageUrl)
+        $appStore.setProfileImage(newProfileImageUrl);
+        $appStore.setGlobalLoading(false);
+
+    }catch(e){
+        $appStore.setGlobalLoading(false);
+        notify({
+            title: 'Error',
+            text: 'Error al cambiar la imagen de perfil',
+            type: 'error'
+        });
+    }
+    
+    
+}
+
+const userProfileImage = computed(()=>{
+    console.log($appStore.getUserData);
+    return $appStore.getUserData?.profileImage;
+})
+
+const userProfileDefault = computed(()=>{
+    return $appStore.getImageProfileDefault;
+})
 
 
 </script>
@@ -779,7 +821,7 @@ const myProfile = ()=>{
                     >
                         <img
                             class="avatar rounded-full"
-                            src="/images/faces/1.jpg"
+                            :src="userProfileImage ? userProfileImage : userProfileDefault" 
                             alt=""
                         />
                     </MenuButton>
@@ -813,6 +855,22 @@ const myProfile = ()=>{
                                 Mi Perfil
                             </button>
                         </MenuItem>
+
+                        <MenuItem v-slot="{ active }">
+                            <button
+                                @click="changeProfileImage"
+                                :class="[
+                                    active
+                                        ? 'bg-[#25CEDE] text-white'
+                                        : 'text-gray-900',
+                                    'group flex  items-center w-full px-4 py-2 text-sm',
+                                ]"
+                            >
+                                Cambiar foto de perfil
+                            </button>
+                        </MenuItem>
+
+
                         <MenuItem v-slot="{ active }">
                             <button
                                  @click="onLogout"
@@ -829,6 +887,8 @@ const myProfile = ()=>{
                     </div>
                 </MenuItems>
             </Menu>
+
+            <input type="file" class="hidden" ref="inputFile" @change="onAvatarSelected"/>
         </div>
     </div>
 </template>

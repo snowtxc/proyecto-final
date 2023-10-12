@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Componente;
 use App\Models\Etapa;
 use App\Models\ComponenteImagen;
+use App\Models\TipoComponente;
+
 use App\Helpers\FileHelper;
 
 use Validator;
@@ -31,7 +33,7 @@ class ComponenteController extends Controller
         $result = array();
         foreach($componentes as $componente){
             $tipoComponente = $componente->tipoComponente;
-            $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($tipoComponente->Imagen);
+            $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
             array_push($result,
                [
                 "tipoComponenteImage" => $pathImage,
@@ -52,7 +54,6 @@ class ComponenteController extends Controller
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
             'Nombre' => 'required',
-            "etapa_id" => "required|integer",
             "DireccionIp" => "required|Ipv4",
             "Descripcion" => "required",
             "tipo_componente_id" => "required",
@@ -63,9 +64,9 @@ class ComponenteController extends Controller
         }
         $body = $request->all();
 
-        $etapa = Etapa::find($body['etapa_id']);
-        if(!isset($etapa)){
-            return response()->json(['error' => 'Etapa no existe'], 404);
+        $tipoComponente = TipoComponente::find($body['tipo_componente_id']);
+        if(!isset($tipoComponente)){
+            return response()->json(['error' => 'Tipo de Componente no existe'], 404);
         }
         $componente = Componente::create($body);
 
@@ -91,14 +92,13 @@ class ComponenteController extends Controller
             $imagenes = $componente->imagenes;
             $imagenesPath = [];
             foreach($imagenes as $imagen){
-                $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($imagen->Path);
+                $pathImage =  FileHelper::getRealPath($imagen->Path);
                 array_push($imagenesPath,
                     ["id" => $imagen->id,
                     "Path" => $pathImage,
                     "Nombre" => $imagen->Nombre]);
             }
-            $proceso_id = $etapa->proceso_id;
-            $pathImage =  env('APP_URL').":".env("APP_PORT").FileHelper::getRealPath($tipoComponente->Imagen);
+            $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
             return [
                 "tipoComponenteImage" => $pathImage,
                 "tipoComponenteNombre" => $tipoComponente->Nombre,
@@ -107,7 +107,7 @@ class ComponenteController extends Controller
                 "Unidad" => $componente->Unidad,
                 "DireccionIp" => $componente->DireccionIp,
                 "etapa_id" => $componente->etapa_id,
-                "proceso_id" => $etapa->proceso_id,
+                "proceso_id" =>  isset($etapa) ?  $etapa->proceso_id : null,
                 "tipo_componente_id" => $componente->tipo_componente_id,
                 "id" => $componente->id,
                 "imagenes" => $imagenesPath
@@ -168,8 +168,7 @@ class ComponenteController extends Controller
             'Path' => $pathUploaded,
             'Nombre' => $fileName
         ]);
-        $path = FileHelper::getRealPath($imageRow->Path);
-        $fullPath =  env('APP_URL').":".env("APP_PORT").$path;
+        $fullPath = FileHelper::getRealPath($imageRow->Path);
 
         return response()->json(
             ["id"=> $imageRow->id
@@ -206,8 +205,8 @@ class ComponenteController extends Controller
         if(!isset($image)){
             return response()->json(['error' => 'Imagen de Componente no encontrado'], 404);
         }
-        $path = FileHelper::getRealPath($image->Path);
-        $fullPath =  env('APP_URL').":".env("APP_PORT").$path;
+        $fullPath = FileHelper::getRealPath($image->Path);
+
         return response()->json(['path' => $fullPath], 200);
 
     }

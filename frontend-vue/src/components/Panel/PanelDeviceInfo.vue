@@ -4,24 +4,22 @@
             <div class="flex flex-col">
                 <div class="flex justify-end">
                     <div class="flex gap-4">
-                        <button
+                        <font-awesome-icon
+                            :icon="['far', 'pen-to-square']"
+                            class="w-5 h-5 m-4 hover:text-primary"
                             @click="
                                 $router.push({
                                     name: 'editarDispositivo',
                                     params: { id: props.deviceInfo.id },
                                 })
                             "
-                            class="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded"
-                        >
-                            <i class="fas fa-pencil-alt mr-2"></i>
-                        </button>
+                        />
 
-                        <button
-                            class="flex justify-center items-center px-4 py-2 bg-red-500 text-white rounded"
-                            @click="onDelete"
-                        >
-                            <i class="fas fa-trash-alt mr-2"></i>
-                        </button>
+                        <font-awesome-icon
+                            :icon="['far', 'trash-can']"
+                            @click="showModalDeleteComponent = true"
+                            class="w-5 h-5 m-4 hover:text-primary"
+                        />
                     </div>
                 </div>
                 <div class="flex gap-3 mt-3">
@@ -86,14 +84,17 @@
                         <template v-slot:cardHeader>
                             <div class="card-header flex justify-between">
                                 <div class="card-title py-3">Partes</div>
-                                <BaseBtn                     
-                                                        rounded
-                                                        @click="showModalPart = true; actionPart = Action.CREAR"
-                                                        class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center"
-                                                    >
-                                                        Agregar parte
-                                                        <i class="fa-solid fa-plus ml-2"></i>
-                                                    </BaseBtn>
+                                <BaseBtn
+                                    rounded
+                                    @click="
+                                        showModalPart = true,
+                                        actionPart = Action.CREAR
+                                    "
+                                    class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center"
+                                >
+                                    Agregar parte
+                                    <i class="fa-solid fa-plus ml-2"></i>
+                                </BaseBtn>
                             </div>
                         </template>
                         <div
@@ -105,94 +106,110 @@
                                 <div
                                     class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
                                 >
-                                    <div class="flex justify-center w-full" v-if="loadingPartes">
-                                            <spinner :show="true"></spinner>
-                                    </div>
-                                     <div class="w-full flex justify-center"
-                                                v-else-if="!loadingPartes && emptyParts">
-                                                    <p class="text-gray-600">
-                                                        No existe ninguna parte asociada al componente
-                                                    </p>
-                                     </div>
-                                    <table v-else
-                                        class="table-3 dataTable-table max-w-full w-full"
+                                    <div
+                                        class="flex justify-center w-full"
+                                        v-if="loadingPartes"
                                     >
-                                        <thead>
-                                            <tr class="">
-                                                <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
+                                        <spinner :show="true"></spinner>
+                                    </div>
+                                    <div
+                                        class="w-full flex justify-center"
+                                        v-else-if="!loadingPartes && emptyParts"
+                                    >
+                                        <p class="text-gray-600">
+                                            No existe ninguna parte asociada al
+                                            componente
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="max-h-[50vh] overflow-y-auto"
+                                        v-else
+                                    >
+                                        <table
+                                            class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto"
+                                        >
+                                            <thead>
+                                                <tr class="">
+                                                    <th
+                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
+                                                    >
+                                                        Fecha
+                                                    </th>
+                                                    <th
+                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
+                                                    >
+                                                        Nombre de la parte
+                                                    </th>
+
+                                                    <th
+                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
+                                                    >
+                                                        Acciones
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr
+                                                    class="hover:bg-gray-100 cursor-pointer"
+                                                    v-for="parte in partesFormatted"
+                                                    :key="parte.id"
                                                 >
-                                                    Fecha
-                                                </th>
-                                                <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                >
-                                                    Nombre de la parte
-                                                </th>
-                                                <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                >
-                                                    Descripcion
-                                                </th>
+                                                    <td
+                                                        class="text-xs py-5 px-4"
+                                                    >
+                                                        {{ parte.Fecha }}
+                                                    </td>
 
-                                                
+                                                    <td class="text-xs">
+                                                        {{ parte.Nombre }}
+                                                    </td>
 
-                                                <th
-                                                    class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                >
-                                                    Acciones
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                    
-                                        <tbody>
-                                            <tr
-                                                class="hover:bg-gray-100 cursor-pointer"
-                                                v-for="parte in partesFormatted"
-                                                :key="parte.id"
-                                            >
-                                                <td class="text-xs py-5 px-4">
-                                                    {{ parte.Fecha}}
-                                                </td>
+                                                    <td class="py-5">
+                                                        <div class="flex gap-2">
+                                                            <ModalPartNotas
+                                                                :parteNombre="
+                                                                    parte.Nombre
+                                                                "
+                                                                :componenteId="
+                                                                    props
+                                                                        .deviceInfo
+                                                                        .id
+                                                                "
+                                                                :parteId="
+                                                                    parte.id
+                                                                "
+                                                            ></ModalPartNotas>
 
-                                                <td class="text-xs">
-                                                   {{  parte.Nombre }}
-                                                </td>
-                                                
-                                                <td class="py-5">
-                                                   {{  parte.Descripcion }}
-                                                </td>
+                                                            <font-awesome-icon
+                                                                :icon="[
+                                                                    'far',
+                                                                    'pen-to-square',
+                                                                ]"
+                                                                class="w-5 h-5 m-4 hover:text-primary"
+                                                                @click="
+                                                                    editPart(parte)"
+                                                            />
 
-                                              
+                                                            <font-awesome-icon
+                                                                :icon="[
+                                                                    'far',
+                                                                    'trash-can',
+                                                                ]"
+                                                               @click="deletePart(parte)"
+                                                                class="w-5 h-5 m-4 hover:text-primary"
+                                                            />
+                                                           
 
-                                                <td class="py-5">
-                                                    <div class="flex gap-2">
-                                                        <ModalPartInfo  :parteNombre="parte.Nombre" :parteDescripcion="parte.Descripcion"  :componenteId="props.deviceInfo.id" :parteId="parte.id"></ModalPartInfo>
- 
-                                                        <button
-                                                            @click="editPart(parte)"
-                                                            class="flex justify-center items-center px-4 py-2 bg-blue-500 text-white rounded"
-                                                        >
-                                                            <i
-                                                                class="fas fa-pencil-alt mr-2"
-                                                            ></i>
-                                                        </button>
-
-                                                        <button
-                                                            class="flex justify-center items-center px-4 py-2 bg-red-500 text-white rounded"
-                                                            @click="deletePart(parte)"
-                                                        >
-                                                            <i
-                                                                class="fas fa-trash-alt mr-2"
-                                                            ></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                           
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                
                             </div>
                         </div>
                     </BaseCard>
@@ -201,40 +218,52 @@
         </BaseCard>
     </div>
 
-    <ModalPartForm  v-if="showModalPart" @onProcessed="handleParteModal" :action="actionPart" @onClose="showModalPart = false" :componente_id="props.deviceInfo.id" :partData="partSelected"></ModalPartForm>
+    <ModalPartForm
+        v-if="showModalPart"
+        @onProcessed="handleParteModal"
+        :action="actionPart"
+        @onClose="showModalPart = false"
+        :componente_id="props.deviceInfo.id"
+        :partData="partSelected"
+    ></ModalPartForm>
 
-    <ConfirmationModal 
-    v-if="showModalDeletePart && partSelected" 
-    :show="showModalDeletePart" 
-    title="Eliminar parte"
-     message="Seguro deseas eliminar esta parte?"  
-     @cancel="showModalDeletePart = false"
-     @confirm="onConfirmDeletePart"></ConfirmationModal>
+    <ConfirmationModal
+        v-if="showModalDeleteComponent"
+        :show="showModalDeleteComponent"
+        title="Eliminar componente"
+        message="Seguro deseas eliminar este componente?"
+        @cancel="showModalDeleteComponent = false"
+        @confirm="onDelete"
+    ></ConfirmationModal>
 
+    <ConfirmationModal
+        v-if="showModalDeletePart && partSelected"
+        :show="showModalDeletePart"
+        title="Eliminar parte"
+        message="Seguro deseas eliminar esta parte?"
+        @cancel="showModalDeletePart = false"
+        @confirm="onConfirmDeletePart"
+    ></ConfirmationModal>
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits  ,onBeforeMount, computed} from 'vue'
-import ComponenteController from '../../services/ComponenteController';
-import ParteController from "../../services/ParteController";
+import { ref, defineProps, defineEmits, onBeforeMount, computed } from 'vue'
+import ComponenteController from '../../services/ComponenteController'
+import ParteController from '../../services/ParteController'
 
+import ModalPartForm from '../Modals/ModalPartForm.vue'
+import ModalPartNotas from '../Modals/ModalPartNotas.vue'
 
-import ModalPartForm from '../Modals/ModalPartForm.vue';
-import ModalPartInfo from '../Modals/ModalPartInfo.vue';
-
-
-import ConfirmationModal from '../ConfirmationModal.vue';
-import { Action } from '../../shared/enums/Action';
-import { useNotification } from '@kyvg/vue3-notification';
-import spinner from '../../views/components/spinner/spinner.vue';
+import ConfirmationModal from '../ConfirmationModal.vue'
+import { Action } from '../../shared/enums/Action'
+import { useNotification } from '@kyvg/vue3-notification'
+import spinner from '../../views/components/spinner/spinner.vue'
 import * as dayjs from 'dayjs'
-import { appStore } from '../../store/app';
+import { appStore } from '../../store/app'
 
-import  cutString from "../../shared/helpers/cutString";
+import cutString from '../../shared/helpers/cutString'
 
-
-const $appStore = appStore();
-
+const $appStore = appStore()
 
 const props = defineProps({
     deviceInfo: { required: true, type: Object },
@@ -244,14 +273,15 @@ const { notify } = useNotification()
 
 const emit = defineEmits(['onDelete'])
 
-const deleting = ref(false);
+const showModalDeleteComponent = ref(false)
+const deleting = ref(false)
 
-const partes = ref([]);
-const loadingPartes = ref(true);
-const  showModalPart = ref(false);
-const  showModalDeletePart = ref(false);
-const  actionPart = ref('');
-const partSelected = ref(null);
+const partes = ref([])
+const loadingPartes = ref(true)
+const showModalPart = ref(false)
+const showModalDeletePart = ref(false)
+const actionPart = ref('')
+const partSelected = ref(null)
 
 const splineAreaWidgetTwo = ref({
     series: [
@@ -321,21 +351,19 @@ const splineAreaWidgetTwo = ref({
             width: 1,
         },
     },
-});
-
-
-onBeforeMount(()=>{
-     ParteController.list(props.deviceInfo.id).then((partesList) =>{
-          partes.value = partesList;
-          console.log(partes.value)
-          loadingPartes.value = false;
-     });
 })
 
+onBeforeMount(() => {
+    ParteController.list(props.deviceInfo.id).then((partesList) => {
+        partes.value = partesList
+        console.log(partes.value)
+        loadingPartes.value = false
+    })
+})
 
 const onDelete = async () => {
     const ID = props.deviceInfo.id
-    deleting.value = true;
+    deleting.value = true
     try {
         const deviceDeleted = await ComponenteController.delete(ID)
         deleting.value = false
@@ -355,77 +383,78 @@ const onDelete = async () => {
     }
 }
 
-const handleParteModal = (parte)=>{
-    showModalPart.value = false;
-    if(actionPart.value == Action.CREAR){
-        partes.value.unshift(parte);
-        return;
+const handleParteModal = (parte) => {
+    showModalPart.value = false
+    if (actionPart.value == Action.CREAR) {
+        partes.value.unshift(parte)
+        return
     }
-    const index = partes.value.findIndex(part => part.id == parte.id);
-    partes.value[index] = parte;
-
-
+    const index = partes.value.findIndex((part) => part.id == parte.id)
+    partes.value[index] = parte
 }
-const editPart = (parte) =>{
-  actionPart.value = Action.EDITAR;
-  partSelected.value = parte;
+const editPart = (parte) => {
+    actionPart.value = Action.EDITAR
+    partSelected.value = parte
 
-  showModalPart.value = true;
+    showModalPart.value = true
 }
 
-const deletePart = (parte) =>{
-    partSelected.value = { ... parte};
-    showModalDeletePart.value = true;
+const deletePart = (parte) => {
+    partSelected.value = { ...parte }
+    showModalDeletePart.value = true
 }
 
-const onConfirmDeletePart = async()=>{
-    if(!partSelected.value){
-        return;
+const onConfirmDeletePart = async () => {
+    if (!partSelected.value) {
+        return
     }
-    showModalDeletePart.value = false;
+    showModalDeletePart.value = false
 
-    $appStore.setGlobalLoading(true);
+    $appStore.setGlobalLoading(true)
 
-    const COMPONENTE_ID = props.deviceInfo.id;
-    const PARTE_ID = partSelected.value.id;
-    try{
-       const partDeleted = await  ParteController.delete(COMPONENTE_ID,PARTE_ID )
-       const index = partes.value.findIndex(part => part.id == partDeleted.id);
-       partes.value.splice(index,1);
-       notify({
-        title: 'Parte eliminada',
-        text: `La parte ${partDeleted.Nombre} ha sido eliminada`,
-        type: 'success'
-       });
-       $appStore.setGlobalLoading(false);
-
-
-    }catch(e){
+    const COMPONENTE_ID = props.deviceInfo.id
+    const PARTE_ID = partSelected.value.id
+    try {
+        const partDeleted = await ParteController.delete(
+            COMPONENTE_ID,
+            PARTE_ID
+        )
+        const index = partes.value.findIndex(
+            (part) => part.id == partDeleted.id
+        )
+        partes.value.splice(index, 1)
+        notify({
+            title: 'Parte eliminada',
+            text: `La parte ${partDeleted.Nombre} ha sido eliminada`,
+            type: 'success',
+        })
+        $appStore.setGlobalLoading(false)
+    } catch (e) {
         notify({
             title: 'Error',
             text: `Ocurrio un error al eliminar la parte`,
             type: 'error',
         })
-        $appStore.setGlobalLoading(false);
-
+        $appStore.setGlobalLoading(false)
     }
     ParteController.delete
 }
 
-const partesFormatted = computed(()=>{
-    return partes.value.map(parte =>{
-        const { created_at ,Descripcion, ...data} = parte;
+const partesFormatted = computed(() => {
+    return partes.value.map((parte) => {
+        const { created_at, Descripcion, ...data } = parte
 
         return {
             ...data,
-            Fecha: dayjs(created_at).format("DD/MM/YYYY"),
-            Descripcion:  Descripcion ? cutString(Descripcion, 50): 'Sin descripcion'
+            Fecha: dayjs(created_at).format('DD/MM/YYYY'),
+            Descripcion: Descripcion
+                ? cutString(Descripcion, 50)
+                : 'Sin descripcion',
         }
     })
 })
 
-const emptyParts = computed(()=>{
-    return partes.value.length <= 0;
+const emptyParts = computed(() => {
+    return partes.value.length <= 0
 })
-
 </script>

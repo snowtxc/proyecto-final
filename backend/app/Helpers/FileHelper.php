@@ -21,7 +21,7 @@ class FileHelper
     }
 
     public static function getRealPath($path){
-       return Storage::url($path);
+       return env('APP_URL').":".env("APP_PORT").Storage::url($path);
     }
 
 }

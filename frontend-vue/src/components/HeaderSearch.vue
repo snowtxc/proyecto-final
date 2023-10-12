@@ -85,7 +85,7 @@
                 <!-- search list  -->
                 <div v-for="(item, index) in searchList" :key="index" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
                     <div class="flex">
-                        <img class="w-24 object-cover" :src="item.img" alt="" />
+                        <img class="w-24 object-fill" :src="item.img" alt="" />
                     </div>
                     <div class="flex pl-2 flex-1">
                         <div class="flex flex-grow flex-col self-center justify-between lg:items-center lg:flex-row">

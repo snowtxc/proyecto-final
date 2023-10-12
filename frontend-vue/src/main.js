@@ -20,9 +20,9 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-import { faPenToSquare, faRectangleXmark, faTrashCan, faSquarePlus } from '@fortawesome/free-regular-svg-icons'
+import { faPenToSquare, faRectangleXmark, faTrashCan, faSquarePlus, faNoteSticky } from '@fortawesome/free-regular-svg-icons'
 
-library.add(faTrashCan, faPenToSquare, faRectangleXmark, faSquarePlus)
+library.add(faTrashCan, faPenToSquare, faRectangleXmark, faSquarePlus,faNoteSticky)
 const pinia = createPinia();
 
 pinia.use(piniaPluginPersistedstate);
