@@ -21,7 +21,7 @@
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                     <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
 
-                        <ul v-if="usuarios.length > 0">
+                        <ul v-if="usuarios.length > 1">
                             <li v-for="(user, index) in usuarios" :key="index" >
                                 <div v-if="user.id != userLogged.id" class="flex flex-col items-center mb-4 md:flex-row">
                                     <img
@@ -55,7 +55,7 @@
 
 
                         </ul>
-                        <p class="px-4 py-3" v-if="usuarios.length == 0"> No se encontraron usuarios</p>
+                        <p class="px-4 py-3" v-if="usuarios.length <= 1"> No se encontraron usuarios</p>
                     
                     </div>
                     <div class="dataTable-bottom">
@@ -119,7 +119,6 @@ export default{
 
     methods: {
         getUsuarios(){
-            this.usuarios = [];
             UsuarioController.listaUsuarios().then((response) => {
                 if(response.status == 200){
                 this.usuarios = response.data;

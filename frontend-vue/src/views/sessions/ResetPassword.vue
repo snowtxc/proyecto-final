@@ -50,7 +50,7 @@
 import { appStore } from "@/store/app.js";
 import {ref} from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import  PasswordController  from '../../services/PasswordController'
+import  AuthController  from '../../services/AuthController'
 
 const route = useRoute();
 const router = useRouter();
@@ -79,7 +79,7 @@ const confirm = () => {
   if( !error.value ){
     $appStore.setGlobalLoading(true);  
    
-    PasswordController.resetPassword(token, password.value)
+    AuthController.resetPassword(token, password.value)
     .then((response) => {
         console.log(response);
         router.push('/');        
