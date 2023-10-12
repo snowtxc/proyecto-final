@@ -53,4 +53,8 @@ class Componente extends Model
         return $this->hasOne(Nodo::class);
     }
 
+    public function alarmas(){
+        return $this->hasMany(Alarma::class);
+    }
+
 }

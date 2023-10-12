@@ -22,4 +22,9 @@ class Proceso extends Model
         return $this->belongsToMany(User::class, 'proceso_user');
     }
 
+    public function alarmas(){
+        return $this->hasMany(Alarma::class);
+    }
+
+
 }
