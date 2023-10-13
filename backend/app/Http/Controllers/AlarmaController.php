@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Alarma;
+use App\Helpers\FileHelper;
+
 
 
 class AlarmaController extends Controller
@@ -19,8 +21,11 @@ class AlarmaController extends Controller
         $fechaInicio = $request->query('fechaInicio') != null ? $request->query('fechaInicio') : null;
         $fechaFin =  $request->query('fechaFin') != null ? $request->query('fechaFin') : null;
 
-        $countRows = Alarma::when(isset($procesoId), function ($query) use ($procesoId) {
+        $countRows =
+         Alarma::when(isset($procesoId), function ($query) use ($procesoId) {
             $query->where('proceso_id', '=', $procesoId);
+        })::when(isset($componenteId), function ($query) use ($componenteId) {
+            $query->where('componente_id', '=', $componenteId);
         })->count();
 
         $alarmas = Alarma::skip($offset)->take($maxRows)->when(isset($procesoId), function ($query) use ($procesoId) {
@@ -30,12 +35,27 @@ class AlarmaController extends Controller
         $result = array();
         foreach($alarmas as $alarma){
               $componente = $alarma->componente;
-              $tipoComponente = $componente->tipo_componente;
-              return array("data" => $tipoComponente, "countRows" => $countRows);
+              $proceso =  $alarma->proceso;
+              $tipoComponente = $componente->tipoComponente;
+              $imagen = $tipoComponente->Imagen;
+              $urlPath = FileHelper::getRealPath($imagen);
+
+              array_push($result,
+                    [
+                        "id" => $alarma->id,
+                        "componenteNombre" => $componente->Nombre,
+                        "tipoComponente" => $tipoComponente->Nombre,
+                        "procesoNombre" => $proceso->Nombre,
+                        "fechaHora"  => $alarma->created_at,
+                        "tipoComponenteImagen" => $urlPath
+                    ]
+                );
+
 
         }
 
-        return array("data" => $alarmas, "countRows" => $countRows);
+
+        return array("data" => $result, "countRows" => $countRows);
     }
 
 }

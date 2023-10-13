@@ -9,6 +9,13 @@ class Nodo extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'Posicion',
+        'componente_id',
+        'etapa_id'
+    ];
+
+
     public function  componente()
     {
         return $this->hasOne(Componente::class);
