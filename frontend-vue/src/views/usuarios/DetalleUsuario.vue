@@ -50,7 +50,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="dataTable-bottom">
+                    <div class="dataTable-bottom"> 
                     </div>
                 </div>
            
@@ -61,7 +61,7 @@
 <script>
 
 import UsuarioController from '../../services/UsuarioController'
-import { appStore } from "@/store/app.js";
+import { appStore } from "@/store/app.js"; 
 
 const $appStore = appStore();
 
@@ -163,7 +163,6 @@ export default{
         }
     },
     
-    components: { RadioGroup }
 
 }
 

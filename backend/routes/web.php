@@ -10,6 +10,8 @@ use App\Http\Controllers\ParteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TipoComponenteController;
 use App\Http\Controllers\AlarmaController;
+use App\Http\Controllers\NodoController;
+
 
 
 
@@ -137,7 +139,10 @@ Route::prefix('api')->group(function () {
     });
 
 
-
-
+     /*ALARMA ENDPOINTS*/
+     Route::controller(NodoController::class)->group(function () {
+        Route::post('/nodos', 'create');
+        Route::delete('/nodos/{id}', 'delete');
+    });
 
 });
