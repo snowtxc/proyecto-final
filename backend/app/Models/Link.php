@@ -9,6 +9,12 @@ class Link extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'nodo_from_id',
+        'nodo_to_id'
+    ];
+
+
     public function fromNodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_from_id');
