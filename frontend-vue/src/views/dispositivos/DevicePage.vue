@@ -284,6 +284,7 @@ onBeforeMount(async () => {
         ProcesoController.getAll(),
         TipoComponenteController.getAll(),
     ])
+    console.log(tiposComponentesData);
     procesos.value = procesosData
     tiposComponentes.value = tiposComponentesData;
 

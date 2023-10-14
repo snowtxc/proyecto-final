@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string("Posicion");
 
             $table->unsignedBigInteger('etapa_id');
-            $table->foreign('etapa_id')->references('id')->on('etapas');
+            $table->foreign('etapa_id')->references('id')->on('etapas')->onDelete('cascade');
 
             $table->unsignedBigInteger('componente_id');
-            $table->foreign('componente_id')->references('id')->on('componentes');
+            $table->foreign('componente_id')->references('id')->on('componentes')->onDelete('cascade');
 
             $table->timestamps();
         });

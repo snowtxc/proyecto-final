@@ -369,7 +369,7 @@ const onDelete = async () => {
         deleting.value = false
         notify({
             title: 'Dispositivo eliminado',
-            text: `El dispositivo ${deviceDeleted.Nombre} ha sido eliminado`,
+            text: `El dispositivo ha sido eliminado`,
             type: 'success',
         })
         emit('onDelete', ID)

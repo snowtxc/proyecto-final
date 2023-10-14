@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('nodo_from_id');
-            $table->foreign('nodo_from_id')->references('id')->on('nodos');
+            $table->foreign('nodo_from_id')->references('id')->on('nodos')->onDelete('cascade');;
 
             $table->unsignedBigInteger('nodo_to_id');
-            $table->foreign('nodo_to_id')->references('id')->on('nodos');
+            $table->foreign('nodo_to_id')->references('id')->on('nodos')->onDelete('cascade');;
 
             $table->timestamps();
         });
