@@ -11,6 +11,10 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\TipoComponenteController;
 use App\Http\Controllers\AlarmaController;
 use App\Http\Controllers\NodoController;
+use App\Http\Controllers\LinkController;
+
+
+use App\Events\Hello;
 
 
 
@@ -143,6 +147,20 @@ Route::prefix('api')->group(function () {
      Route::controller(NodoController::class)->group(function () {
         Route::post('/nodos', 'create');
         Route::delete('/nodos/{id}', 'delete');
+        Route::put('/nodos/{id}/updatePosition', 'updateNodePosition');
+    });
+
+     /*ALARMA ENDPOINTS*/
+     Route::controller(LinkController::class)->group(function () {
+        Route::post('/links', 'create');
+        Route::delete('/links/{id}', 'delete');
+
+
+    });
+
+
+    Route::get('/broadcast', function(Request $request){
+        broadcast(new Hello());
     });
 
 });

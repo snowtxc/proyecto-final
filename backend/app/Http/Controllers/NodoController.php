@@ -8,6 +8,13 @@ use Validator;
 use App\Models\Nodo;
 use App\Models\Componente;
 use App\Models\Etapa;
+
+
+//events
+use App\Events\NodePositionUpdated;
+
+
+
 class NodoController extends Controller
 {
 
@@ -40,9 +47,6 @@ class NodoController extends Controller
         $nodoCreated = Nodo::create($request->all());
 
         return response()->json($nodoCreated, 200);
-
-
-
     }
 
 
@@ -54,6 +58,35 @@ class NodoController extends Controller
         $nodo->delete();
         return response()->json(['message' => 'Nodo eliminado'], 200);
     }
+
+
+    public function updateNodePosition(Request $request, $id){
+        $validator = Validator::make($request->all(), [
+            'NewPosition' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $nodo = Nodo::find($id);
+        if(!isset($nodo)){
+            return response()->json(['error' => 'Nodo no encontrado'], 404);
+        }
+
+        $body = $request->all();
+        $newPosition = $body = ['NewPosition'];
+
+        $etapa  = $nodo->etapa;
+        $etapaId = $nodo->etapa_id;
+        $procesoId = $etapa->proceso_id;
+        $nodo->Posicion = $newPosition;
+        $nodo->save();
+
+        broadcast(new NodePositionUpdated($nodo->id, $newPosition, $procesoId,$etapaId));
+
+    }
+
 
 
 }
