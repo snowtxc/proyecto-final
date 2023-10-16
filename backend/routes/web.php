@@ -120,7 +120,7 @@ Route::prefix('api')->group(function () {
         Route::get('/componentes/{componenteId}/imagenes/{imageId}', 'getImage');
         Route::post('/componentes/{id}/imagenes', 'addImageById');
         Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
-
+        Route::get('/componentes-sin-nodo', 'listarDispositivosSinNodo');
     });
 
     /*PARTE ENDPOINTS*/
@@ -139,25 +139,24 @@ Route::prefix('api')->group(function () {
     /*ALARMA ENDPOINTS*/
     Route::controller(AlarmaController::class)->group(function () {
         Route::get('/alarmas', 'list');
-
     });
-
 
      /*ALARMA ENDPOINTS*/
      Route::controller(NodoController::class)->group(function () {
         Route::post('/nodos', 'create');
         Route::delete('/nodos/{id}', 'delete');
         Route::put('/nodos/{id}/updatePosition', 'updateNodePosition');
+        Route::delete('/nodosByComponente/{id}', 'deleteByComponentId');
+        Route::get('/nodos/{etapaId}', 'list');
     });
 
      /*ALARMA ENDPOINTS*/
      Route::controller(LinkController::class)->group(function () {
         Route::post('/links', 'create');
         Route::delete('/links/{id}', 'delete');
-
+        Route::get('/links/{etapaId}', 'list');
 
     });
-
 
     Route::get('/broadcast', function(Request $request){
         broadcast(new Hello());

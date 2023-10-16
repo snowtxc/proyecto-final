@@ -211,6 +211,12 @@ class ComponenteController extends Controller
 
     }
 
+    public function listarDispositivosSinNodo()
+    {
+        $dispositivosSinNodo = Componente::doesntHave('nodo')->get();
+
+        return response()->json($dispositivosSinNodo);
+    }
 
 
 }

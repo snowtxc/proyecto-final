@@ -44,6 +44,12 @@ class LinkController extends Controller
             return response()->json(["message" => "Link no existe"],404);
         }
         $link->delete();
-        return response()->json($link,404);
+        return response()->json(['message' => 'Link(s) eliminado(s)'], 200);
+    }
+
+    public function list($etapaId) {
+        $links = Link::where('etapa_id', $etapaId)->get();
+    
+        return response()->json($links, 200);
     }
 }

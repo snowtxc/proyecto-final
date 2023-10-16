@@ -21,7 +21,7 @@ class NodoController extends Controller
 
     public function create(Request $request){
         $validator = Validator::make($request->all(), [
-            'Posicion' => 'required|numeric',
+            'Posicion' => 'required',
             "componente_id"  => 'required|numeric',
             "etapa_id"  => 'required|numeric'
         ]);
@@ -47,6 +47,7 @@ class NodoController extends Controller
         $nodoCreated = Nodo::create($request->all());
 
         return response()->json($nodoCreated, 200);
+        
     }
 
 
@@ -59,6 +60,19 @@ class NodoController extends Controller
         return response()->json(['message' => 'Nodo eliminado'], 200);
     }
 
+    public function deleteByComponentId($componenteId){
+        $nodos = Nodo::where('componente_id', $componenteId)->get();
+    
+        if($nodos->isEmpty()){
+            return response()->json(['error' => 'Nodo(s) no encontrado(s) para el componente_id especificado'], 404);
+        }
+    
+        foreach ($nodos as $nodo) {
+            $nodo->delete();
+        }
+    
+        return response()->json(['message' => 'Nodo(s) eliminado(s) para el componente_id especificado'], 200);
+    }
 
     public function updateNodePosition(Request $request, $id){
         $validator = Validator::make($request->all(), [
@@ -87,6 +101,10 @@ class NodoController extends Controller
 
     }
 
+    public function list($etapaId) {
+        $nodos = Nodo::where('etapa_id', $etapaId)->get();
+        return response()->json($nodos, 200);
+    }
 
 
 }
