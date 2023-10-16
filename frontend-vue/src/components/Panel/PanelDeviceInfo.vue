@@ -1,6 +1,18 @@
 <template>
     <div class="w-full h-screen">
         <BaseCard>
+            <div class="w-full flex justify-between items-center">
+                <Breadcrumbs :parentTitle="title"></Breadcrumbs>
+
+                <BaseBtn
+                         @click="handleViewHistoricos"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    
+                >
+                    <i class="fas fa-file-excel mr-2"></i> Visualizar Historicos
+                </BaseBtn>
+            </div>
+
             <div class="flex flex-col">
                 <div class="flex justify-end">
                     <div class="flex gap-4">
@@ -23,23 +35,6 @@
                     </div>
                 </div>
                 <div class="flex gap-3 mt-3">
-                    <BaseCard class="overflow-hidden flex-2">
-                        <div class="p-5">
-                            <div class="text-gray-500">
-                                {{ props.deviceInfo.Nombre }}
-                            </div>
-                            <p class="text-primary text-2xl m-0">25 °C</p>
-                        </div>
-                        <div id="basicArea-chart">
-                            <apexchart
-                                type="area"
-                                height="270"
-                                :options="splineAreaWidgetTwo.chartOptions"
-                                :series="splineAreaWidgetTwo.series"
-                            />
-                        </div>
-                    </BaseCard>
-
                     <div class="grid grid-cols-12 w-full gap-1 flex-1">
                         <div class="col-span-6">
                             <BaseCard>
@@ -77,8 +72,58 @@
                                 </div>
                             </BaseCard>
                         </div>
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            35 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            35 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
                     </div>
+                    <BaseCard class="overflow-hidden flex-1">
+                        <div class="p-5">
+                            <p class="text-primary text-2xl m-0">25 °C</p>
+                        </div>
+                        <div id="basicArea-chart">
+                            <apexchart
+                        type="line"
+                        :options="chartOptions"
+                        :series="chartSeries"
+                        width="500"
+                    />
+                        </div>
+                    </BaseCard>
                 </div>
+                
                 <div class="mt-3">
                     <BaseCard>
                         <template v-slot:cardHeader>
@@ -87,8 +132,8 @@
                                 <BaseBtn
                                     rounded
                                     @click="
-                                        showModalPart = true,
-                                        actionPart = Action.CREAR
+                                        ;(showModalPart = true),
+                                            (actionPart = Action.CREAR)
                                     "
                                     class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center"
                                 >
@@ -189,7 +234,10 @@
                                                                 ]"
                                                                 class="w-5 h-5 m-4 hover:text-primary"
                                                                 @click="
-                                                                    editPart(parte)"
+                                                                    editPart(
+                                                                        parte
+                                                                    )
+                                                                "
                                                             />
 
                                                             <font-awesome-icon
@@ -197,12 +245,13 @@
                                                                     'far',
                                                                     'trash-can',
                                                                 ]"
-                                                               @click="deletePart(parte)"
+                                                                @click="
+                                                                    deletePart(
+                                                                        parte
+                                                                    )
+                                                                "
                                                                 class="w-5 h-5 m-4 hover:text-primary"
                                                             />
-                                                           
-
-                                                           
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -248,7 +297,8 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, onBeforeMount, computed } from 'vue'
-import ComponenteController from '../../services/ComponenteController'
+import ComponenteController from '../../services/ComponenteController';
+import { useRouter } from 'vue-router';
 import ParteController from '../../services/ParteController'
 
 import ModalPartForm from '../Modals/ModalPartForm.vue'
@@ -263,7 +313,10 @@ import { appStore } from '../../store/app'
 
 import cutString from '../../shared/helpers/cutString'
 
+import Breadcrumbs from '../Breadcrumbs.vue'
+
 const $appStore = appStore()
+const $router = useRouter();
 
 const props = defineProps({
     deviceInfo: { required: true, type: Object },
@@ -282,6 +335,29 @@ const showModalPart = ref(false)
 const showModalDeletePart = ref(false)
 const actionPart = ref('')
 const partSelected = ref(null)
+
+const chartOptions = ref({
+    chart: {
+        id: 'real-time-chart',
+        animations: {
+            enabled: true,
+            easing: 'linear',
+            dynamicAnimation: {
+                speed: 1000,
+            },
+        },
+    },
+    xaxis: {
+        type: 'datetime',
+    },
+})
+
+const chartSeries = ref([
+    {
+        name: 'Load Average',
+        data: [],
+    },
+])
 
 const splineAreaWidgetTwo = ref({
     series: [
@@ -353,12 +429,23 @@ const splineAreaWidgetTwo = ref({
     },
 })
 
+
 onBeforeMount(() => {
     ParteController.list(props.deviceInfo.id).then((partesList) => {
         partes.value = partesList
         console.log(partes.value)
         loadingPartes.value = false
     })
+
+    setInterval(() => {
+        const random = Math.floor(Math.random() * 10) + 1
+        const timestamp = new Date().getTime()
+
+        chartSeries.value[0].data.push({
+            x: timestamp,
+            y: random,
+        })
+    }, 3000)
 })
 
 const onDelete = async () => {
@@ -402,6 +489,11 @@ const editPart = (parte) => {
 const deletePart = (parte) => {
     partSelected.value = { ...parte }
     showModalDeletePart.value = true
+}
+
+const handleViewHistoricos = ()=>{
+    const componentID =  props.deviceInfo.id;
+    $router.push({name: 'VerHistoricos',params: {id : componentID}});
 }
 
 const onConfirmDeletePart = async () => {
@@ -456,5 +548,10 @@ const partesFormatted = computed(() => {
 
 const emptyParts = computed(() => {
     return partes.value.length <= 0
+})
+
+const title = computed(() => {
+    console.log(props.deviceInfo)
+    return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
 })
 </script>

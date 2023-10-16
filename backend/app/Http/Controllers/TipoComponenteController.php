@@ -27,6 +27,8 @@ class TipoComponenteController extends Controller
         return $result;
     }
 
+
+
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [

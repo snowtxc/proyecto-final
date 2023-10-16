@@ -19,5 +19,9 @@ class Registro extends Model
         return $this->belongsTo(Componente::class);
     }
 
+    public function etapa()
+    {
+        return $this->belongsTo(Etapa::class);
+    }
 
 }

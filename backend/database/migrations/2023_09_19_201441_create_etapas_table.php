@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('proceso_id');
             $table->foreign('proceso_id')->references('id')->on('procesos');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

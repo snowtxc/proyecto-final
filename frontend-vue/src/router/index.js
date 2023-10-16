@@ -74,6 +74,18 @@ const routes = [
                 component: () => import('../views/dispositivos/DevicePage.vue'),
             },
 
+            {
+                path: '/dispositivos/:id/historicos',
+                name: 'VerHistoricos',
+                component: () => import('../views/historicos/VerHistorico.vue'),
+            },
+
+            
+            {
+                path: '/tipos-componentes',
+                name: 'TipoComponentes',
+                component: () => import('../views/tipos-componentes/IndexPage.vue'),
+            },
 
 
 
