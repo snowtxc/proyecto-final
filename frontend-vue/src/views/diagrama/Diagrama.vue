@@ -2,7 +2,7 @@
     <div class="flex flex-row w-auto ">
         <div class="flex flex-col w-3/4 mr-2">
 
-            <div class=" h-[800px] w-full border border-gray-300 rounded-lg">
+            <Card class=" h-[750px] w-full">
                 <select id="small"
                     class="w-80 p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none"
                     v-model="selectedProcess">
@@ -13,17 +13,17 @@
                         {{ proceso.Nombre }}
                     </option>
                 </select>
-                <div ref="myDiagramDiv" class="w-full h-full  "></div>
-            </div>
-            <div class=" h-[300px] w-full border border-gray-300 mt-2 rounded-lg">
+                <div ref="myDiagramDiv" class="w-full h-full"></div>
+            </Card>
+            <Card class=" h-[300px] w-full  mt-6">
                 <!-- <BaseBtn id="agregarNodoButton">add</BaseBtn>
 
                 <BaseBtn @click="print">print</BaseBtn> -->
-            </div>
+            </Card>
         </div>
-        <div class="h-[1108px] w-1/4 border border-gray-300 rounded-lg">
+        <Card class="h-[1074px] w-1/4 ml-4">
 
-        </div>
+        </Card>
     </div>
 </template>
 
@@ -32,6 +32,7 @@ import { ref, onMounted } from 'vue';
 import go from 'gojs';
 import { appStore } from "@/store/app.js";
 import ProcesoController from '@/services/ProcesoController.js';
+import Card from '@/components/Card/Card.vue';
 
 
 const $appstore = appStore();
@@ -104,7 +105,7 @@ const createDiagram = () => {
     const $ = go.GraphObject.make;
     const diagram = $(go.Diagram, myDiagramDiv.value,
         {
-            //isReadOnly: true
+            isReadOnly: true
         });
 
 
@@ -239,6 +240,14 @@ const createDiagram = () => {
             },
             new go.Binding("location", "pos", go.Point.parse).makeTwoWay(go.Point.stringify),
             $(go.Shape, "RoundedRectangle", { fill: "white" }),
+            $(go.Shape,
+                {
+                    width: 40, height: 0,
+                    stroke: null, strokeWidth: 0, fill: "gray"
+                },
+                new go.Binding("height", "icon", () => 40),
+                new go.Binding("fill", "color", colorFunc),
+                new go.Binding("geometry", "icon", geoFunc)),
             $(go.Picture,
                 {
                     name: "picture",
@@ -246,15 +255,6 @@ const createDiagram = () => {
                 },
                 new go.Binding("source", "picture") // Vincula la URL de la imagen desde los datos del nodo
             ),
-
-            $(go.Shape,
-                {
-                    name: "PORT",
-                    width: 40, height: 24, margin: new go.Margin(-1, 0, 0, 0),
-                    stroke: null, strokeWidth: 0, fill: "gray",
-                    portId: "", fromLinkable: true, toLinkable: true
-                },
-                new go.Binding("fill", "color", colorFunc)),
             $(go.TextBlock,
                 { margin: 8, font: "bold 12px sans-serif", textAlign: "center" },
                 new go.Binding("text", "nombre") // Supongamos que tienes una propiedad "nombre" en tus datos de nodo

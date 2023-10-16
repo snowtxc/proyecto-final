@@ -11,7 +11,8 @@ class Link extends Model
 
     protected $fillable = [
         'nodo_from_id',
-        'nodo_to_id'
+        'nodo_to_id',
+        'etapa_id'
     ];
 
 
@@ -23,5 +24,10 @@ class Link extends Model
     public function toNodo()
     {
         return $this->belongsTo(Nodo::class, 'nodo_to_id');
+    }
+
+    public function Etapa()
+    {
+        return $this->belongsTo(Etapa::class, 'etapa_id');
     }
 }

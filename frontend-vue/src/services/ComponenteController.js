@@ -49,5 +49,9 @@ export default{
         return data;      
     },
 
-   
+    async listDispositivosSinNodo(id){
+        const response  = await axios.get("componentes-sin-nodo/");
+        const { data } = response;
+        return data;      
+    },
 } 
