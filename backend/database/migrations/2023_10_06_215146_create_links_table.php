@@ -28,6 +28,7 @@ return new class extends Migration
               ->on('nodos')
               ->onDelete('cascade'); // Configura la eliminación en cascada
 
+
         $table->unsignedBigInteger('etapa_id');
         $table->foreign('etapa_id')->references('id')->on('etapas');
 

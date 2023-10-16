@@ -15,7 +15,7 @@ const props = defineProps({
     <button
         @click="emit('click')"
         type="button"
-        class="btn rounded font-normal leading-4 ripple bg-primary text-white  hover:bg-primary-dark"
+        class="btn  border  transition-all bg-primary text-white  hover:bg-white hover:text-black   dark:hover:bg-red-800"
         :class="[
             props.block ? 'block w-full' : 'inline-block',
             props.sm ? 'sm' : '',

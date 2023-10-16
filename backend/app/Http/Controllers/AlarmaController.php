@@ -22,8 +22,6 @@ class AlarmaController extends Controller
         $fechaInicio = $request->query('fechaInicio') != null ? $request->query('fechaInicio') : null;
         $fechaFin =  $request->query('fechaFin') != null ? $request->query('fechaFin') : null;
 
-
-
         $query  =  Alarma::when(isset($procesoId), function ($query) use ($procesoId) {
             $query->where('proceso_id', '=', $procesoId);
         })->when(isset($componenteId), function ($query) use ($componenteId) {

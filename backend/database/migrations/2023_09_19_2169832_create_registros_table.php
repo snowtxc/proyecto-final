@@ -17,6 +17,11 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('Marca');
+
+            $table->unsignedBigInteger('etapa_id');
+            $table->foreign('etapa_id')->references('id')->on('etapas');
+
+
             $table->unsignedBigInteger('componente_id');
             $table->foreign('componente_id')->references('id')->on('componentes');
         });
