@@ -121,7 +121,8 @@ export default{
         getUsuarios(){
             UsuarioController.listaUsuarios().then((response) => {
                 if(response.status == 200){
-                this.usuarios = response.data;
+                    this.usuarios = response.data;
+                    console.log(this.usuarios);
                 }
                 $appStore.setGlobalLoading(false);
             })
