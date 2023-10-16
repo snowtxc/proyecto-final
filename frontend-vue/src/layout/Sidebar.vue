@@ -104,6 +104,16 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
 
+                        <router-link
+                            to="/alarmas"
+                            tag="li"
+                            class="nav-item"
+                        >
+                            <div class="nav-item-hold">
+                                <i class="fa-solid fa-exclamation-triangle text-3xl"></i>
+                                <p>Alarmas</p>
+                            </div>
+                        </router-link>
                         
                        
                         <router-link

@@ -118,7 +118,13 @@ const routes = [
                 path: '/etapas/:procesoId/:etapaId', 
                 name: 'editarEtapa',
                 component: ()=> import("../views/etapas/etapa.vue"),
-            }
+            },
+
+            { 
+                path: '/alarmas', 
+                name: 'ListaAlarmas',
+                component: ()=> import("../views/alarmas/ListadoAlarmas.vue"),
+            },
         ],
     },
 
