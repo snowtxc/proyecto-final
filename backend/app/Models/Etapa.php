@@ -29,4 +29,10 @@ class Etapa extends Model
         return $this->hasMany(Nodo::class);
     }
 
+    public function registros()
+    {
+        return $this->hasMany(Nodo::class);
+    }
+
+
 }

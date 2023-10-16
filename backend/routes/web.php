@@ -12,6 +12,8 @@ use App\Http\Controllers\TipoComponenteController;
 use App\Http\Controllers\AlarmaController;
 use App\Http\Controllers\NodoController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\RegistroController;
+
 
 
 use App\Events\Hello;
@@ -157,6 +159,14 @@ Route::prefix('api')->group(function () {
 
 
     });
+
+    /*REGISTROS ENDPOINTS*/
+    Route::controller(RegistroController::class)->group(function () {
+        Route::get('/componentes/{id}/registros', 'list');
+        Route::get('/componentes/{id}/registros/exportExcel', 'exportExcel');
+
+    });
+
 
 
     Route::get('/broadcast', function(Request $request){

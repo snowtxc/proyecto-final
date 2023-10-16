@@ -25,6 +25,23 @@ import { faPenToSquare, faRectangleXmark, faTrashCan, faSquarePlus, faNoteSticky
 library.add(faTrashCan, faPenToSquare, faRectangleXmark, faSquarePlus,faNoteSticky)
 const pinia = createPinia();
 
+import Echo from "laravel-echo";
+
+import Pusher from "pusher-js";
+
+
+
+window.Pusher = Pusher;
+window.Echo  = new Echo({
+    broadcaster: 'pusher',
+    key: "ASDASD2121",
+    wsHost: "127.0.0.1",
+    wsPort: 6001,
+    forceTLS: false,
+    disableStats: true,
+    cluster: "mt1"
+})
+
 pinia.use(piniaPluginPersistedstate);
 
 

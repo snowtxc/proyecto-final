@@ -5,7 +5,16 @@ import {
     splineAreaWidgetTwo,
     splineAreaWidgetThree,
 } from '@/data/dashboard.v1.js'
+
+import { onBeforeMount } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
+
+
+onBeforeMount(()=>{
+    window.Echo.channel('channel-name').listen('Hello', (e)=>{
+        console.log(e);
+    })
+})
 </script>
 
 <template>

@@ -19,11 +19,15 @@
                             </span>
                         </div>
 
-                        <input
-                            v-model="dataDevice.Nombre"
-                            class="w-72 px-4 py-1 bg-gray-100 focus:outline-none border border-gray-400 rounded-full"
-                            type="text"
+                        
+                        
+                        <input class="h-11 px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block  border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
+                        v-model="dataDevice.Nombre"
+                        type="text"
                         />
+
+
+                    
                     </div>
                     <div class="mb-3 flex flex-col">
                         <div>
@@ -47,11 +51,13 @@
                                 }}</span
                             >
                         </div>
-                        <input
-                            v-model="dataDevice.DireccionIp"
-                            class="w-72 px-4 py-1 bg-gray-100 focus:outline-none border border-gray-400 rounded-full"
-                            type="text"
+
+                        <input class="h-11 px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block  border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
+                        v-model="dataDevice.DireccionIp"
+                        type="text"
                         />
+
+                        
                     </div>
                 </div>
 
@@ -123,6 +129,7 @@
             </div>
             <div class="ml-4 col-span-7">
                 <BaseCard>
+                
                     <Breadcrumbs parentTitle="Fotos" />
 
                     <div
@@ -188,7 +195,9 @@ import ComponenteController from '@/services/ComponenteController.js'
 import { useNotification } from '@kyvg/vue3-notification'
 import { useRoute } from 'vue-router';
 
-import ConfirmationModal from '../../components/ConfirmationModal.vue'
+import ConfirmationModal from '../../components/ConfirmationModal.vue';
+
+
 const { notify } = useNotification()
 
 import { Action } from '../../shared/enums/Action'
@@ -284,6 +293,7 @@ onBeforeMount(async () => {
         ProcesoController.getAll(),
         TipoComponenteController.getAll(),
     ])
+    console.log(tiposComponentesData);
     procesos.value = procesosData
     tiposComponentes.value = tiposComponentesData;
 
