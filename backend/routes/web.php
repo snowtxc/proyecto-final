@@ -141,6 +141,7 @@ Route::prefix('api')->group(function () {
     /*ALARMA ENDPOINTS*/
     Route::controller(AlarmaController::class)->group(function () {
         Route::get('/alarmas', 'list');
+        Route::get("/alarmas/{id}/usuarios", 'getUsers');
     });
 
      /*ALARMA ENDPOINTS*/

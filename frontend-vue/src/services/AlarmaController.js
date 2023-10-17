@@ -7,19 +7,19 @@ export default{
             url+="&proceso_id="+procesoId;
         }
         if(componenteId){
-            url+="&proceso_id="+componenteId;
+            url+="&componente_id="+componenteId;
         }
         if(fechaIni){
-            url+="&proceso_id="+fechaIni;
+            url+="&fechaInicio="+fechaIni;
         }
         if(fechaFin){
-            url+="&proceso_id="+fechaFin;
+            url+="&fechaFin="+fechaFin;
         }
         return axios.get(url);
     },
 
     getUsers(idAlarma){
-        return axios.get("alarmas/"+idAlarma);
+        return axios.get("alarmas/"+idAlarma+"/usuarios");
     }
 
 }

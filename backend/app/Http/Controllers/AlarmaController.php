@@ -27,8 +27,8 @@ class AlarmaController extends Controller
         })->when(isset($componenteId), function ($query) use ($componenteId) {
             $query->where('componente_id', '=', $componenteId);
         })->when(isset($fechaInicio) && isset($fechaFin), function ($query) use ($fechaInicio, $fechaFin) {
-            $start =  Carbon::createFromFormat('d/m/Y', $fechaInicio);
-            $end  =  Carbon::createFromFormat('d/m/Y', $fechaFin);
+            $start = Carbon::createFromFormat('d-m-Y', $fechaInicio)->format('Y-m-d');
+            $end  =  Carbon::createFromFormat('d-m-Y', $fechaFin)->format('Y-m-d');
             $query->whereBetween('created_at', [$start, $end]);
         });
 
@@ -63,6 +63,28 @@ class AlarmaController extends Controller
 
 
         return array("data" => $result, "countRows" => $countRows);
+    }
+
+    public function getUsers($id){
+        $alarma =  Alarma::find($id);
+        if(!isset($alarma)){
+            return response()->json(['error' => 'Alarma no encontrada'], 404);
+        }
+
+        $users = $alarma->users;
+        $data = [];
+        foreach($users as $user){
+            $userFormatted = [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "profileImage" =>  isset($user->profileImage) ? FileHelper::getRealPath($user->profileImage) : null,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at,
+            ];
+            array_push($data, $userFormatted);
+        }
+        return response()->json($data, 200);
     }
 
 }

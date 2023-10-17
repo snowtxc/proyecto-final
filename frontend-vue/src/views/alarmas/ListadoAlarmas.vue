@@ -50,18 +50,19 @@
             <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
             <div v-if="alarmas.length > 0">
                 <div v-for="(item, index) in alarmas" :key="index" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
-                    <div class="flex">
-                        <img class="w-24 object-fill" :src="item.tipoComponenteImagen" alt="" />
-                    </div>
+                    
                     <div class="flex pl-2 flex-1">
                         <div class="flex flex-grow flex-col self-center justify-between lg:items-center lg:flex-row">
-                            <a class="hover:text-primary" href="">
-                                {{item.componenteNombre}}</a>
+                            <!--a class="hover:text-primary" href=""></a-->
+                            <div class="flex">
+                                <img class="w-20 object-fill" :src="item.tipoComponenteImagen" alt="" />
+                            </div>
+                            <p>{{item.componenteNombre}}</p>   
                             <p>{{item.tipoComponente}}</p>
                             <p>{{item.procesoNombre}}</p>
-                            <p>{{item.fechaHora}}
+                            <p>{{ formattedDate(item.fechaHora) }}
                             </p>
-                            <i class="fa-solid fa-users w-5 h-5 m-4 hover:text-primary"
+                            <i class="fa-solid fa-users m-4 text-2xl hover:text-primary"
                                 @click="this.selectedAlarma = item.id, this.showModalUsuarios = true" 
                             ></i>
                         </div>
@@ -121,79 +122,17 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-            <!-- div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
-                <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
-                    <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
-
-                        <ul v-if="usuarios.length > 1">
-                            <li v-for="(user, index) in usuarios" :key="index" >
-                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center mb-4 md:flex-row">
-                                    <img
-                                        class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
-                                        :src= "user.profileImage ? user.profileImage : imageProfileDefault"
-                                        alt=""
-                                    />
-                                    <div class="flex-grow md:text-left">
-                                        <h5>
-                                            <p
-                                                class="text-gray-800"
-                                            >
-                                                {{ user.name }}  -  {{ user.rol }}
-                                            </p>
-                                        </h5>
-                                        <p class="text-gray-400 text-xs mb-3 md:mb-0">
-                                            {{ user.email }}
-                                        </p>
-                                    </div>
-                                   
-                                        <font-awesome-icon 
-                                            :icon="['far', 'pen-to-square']" 
-                                            @click="this.selectedUser = user.id, this.showModalUsuario = true" 
-                                            class="w-5 h-5 m-4 hover:text-primary"/>
-                                        <font-awesome-icon 
-                                            :icon="['far', 'trash-can']" 
-                                            @click="this.userDelete = user.id, this.showConfirmationModal = true" 
-                                            class="w-5 h-5 m-4 hover:text-primary"/>
-                                </div>
-                            </li>
-
-
-                        </ul>
-                        <p class="px-4 py-3" v-if="usuarios.length <= 1"> No se encontraron usuarios</p>
-                    
-                    </div>
-                    <div class="dataTable-bottom">
-                        <div class="dataTable-info">
-                            
-                        </div>
-                        <nav class="dataTable-pagination">
-                            <ul class="dataTable-pagination-list"></ul>
-                        </nav>
-                    </div>
-                </div>
-            </div-->
         </BaseCard>
     </div>
 
-    <!--DetalleUsuario 
-        v-if="showModalUsuario" 
-        :show="showModalUsuario" 
-        :userId="selectedUser" 
-        @onClose="showModalUsuario = false" 
-        @onConfirm="onConfirmEvent">
-    </DetalleUsuario>
-    <ConfirmationModal
-      v-if="showConfirmationModal"
-      :show="showConfirmationModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @confirm="eliminar"
-      @cancel="cancelar"
-    /-->
+    <ModalUsersAlarma 
+        v-if="showModalUsuarios" 
+        :show="showModalUsuarios" 
+        :alarmaId="selectedAlarma" 
+        @onClose="showModalUsuarios = false" 
+        >
+    </ModalUsersAlarma>
+    
 </template>
 
 <script>
@@ -201,77 +140,72 @@
 import AlarmaController from '@/services/AlarmaController';
 import ProcesoController from '@/services/ProcesoController';
 import { appStore } from "@/store/app.js";
+import ModalUsersAlarma from '../../components/Modals/ModalUsersAlarma.vue';
+import dayjs from "dayjs";
 
 const $appStore = appStore();
 
 export default{
-
-    data(){
+    data() {
         return {
-            alarmas : [],
+            alarmas: [],
             procesos: [],
             componentes: [],
             filtroProceso: null,
             filtroComponente: null,
             filtroFechaIni: null,
             filtroFechaFin: null,
-
             totalRows: 0,
             totalPage: 0,
             actualPage: 1,
-            
-            selectedAlarma : 0,
+            selectedAlarma: 0,
+            showModalUsuarios: false,
             userLogged: $appStore.getUserData
-        }
+        };
     },
-
-    created(){
+    created() {
         $appStore.setGlobalLoading(true);
         this.getAlarmas();
         this.getProcesos();
     },
-
     methods: {
-        getAlarmas(){
-            AlarmaController.listaAlarmas(this.actualPage, this.filtroProceso, this.filtroComponente, this.filtroFechaIni, this.filtroFechaFin).then((response) => {
-                if(response.status == 200){
+        getAlarmas() {
+            const fecha1 = this.filtroFechaIni ? dayjs(this.filtroFechaIni).format("DD-MM-YYYY") : null;
+            const fecha2 = this.filtroFechaFin ? dayjs(this.filtroFechaFin).format("DD-MM-YYYY") : null;
+            console.log(fecha1);
+            console.log(fecha2);
+            AlarmaController.listaAlarmas(this.actualPage, this.filtroProceso, this.filtroComponente, fecha1, fecha2).then((response) => {
+                console.log(response);
+                if (response.status == 200) {
                     this.alarmas = response.data.data;
                     this.totalRows = response.data.countRows;
-                    if(this.totalRows >= 10){
+                    if (this.totalRows >= 10) {
                         this.totalPage = this.totalRows / 10;
                     }
                 }
                 $appStore.setGlobalLoading(false);
-            })
+            });
         },
-        getProcesos(){
+        getProcesos() {
             ProcesoController.listaProcesos().then((response) => {
-                if(response.status == 200){
+                if (response.status == 200) {
                     this.procesos = response.data;
                 }
-                this.procesos.unshift({id: null, Nombre: 'Todos'});
+                this.procesos.unshift({ id: null, Nombre: 'Todos' });
                 $appStore.setGlobalLoading(false);
-            })
+            });
         },
+        formattedDate(fechaHora){
+            return dayjs(fechaHora).format('DD/MM/YYYY HH:mm A');
+        }
+    },
+
+    computed: {
         
     },
 
-    /*components:{
-        
-    }*/
-
-
+    components: { ModalUsersAlarma }
 }
 
 
 </script>
-
-<style scoped>
-.end-align {
-  display: flex !important;
-  justify-content: flex-end !important;
-  align-items: center !important;
-}
-
-
-</style>
