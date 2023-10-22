@@ -22,7 +22,7 @@ import { defineProps, defineEmits } from 'vue';
 const emit = defineEmits(['onSelect']);
 const props = defineProps({
     nombre: { required: true, type: String },
-    value: { required: true, type: Number },
+    value: { required: true, type: [Number, null] },
     image: { required: true, type: String },
     selected: { required: true, type: [Boolean, null] },
     ipAddress: { required: true, type: String }
