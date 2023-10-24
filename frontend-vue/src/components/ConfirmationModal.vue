@@ -5,7 +5,11 @@
         <div class="modal-content p-4">
           <h2 class="text-lg font-semibold mb-4">{{ title }}</h2>
           <p class="mb-6">{{ message }}</p>
-          <div class="flex justify-end">
+
+          <CardWarning v-if="warning" :text="warning"></CardWarning>
+         
+
+          <div class="flex justify-end mt-2">
             <BaseBtn rounded block @click="cancel" class="btn-cancel mr-4">Cancelar</BaseBtn>
             <BaseBtn rounded block @click="confirm" class="btn-confirm">Confirmar</BaseBtn>
           </div>
@@ -15,32 +19,36 @@
   </template>
   
   <script>
+import CardWarning from './Card/CardWarning.vue';
+
   export default {
     props: {
-      title: String,
-      message: String,
-      show: Boolean
+        title: String,
+        message: String,
+        show: Boolean,
+        warning: String
     },
     data() {
-      return {
-        isModalOpen: false,
-      };
+        return {
+            isModalOpen: false,
+        };
     },
     methods: {
-      open() {
-        this.isModalOpen = true;
-      },
-      close() {
-        this.$emit('cancel');
-      },
-      confirm() {
-        this.$emit('confirm');
-      },
-      cancel() {
-        this.$emit('cancel');
-      },
+        open() {
+            this.isModalOpen = true;
+        },
+        close() {
+            this.$emit('cancel');
+        },
+        confirm() {
+            this.$emit('confirm');
+        },
+        cancel() {
+            this.$emit('cancel');
+        },
     },
-  };
+    components: { CardWarning }
+};
   </script>
   
   <style scoped>
