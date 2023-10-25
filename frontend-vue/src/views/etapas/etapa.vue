@@ -1,11 +1,14 @@
 <template>
   <div class="h-[750px] w-full ">
     <Breadcrumb parentTitle='Procesos' subParentTitle="Etapa" />
-    <div class="h-full w-full flex ">
+    <div class="h-full w-full flex flex-row justify-between ">
       <div class="h-full w-1/5 p-4 space-y-4">
         <p class="font-bold text-xl mb-4">
           Dispositivos
         </p>
+        <div class="flex flex-col items-center w-full ">
+          <spinner :show="showSpinnerComponentes"></spinner>
+        </div>
         <template v-if="listaComponentes.length > 0">
           <CardDevice v-for="item in listaComponentes" :key="item.id" :nombre="item.Nombre" :ipAddress="item.DireccionIp"
             :value="25" :image="item.tipoComponenteImage" id="agregarNodoButton" @click="cardClicked(item)">
@@ -14,9 +17,12 @@
         <template v-else>
           <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
         </template>
-      </div>
 
-      <Card class="h-full w-5/6 ">
+      </div>
+      <div class="h-full flex items-center w-10">
+        <ArrowSpinner :show="true" />
+      </div>
+      <Card class="h-full w-3/4 ">
         <!-- <spinner :show="true"></spinner> -->
         <div ref="myDiagramDiv" class="w-full h-full"></div>
       </Card>
@@ -25,7 +31,7 @@
 </template>
 <script setup>
 import Breadcrumb from '@/components/Breadcrumbs.vue';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import go from 'gojs';
 import Card from '@/components/Card/Card.vue';
@@ -35,6 +41,7 @@ import LinkController from '../../services/LinkController';
 import { appStore } from "@/store/app.js";
 import CardDevice from '../../components/Cards/CardDevice.vue'
 import spinner from '../components/spinner/spinner.vue';
+import ArrowSpinner from '../components/spinner/ArrowSpinner.vue';
 
 const $appstore = appStore();
 const procesoId = ref(null);
@@ -46,15 +53,17 @@ const listaNodos = ref([]);
 let diagram = null;
 const nodeDataArray = [];
 const linkDataArray = [];
+const showSpinnerComponentes = ref(false);
 
 const listaComponentesPromise = ComponenteController.listDispositivosSinNodo();
 
 
-$appstore.setGlobalLoading(true)
+//$appstore.setGlobalLoading(true)
 
 listaComponentesPromise
   .then((response) => {
     listaComponentes.value = response
+    console.log(response)
     $appstore.setGlobalLoading(false)
   })
   .catch((error) => {
@@ -63,15 +72,15 @@ listaComponentesPromise
   });
 
 const cargarListaComponentes = () => {
-  //showSpinnerProcesos.value = true;
+  showSpinnerComponentes.value = true;
   ComponenteController.listDispositivosSinNodo()
     .then((response) => {
       listaComponentes.value = response
-      //showSpinnerProcesos.value = false;
+      showSpinnerComponentes.value = false;
     })
     .catch((error) => {
       console.error('Error al obtener la lista de dispositivos:', error);
-      //showSpinnerProcesos.value = false;
+      showSpinnerComponentes.value = false;
     });
 };
 
@@ -127,22 +136,22 @@ const Link = (id, from, to) => {
   linkDataArray.push(newLinkData);
 }
 
-
 const cardClicked = (dataComponente) => {
-  createNode(dataComponente.id, dataComponente.Nombre, "https://carbonestore.com/cdn/shop/products/73_manometro_1024x.jpg?v=1670142115", "-200 -200")
+  createNode(dataComponente.id, dataComponente.Nombre, dataComponente.tipoComponenteImage, "-200 -200")
 }
 
 const createDiagram = async () => {
+
   nodeDataArray.splice(0, nodeDataArray.length);
   const listaNodosPromise = await NodoController.list(etapaId.value);
   const response = await listaNodosPromise;
 
   const listaLinksPromise = await LinkController.list(etapaId.value);
   const responseLinks = await listaLinksPromise;
-console.log(responseLinks)
+  console.log(responseLinks)
   for (const nodo of response) {
     const componente = await ComponenteController.getById(nodo.componente_id)
-    Node(nodo.id, componente.Nombre, "https://carbonestore.com/cdn/shop/products/73_manometro_1024x.jpg?v=1670142115", nodo.Posicion);
+    Node(nodo.id, componente.Nombre, componente.tipoComponenteImage, nodo.Posicion);
   }
 
   for (const link of responseLinks) {
@@ -151,6 +160,7 @@ console.log(responseLinks)
   }
 
   listaNodos.value = response;
+
 
   const $ = go.GraphObject.make;
   if (diagram) {
@@ -185,41 +195,40 @@ console.log(responseLinks)
 
 
   diagram.addDiagramListener('SelectionDeleted', async (event) => {
-  const deletedNodes = [];
-  const deletedLinks = [];
+    const deletedNodes = [];
+    const deletedLinks = [];
 
-  event.subject.each(function (part) {
-    if (part instanceof go.Node) {
-      deletedNodes.push(part.data);
-    } else if (part instanceof go.Link) {
-      deletedLinks.push(part.data);
-    }
-  });
+    event.subject.each(function (part) {
+      if (part instanceof go.Node) {
+        deletedNodes.push(part.data);
+      } else if (part instanceof go.Link) {
+        deletedLinks.push(part.data);
+      }
+    });
 
-  for (const nodeData of deletedNodes) {
-    const nodo = listaNodos.value.find((nodo) => nodo.id === nodeData.key);
-    if (nodo) {
-      const id = nodo.componente_id;
-      try {
-        await NodoController.deleteByComponent(id);
-        cargarListaComponentes();
-      } catch (error) {
-        console.error('Error al eliminar el nodo:', error);
+    for (const nodeData of deletedNodes) {
+      const nodo = listaNodos.value.find((nodo) => nodo.id === nodeData.key);
+      if (nodo) {
+        const id = nodo.componente_id;
+        try {
+          await NodoController.deleteByComponent(id);
+          cargarListaComponentes();
+        } catch (error) {
+          console.error('Error al eliminar el nodo:', error);
+        }
       }
     }
-  }
 
-  for (const linkData of deletedLinks) {
-    const linkId = linkData.id;
-    try {
-      await LinkController.delete(linkId);
-    } catch (error) {
-      console.error('Error al eliminar el enlace:', error);
+    for (const linkData of deletedLinks) {
+      const linkId = linkData.__gohashid;
+      console.log(linkData)
+      try {
+        await LinkController.delete(linkId);
+      } catch (error) {
+        console.error('Error al eliminar el enlace:', error);
+      }
     }
-  }
-});
-
-
+  });
 
   diagram.addDiagramListener('InitialLayoutCompleted', () => {
     diagram.addDiagramListener('LinkDrawn', (event) => {
@@ -248,6 +257,17 @@ console.log(responseLinks)
       }
     });
   });
+
+  diagram.addDiagramListener("SelectionMoved", async function (e) {
+    e.subject.each(async function (part) {
+      console.log(part.data.pos)
+      const { key, pos } = part.data
+      console.log(pos)
+      const response = await NodoController.updatePosition(key, pos);
+      console.log(response)
+    });
+  });
+
 
   diagram.nodeTemplate =
     $(go.Node, "Auto",
@@ -304,11 +324,19 @@ console.log(responseLinks)
 
 
   diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray)
+  $appstore.setGlobalLoading(false)
 }
 
-onMounted(() => {
+onBeforeMount(()=>{
   procesoId.value = route.params.procesoId;
   etapaId.value = route.params.etapaId;
+    window.Echo.channel('update-nodo-position.' + etapaId.value + '.' + 'procesoId.value').listen('Hello', (e)=>{
+        console.log(e);
+    })
+})
+
+onMounted(() => {
+  $appstore.setGlobalLoading(true)
   createDiagram();
   console.log(linkDataArray)
 });

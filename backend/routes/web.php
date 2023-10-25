@@ -93,7 +93,7 @@ Route::prefix('api')->group(function () {
         Route::post("/procesos/{id}/usuarios", 'addUsersToProcess');
         Route::delete("/procesos/{id}/usuarios/{userId}", 'removeUserFromProcess');
 
-
+        Route::get("/procesos/{userid}/procesos", 'getProcesosByUser');
     });
 
      /*ETAPA  ENDPOINTS*/

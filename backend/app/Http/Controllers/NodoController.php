@@ -89,7 +89,7 @@ class NodoController extends Controller
         }
 
         $body = $request->all();
-        $newPosition = $body = ['NewPosition'];
+        $newPosition = $body['NewPosition'];
 
         $etapa  = $nodo->etapa;
         $etapaId = $nodo->etapa_id;
@@ -97,8 +97,8 @@ class NodoController extends Controller
         $nodo->Posicion = $newPosition;
         $nodo->save();
 
-        broadcast(new NodePositionUpdated($nodo->id, $newPosition, $procesoId,$etapaId));
-
+        broadcast(new NodePositionUpdated($nodo->id, $newPosition, $procesoId, $etapaId));
+        return response()->json(['message' => 'Posicion Actualizada'], 200);
     }
 
     public function list($etapaId) {
