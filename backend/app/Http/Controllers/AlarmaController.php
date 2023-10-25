@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Alarma;
 use App\Helpers\FileHelper;
 use Carbon\Carbon;
-
+use App\Models\Proceso;
+use App\Models\AlarmaUser;
+use App\Models\Componente;
+use Illuminate\Support\Facades\Mail;
 
 
 class AlarmaController extends Controller
@@ -26,15 +29,15 @@ class AlarmaController extends Controller
             $query->where('proceso_id', '=', $procesoId);
         })->when(isset($componenteId), function ($query) use ($componenteId) {
             $query->where('componente_id', '=', $componenteId);
-        })->when(isset($fechaInicio) && isset($fechaFin), function ($query) use ($fechaInicio, $fechaFin) {
-            $start =  Carbon::createFromFormat('d/m/Y', $fechaInicio);
-            $end  =  Carbon::createFromFormat('d/m/Y', $fechaFin);
-            $query->whereBetween('created_at', [$start, $end]);
-        });
+        })->when(isset($fechaInicio), function ($query) use ($fechaInicio) {
+            $start = Carbon::createFromFormat('d-m-Y', $fechaInicio)->format('Y-m-d');
+            $query->whereDate('created_at', ">=" , $start);
+        })->when(isset($fechaFin), function ($query) use ($fechaFin) {
+            $end  =  Carbon::createFromFormat('d-m-Y', $fechaFin)->format('Y-m-d');
+            $query->whereDate('created_at', "<=" , $end);
+        })->orderBy('created_at','desc');
 
         $queryPaginated  = $query->skip($offset)->take($maxRows);
-
-
 
         $countRows =  $query->count();
         $alarmas = $queryPaginated->get();
@@ -64,5 +67,70 @@ class AlarmaController extends Controller
 
         return array("data" => $result, "countRows" => $countRows);
     }
+
+    public function getUsers($id){
+        $alarma =  Alarma::find($id);
+        if(!isset($alarma)){
+            return response()->json(['error' => 'Alarma no encontrada'], 404);
+        }
+
+        $users = $alarma->users;
+        $data = [];
+        foreach($users as $user){
+            $userFormatted = [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "profileImage" =>  isset($user->profileImage) ? FileHelper::getRealPath($user->profileImage) : null,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at,
+            ];
+            array_push($data, $userFormatted);
+        }
+        return response()->json($data, 200);
+    }
+
+    public function create(Request $request) {
+        $componenteId = $request->input('componente_id');
+        $procesoId = $request->input('proceso_id');
+
+        $componente = Componente::find($componenteId);
+        if(!isset($componente)){
+            return response()->json(['error' => 'Dispositivo no encontrado'], 404);
+        }
+        $proceso =  Proceso::find($procesoId);
+        if(!isset($proceso)){
+            return response()->json(['error' => 'Proceso no encontrado'], 404);
+        }
+
+        $alarma = new Alarma;
+        $alarma->componente_id = $componenteId;
+        $alarma->proceso_id = $procesoId;
+        $alarma->save();
+        
+        $usuarios = $proceso->users;
+    
+        foreach ($usuarios as $usuario) {
+            $data = [
+                'name' => $usuario->name,
+                'dispositivo' => $componente->Nombre,
+                'proceso' => $proceso->Nombre
+            ];
+    
+            Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
+                $message->to($usuario->email)->subject('Nueva Alarma');
+            });
+        }
+    
+        foreach ($usuarios as $usuario) {
+            $alarmaUser = new AlarmaUser;
+            $alarmaUser->alarma_id = $alarma->id;
+            $alarmaUser->user_id = $usuario->id;
+            $alarmaUser->save();
+        }
+    
+        return response()->json(['message' => 'Alarma creada y notificaciones enviadas.']);
+    }
+    
 
 }
