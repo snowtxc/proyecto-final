@@ -169,8 +169,29 @@ class ProcesoController extends Controller
 
     }
 
+    public function getProcesosByUser($userId)
+    {
+        $user = User::find($userId);
+        if (!isset($user)) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
 
+        $procesos = $user->procesos;
 
+        $data = [];
+        foreach ($procesos as $proceso) {
+            $procesoFormatted = [
+                "id" => $proceso->id,
+                "Nombre" => $proceso->Nombre,
+                "Descripcion" => $proceso->Descripcion,
+                "created_at" => $proceso->created_at,
+                "updated_at" => $proceso->updated_at,
+            ];
+            array_push($data, $procesoFormatted);
+        }
+
+        return response()->json($data, 200);
+    }
 
 
 }

@@ -19,4 +19,10 @@ export default{
         return data;
      },
 
+     async updatePosition(id, position) {
+      const response = await axios.put(`/nodos/${id}/updatePosition`, {NewPosition: position})
+      const { data } = response;
+      return data;
+     }
+
 } 
