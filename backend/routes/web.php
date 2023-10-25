@@ -108,6 +108,8 @@ Route::prefix('api')->group(function () {
     Route::controller(TipoComponenteController::class)->group(function () {
         Route::get('/tipos_componentes', 'list');
         Route::post('/tipos_componentes', 'create');
+        Route::delete('/tipos_componentes/{id}', 'delete');
+
     });
 
 
