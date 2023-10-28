@@ -1,11 +1,9 @@
 <template>
     <Card
-        class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150 flex items-center justify-center"
+        class="card w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150 flex items-center justify-center rounded-lg shadow-sm"
         @click="showModal"
     >
-        <p class="font-bold text-xl cursor-pointer">Agregar Nuevo Usuario
-            <i class="fa-solid fa-user"></i>
-        </p>
+        <p class="font-bold text-xl cursor-pointer">Agregar Nuevo Usuario</p>
     </Card>
 
     <div
@@ -169,3 +167,12 @@ const imageProfileDefault = computed(()=>{
 });
 
 </script>
+
+<style lang="scss" scoped>
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 20px 1px rgb(0 0 0 / 6%), 0 1px 4px rgb(0 0 0 / 8%);
+    // box-shadow:rgb(149 157 165 / 20%) 0px 8px 24px;
+
+}
+</style>
