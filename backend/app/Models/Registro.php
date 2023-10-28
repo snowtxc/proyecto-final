@@ -12,6 +12,8 @@ class Registro extends Model
     protected $fillable = [
         'FechaHora',
         'Marca',
+        'etapa_id',
+        'componente_id'
     ];
 
     public function componente()

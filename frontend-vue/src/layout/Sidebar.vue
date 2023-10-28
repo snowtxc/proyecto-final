@@ -69,6 +69,18 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
 
+                        <router-link
+                            to="/diagrama"
+                            tag="li"
+                            class="nav-item"
+                        >
+                            <div class="nav-item-hold">
+                                <i class="fa-solid fa-diagram-project"></i>
+                                <p>Diagrama de Procesos</p>
+                            </div>
+                        </router-link>
+
+
                          <router-link
                             to="/procesos"
                             tag="li"

@@ -68,4 +68,37 @@ class TipoComponenteController extends Controller
 
         return response()->json(['error' => 'Componente no encontrado'], 404);
     }
+
+    public function edit(Request $request ,$id){
+
+        $validator = Validator::make($request->all(), [
+            'Nombre' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $tipoComponente =  TipoComponente::find($id);
+        if(!isset($tipoComponente)){
+            return response()->json(["message" =>  "Tipo de componente no existe"],404);
+        }
+        $body = $request->all();
+        if(isset($body['Imagen'])){
+            FileHelper::deleteFile($tipoComponente->Imagen);  //eliminamos del storage la ultima imagen para guardar y asignar una nueva;
+            $file = $body['Imagen'];
+            $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+            $pathUploaded = FileHelper::uploadFile($file, 'public/tipos-componentes',$fileName);
+            $tipoComponente->Imagen = $pathUploaded;
+        }
+        $tipoComponente->Nombre = $body['Nombre'];
+        $tipoComponente->update();
+
+        return [
+            "id" => $tipoComponente->id,
+            'Nombre' => $tipoComponente->Nombre,
+            "Imagen" => FileHelper::getRealPath($tipoComponente->Imagen),
+        ];
+
+
+    }
 }

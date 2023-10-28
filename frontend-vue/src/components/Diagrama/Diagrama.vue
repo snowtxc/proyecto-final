@@ -23,9 +23,7 @@ const myDiagramDiv = ref(null);
 const showSpinnerComponentes = ref(false);
 const listaComponentes = ref([]);
 
-const appendNode = (nodeData) => {
-  console.log("EL pepe")
-}
+
 
 const Node = (id, name, image, pos) => {
   const newNodeData = {
@@ -54,7 +52,6 @@ const cargarListaComponentes = () => {
       showSpinnerComponentes.value = false;
     })
     .catch((error) => {
-      console.error('Error al obtener la lista de dispositivos:', error);
       showSpinnerComponentes.value = false;
     });
 };
@@ -62,23 +59,18 @@ const cargarListaComponentes = () => {
 const createDiagram = async () => {
 
   nodeDataArray.splice(0, nodeDataArray.length);
-  const listaNodosPromise = await NodoController.list(props.etapaId);
-  const response = await listaNodosPromise;
+  const [response,responseLinks] = await Promise.all([NodoController.list(props.etapaId),LinkController.list(props.etapaId)]);
 
-  const listaLinksPromise = await LinkController.list(props.etapaId);
-  const responseLinks = await listaLinksPromise;
-  for (const nodo of response) {
-    const componente = await ComponenteController.getById(nodo.componente_id)
+  await Promise.all(response.map(async(nodo)=>{
+    const { componente } = nodo;
     Node(nodo.id, componente.Nombre, componente.tipoComponenteImage, nodo.Posicion);
-  }
+  }));
 
-  for (const link of responseLinks) {
-    console.log(link)
+  responseLinks.map((link)=>{
     Link(link.id, link.nodo_from_id, link.nodo_to_id);
-  }
+  });
 
   listaNodos.value = response;
-
 
   const $ = go.GraphObject.make;
   if (diagram) {

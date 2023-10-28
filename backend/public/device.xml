@@ -1,0 +1,62 @@
+<xml>
+    <device>
+        <id>123456</id>
+        <name>TemperatureSensor1</name>
+        <mark>ABC123</mark>
+        <model>SensorX-2000</model>
+        <description>A temperature sensor for monitoring room temperature</description>
+        <priv_address>192.168.1.10</priv_address>
+        <pub_address>203.0.113.1</pub_address>
+        <post_time>5</post_time>
+        <post_unit>m</post_unit>
+
+        <!-- Data readings from the device -->
+        <data id='1'>
+            <dataname>Temperature</dataname>
+            <datavalue>25.5</datavalue>
+            <dataunit>°C</dataunit>
+            <datatime>2023-10-28T12:15:00</datatime>
+        </data>
+        <data id='2'>
+            <dataname>Humidity</dataname>
+            <datavalue>50</datavalue>
+            <dataunit>%</dataunit>
+            <datatime>2023-10-28T12:15:00</datatime>
+        </data>
+        <data id='3'>
+            <dataname>Pressure</dataname>
+            <datavalue>1013.25</datavalue>
+            <dataunit>hPa</dataunit>
+            <datatime>2023-10-28T12:15:00</datatime>
+        </data>
+
+        <!-- Device configuration parameters -->
+        <config id='A'>
+            <configname>ThresholdTemperature</configname>
+            <configvalue>30</configvalue>
+            <configunit>°C</configunit>
+            <configstatus>ENABLED</configstatus>
+            <configtime>2023-10-27T08:00:00</configtime>
+        </config>
+        <config id='B'>
+            <configname>UpdateFrequency</configname>
+            <configvalue>10</configvalue>
+            <configunit>minutes</configunit>
+            <configstatus>ENABLED</configstatus>
+            <configtime>2023-10-27T08:00:00</configtime>
+        </config>
+
+        <!-- Extra information about the device -->
+        <extrainfo>
+            <manufacturer>ABC Electronics</manufacturer>
+            <location>Room 101</location>
+        </extrainfo>
+
+        <!-- Log information -->
+        <loginfo>
+            <lastupdate>2023-10-28T12:15:00</lastupdate>
+            <status>Normal operation</status>
+        </loginfo>
+
+    </device>
+</xml>

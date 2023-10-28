@@ -84,7 +84,7 @@
                     ></textarea>
                 </div>
 
-                <div class="grid grid-cols-12 w-full gap-2">
+                <div class="grid grid-cols-12 w-full gap-2 flex items-center mt-2">
                     <div class="col-span-6 mb-3 flex flex-col col-">
                         <div>
                             <label class="text-xs text-gray-600" for="nombre"
@@ -123,6 +123,12 @@
                             class="w-12 h-12 ml-2"
                         />
                     </div>
+                    <div class="col-span-3 ml-2">
+                        <BaseBtn :rounded="true" @click="showModalNewTipoComponente = true">
+                            <i class="fa-solid fa-plus"></i>
+                        </BaseBtn>
+                    </div>
+                   
                 </div>
                 
 
@@ -176,6 +182,7 @@
         </div>
     </BaseCard>
 
+    <ModalTipoComponente :action="Action.CREAR" @onTipoComponente="handleNewTipoComponente" :show="showModalNewTipoComponente" v-if="showModalNewTipoComponente" @onClose="showModalNewTipoComponente = false" ></ModalTipoComponente>
     <ConfirmationModal :show="showModalDelete" message="Seguro deseas eliminar este componente?" title="Eliminar Componente" @cancel="showModalDelete = false;" @confirm="submitDeleteImage"></ConfirmationModal>
 </template>
 
@@ -183,7 +190,8 @@
 import { defineProps, ref, onBeforeMount } from 'vue'
 import { appStore } from '../../store/app'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-import BaseBtn from '../../components/Base/BaseBtn.vue'
+import BaseBtn from '../../components/Base/BaseBtn.vue';
+import { Action } from '../../shared/enums/Action';
 
 import useVuelidate from '@vuelidate/core'
 import { required, ipAddress } from '@vuelidate/validators'
@@ -196,11 +204,11 @@ import { useNotification } from '@kyvg/vue3-notification'
 import { useRoute } from 'vue-router';
 
 import ConfirmationModal from '../../components/ConfirmationModal.vue';
+import ModalTipoComponente from '../../components/Modals/ModalTipoComponente.vue'
 
 
 const { notify } = useNotification()
 
-import { Action } from '../../shared/enums/Action'
 
 const $route = useRoute();
 
@@ -223,6 +231,7 @@ const indexImageSelected = ref(null)
 const submit = ref(false)
 const tipoComponenteSelected = ref(null);
 const imageSelected = ref(null);
+const showModalNewTipoComponente = ref(false);
 
 
 const dataDevice = ref({
@@ -293,7 +302,6 @@ onBeforeMount(async () => {
         ProcesoController.getAll(),
         TipoComponenteController.getAll(),
     ])
-    console.log(tiposComponentesData);
     procesos.value = procesosData
     tiposComponentes.value = tiposComponentesData;
 
@@ -384,6 +392,7 @@ const onSubmit = async () => {
     formData.append('DireccionIp', DireccionIp);
     formData.append('Descripcion', Descripcion);
     formData.append('tipo_componente_id', tipo_componente_id);
+    formData.append('tipo_componente_id', tipo_componente_id);
     formData.append('Unidad', "Celsius");
     if(action.value == Action.CREAR){
         const imagenes =  images.value.filter((image) => image.file !== null);
@@ -400,9 +409,9 @@ const onSubmit = async () => {
         })
 
         action.value == Action.EDITAR ? changeTitulo(`Editar Componente "${componente.Nombre}"`) : null;
-        tipoComponenteSelected.value = null;
         $appStore.setGlobalLoading(false)
         if(action.value == Action.CREAR){
+            tipoComponenteSelected.value = null;
             resetForm();
             clearImages();
         }
@@ -489,6 +498,14 @@ const submitDeleteImage = async()=>{
 
 const changeTitulo = (value)=>{
     title.value = value;
+}
+
+const handleNewTipoComponente = (newTipoComponente)=>{
+      tipoComponenteSelected.value = newTipoComponente;
+      tiposComponentes.value.unshift(newTipoComponente);
+      dataDevice.value.tipo_componente_id = newTipoComponente.id;
+      showModalNewTipoComponente.value = false;
+      
 }
 
 </script>

@@ -65,12 +65,11 @@ listaProcesosPromise
 watch(selectedProcess, async (newVal) => {
   if (newVal) {
     try {
-      const response = await EtapaController.listaEtapas(newVal)
+      EtapaController.listaEtapas(newVal)
         .then((response) => {
           listaEtapas.value = response.data;
         })
         .catch((error) => {
-          console.error('Error al obtener la lista de procesos:', error);
           $appstore.setGlobalLoading(false)
         });
     } catch (error) {

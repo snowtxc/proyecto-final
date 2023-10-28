@@ -12,6 +12,8 @@ use App\Models\Etapa;
 
 //events
 use App\Events\NodePositionUpdated;
+use App\Helpers\FileHelper;
+
 
 
 
@@ -47,7 +49,7 @@ class NodoController extends Controller
         $nodoCreated = Nodo::create($request->all());
 
         return response()->json($nodoCreated, 200);
-        
+
     }
 
 
@@ -62,15 +64,15 @@ class NodoController extends Controller
 
     public function deleteByComponentId($componenteId){
         $nodos = Nodo::where('componente_id', $componenteId)->get();
-    
+
         if($nodos->isEmpty()){
             return response()->json(['error' => 'Nodo(s) no encontrado(s) para el componente_id especificado'], 404);
         }
-    
+
         foreach ($nodos as $nodo) {
             $nodo->delete();
         }
-    
+
         return response()->json(['message' => 'Nodo(s) eliminado(s) para el componente_id especificado'], 200);
     }
 
@@ -103,7 +105,34 @@ class NodoController extends Controller
 
     public function list($etapaId) {
         $nodos = Nodo::where('etapa_id', $etapaId)->get();
-        return response()->json($nodos, 200);
+        $result = array();
+        foreach($nodos as $nodo){
+            $componente =  $nodo->componente;
+            $pathImage =  FileHelper::getRealPath($componente->tipoComponente->Imagen);
+            $componenteData = [
+                "tipoComponenteImage" => $pathImage,
+                "tipoComponenteNombre" => $componente->tipoComponente->Nombre,
+                "Nombre" => $componente->Nombre,
+                "Descripcion" => $componente->Descripcion,
+                "Unidad" => $componente->Unidad,
+                "DireccionIp" => $componente->DireccionIp,
+                "etapa_id" => $componente->etapa_id,
+                "proceso_id" =>  isset($componente->etapa) ?  $componente->etapa->proceso_id : null,
+                "tipo_componente_id" => $componente->tipo_componente_id,
+                "id" => $componente->id,
+            ];
+            array_push($result, [
+                "id" => $nodo->id,
+                "Posicion" => $nodo->Posicion,
+                "etapa_id" => $nodo->etapa_id,
+                "componente_id" => $nodo->etapa_id,
+                "updated_at" => $nodo->updated_at,
+                "created_at" => $nodo->created_at,
+                "componente" => $componenteData,
+
+            ]);
+        }
+        return response()->json($result, 200);
     }
 
 
