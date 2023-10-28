@@ -21,11 +21,11 @@
                 </p>
             </div>
         </div>
-        <div v-if="!loading && !usersEmpty" class="w-full flex flex-col gap-10">
+        <div v-if="!loading && !usersEmpty" class="w-full flex flex-col gap-4">
             <Card
                 v-for="user in props.usuarios"
                 :key="user.id"
-                class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-1 rounded-md	cursor-pointer"
+                class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-4 rounded-md cursor-pointer"
             >
                 <div class="flex flex-row items-center justify-between">
                     <div class="flex items-center">
@@ -154,3 +154,13 @@ const usersEmpty = computed(()=>{
     return props.usuarios.length === 0;
 })
 </script>
+
+<style scoped>
+.delete:hover {
+    color: #ef4444;
+}
+
+.edit:hover {
+    color: #f59e0b;
+}
+</style>
