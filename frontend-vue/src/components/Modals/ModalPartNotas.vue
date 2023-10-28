@@ -197,7 +197,7 @@
             const COMPONENTE_ID =  props.componenteId;
             const PARTE_ID = props.parteId;
             try{
-                const notaCreated  =await ParteController.addNota(COMPONENTE_ID, PARTE_ID, formNewPart.value);
+                const notaCreated  =   await ParteController.addNota(COMPONENTE_ID, PARTE_ID, formNewPart.value);
                 clearForm();
                 notasArr.value.unshift(notaCreated);
                 creatingNota.value = false;

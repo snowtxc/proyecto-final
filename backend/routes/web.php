@@ -13,6 +13,8 @@ use App\Http\Controllers\AlarmaController;
 use App\Http\Controllers\NodoController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\RegistroController;
+use App\Http\Controllers\FtpController;
+
 
 
 
@@ -108,6 +110,7 @@ Route::prefix('api')->group(function () {
     Route::controller(TipoComponenteController::class)->group(function () {
         Route::get('/tipos_componentes', 'list');
         Route::post('/tipos_componentes', 'create');
+        Route::post('/tipos_componentes/{id}/edit', 'edit');
         Route::delete('/tipos_componentes/{id}', 'delete');
 
     });
@@ -117,6 +120,8 @@ Route::prefix('api')->group(function () {
      /*COMPONENTE  ENDPOINTS*/
      Route::controller(ComponenteController::class)->group(function () {
         Route::get('/componentes', 'list');
+        Route::get('/componentes/prueba', 'prueba');
+
         Route::get('/componentes/{id}', 'getById');
         Route::post('/componentes', 'create');
         Route::post('/componentes/{id}', 'update');
@@ -125,6 +130,7 @@ Route::prefix('api')->group(function () {
         Route::post('/componentes/{id}/imagenes', 'addImageById');
         Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
         Route::get('/componentes-sin-nodo', 'listarDispositivosSinNodo');
+
     });
 
     /*PARTE ENDPOINTS*/
@@ -170,6 +176,15 @@ Route::prefix('api')->group(function () {
         Route::get('/componentes/{id}/registros/exportExcel', 'exportExcel');
 
     });
+
+
+     /*FTP ENDPOINTS*/
+     Route::controller(FtpController::class)->group(function () {
+        Route::get('/ftp/download', 'downloadFileFromFTP');
+
+    });
+
+
 
     Route::get('/broadcast', function(Request $request){
         broadcast(new Hello());

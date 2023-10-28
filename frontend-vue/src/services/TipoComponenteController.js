@@ -22,5 +22,11 @@ export default{
         const { data } = response;
         return data;
 
+    },
+
+    async edit(id, body){
+        const response  = await axios.post("tipos_componentes/"+id+"/edit",body); 
+        const { data } = response;
+        return data;
     }
 }

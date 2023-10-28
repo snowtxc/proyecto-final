@@ -1,11 +1,14 @@
 <script setup>
-  import { ref , defineEmits} from 'vue';
+  import { ref , defineEmits,defineProps} from 'vue';
   import { useNotification } from '@kyvg/vue3-notification'
 
   const { notify } = useNotification();
   const emit = defineEmits(['onChangeFile','onClearFile']);
 
-  const imagePreview = ref(null);
+  const props =  defineProps({
+    defaultImgUrl : { type: String ,required: false}
+  })
+  const imagePreview = ref(props.defaultImgUrl ? props.defaultImgUrl : null);
   const inputFile = ref(null);
 
   const validateExtension = (ext) => {

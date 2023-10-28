@@ -8,6 +8,7 @@
      import ModalTipoComponente from "../../components/Modals/ModalTipoComponente.vue";
      import ConfirmationModal from "../../components/ConfirmationModal.vue";
      import { useNotification } from "@kyvg/vue3-notification";
+    
 
      const  { notify } = useNotification();
      const $appStore =  appStore();
@@ -41,9 +42,18 @@
         showModal.value = true;
     }
 
-    const appendTipoComponente = (newTypeComponent) =>{
+    const handleTipoComponenteModal= (typeComponent) =>{
+        console.log(typeComponent)
         showModal.value = false;
-        tiposComponentes.value.unshift(newTypeComponent);
+        if(action.value ==  Action.CREAR){
+            showModal.value = false;
+            tiposComponentes.value.unshift(typeComponent);
+            return;
+        }
+        const index =  tiposComponentes.value.findIndex(item => item.id == typeComponent.id);
+        tiposComponentes.value[index] = typeComponent;
+       
+
     }
 
     const onShowModalDelete = (tipoComponente)=>{
@@ -91,6 +101,12 @@
         }, 500)
     }
 
+    const edit = (tipoComponente) =>{
+         action.value = Action.EDITAR;
+         tipoComponenteSelected.value = tipoComponente;
+         showModal.value = true;
+    }
+
 
 
     
@@ -130,7 +146,19 @@
                         {{tipoComponente.Nombre}}</a>
                 
                     
-                    <div >
+                    <div class="">
+                        <font-awesome-icon
+                                :icon="[
+                                    'far',
+                                    'pen-to-square',
+                                ]"
+                                class="w-5 h-5 m-4 hover:text-primary"
+                                @click="
+                                    edit(
+                                        tipoComponente
+                                    )
+                                "
+                            />
                         <font-awesome-icon
                                 :icon="['far', 'trash-can']"
                                 @click="onShowModalDelete(tipoComponente)"
@@ -146,7 +174,7 @@
         
     </div>
 
-    <ModalTipoComponente v-if="showModal" :show="showModal" :action="action" @onTipoComponenteCreated="appendTipoComponente" @onClose="showModal = false"></ModalTipoComponente>
+    <ModalTipoComponente v-if="showModal" :show="showModal" :action="action" @onTipoComponente="handleTipoComponenteModal" @onClose="showModal = false" :tipoComponenteData="tipoComponenteSelected"></ModalTipoComponente>
 
     <ConfirmationModal 
     v-if="showModalDelete" :show="showModalDelete" 

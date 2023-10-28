@@ -122,7 +122,6 @@ class ComponenteController extends Controller
             'Nombre' => 'required',
             'Descripcion' => 'required',
             "tipo_componente_id" => 'required',
-            "etapa_id" => "required|integer"
         ]);
 
         if ($validator->fails()) {
@@ -214,7 +213,7 @@ class ComponenteController extends Controller
     public function listarDispositivosSinNodo()
     {
         $dispositivosSinNodo = Componente::doesntHave('nodo')->get();
-        
+
         $result = array();
         foreach($dispositivosSinNodo as $componente){
             $tipoComponente = $componente->tipoComponente;
@@ -234,6 +233,12 @@ class ComponenteController extends Controller
             );
         }
         return ($result);
+    }
+
+
+    public function prueba(){
+        return response()->json(['message' => "Mi prueba"], 200);
+
     }
 
 
