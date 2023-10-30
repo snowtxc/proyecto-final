@@ -56,20 +56,20 @@ class ProcesoController extends Controller
 
     public function delete($id){
         $process = Proceso::find($id);
-    
+
         if (!isset($process)) {
             return response()->json(['error' => 'Proceso no encontrado'], 404);
         }
-    
+
         // Elimina todas las etapas asociadas al proceso
         $process->etapas()->delete();
-    
+
         // Elimina el proceso en sí
         $process->delete();
-    
+
         return response()->json(['success' => 'Proceso y etapas relacionadas borrados'], 200);
     }
-    
+
 
 
     public function getEtapasByProcess($id){
@@ -141,6 +141,7 @@ class ProcesoController extends Controller
                 "id" => $user->id,
                 "name" => $user->name,
                 "email" => $user->email,
+                "rol" => $user->rol,
                 "profileImage" =>  isset($user->profileImage) ? FileHelper::getRealPath($user->profileImage) : null,
                 "created_at" => $user->created_at,
                 "updated_at" => $user->updated_at,
@@ -166,6 +167,7 @@ class ProcesoController extends Controller
                 "id" => $usuario->id,
                 "name" => $usuario->name,
                 "email" => $usuario->email,
+                "rol" => $usuario->rol,
                 "profileImage" =>  isset($usuario->profileImage) ? FileHelper::getRealPath($usuario->profileImage) : null,
                 "created_at" => $usuario->created_at,
                 "updated_at" => $usuario->updated_at,
