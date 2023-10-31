@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\Models\Proceso;
 use App\Models\AlarmaUser;
 use App\Models\Componente;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -63,7 +64,6 @@ class AlarmaController extends Controller
 
 
         }
-
 
         return array("data" => $result, "countRows" => $countRows);
     }
@@ -132,5 +132,40 @@ class AlarmaController extends Controller
         return response()->json(['message' => 'Alarma creada y notificaciones enviadas.']);
     }
     
+    public function getByUser(Request $request){
+        $id = $request->query('id');
+        $page = $request->query('page');
+        $user = User::findOrFail($id);
+        $rows = 10; 
+        $alarmas = $user->alarmas()->paginate($rows, ['*'], 'page', $page);
+
+        $result = array();
+        foreach($alarmas as $alarma){
+              $componente = $alarma->componente;
+              $proceso =  $alarma->proceso;
+              $tipoComponente = $componente->tipoComponente;
+              $imagen = $tipoComponente->Imagen;
+              $urlPath = FileHelper::getRealPath($imagen);
+
+              array_push($result,
+                    [
+                        "id" => $alarma->id,
+                        "componenteNombre" => $componente->Nombre,
+                        "tipoComponente" => $tipoComponente->Nombre,
+                        "procesoNombre" => $proceso->Nombre,
+                        "fechaHora"  => $alarma->created_at,
+                        "tipoComponenteImagen" => $urlPath
+                    ]
+                );
+        }
+
+        $response = [
+            'data' => $result,
+            'current_page' => $alarmas->currentPage(), 
+            'last_page' => $alarmas->lastPage()
+        ];
+        
+        return response()->json($response, 200);
+    }
 
 }

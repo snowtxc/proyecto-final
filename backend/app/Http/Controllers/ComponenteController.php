@@ -21,13 +21,17 @@ class ComponenteController extends Controller
         $offset = $page == 1 ? 0 : (($page - 1) * $maxRows);
 
         $nombre = $request->query('nombre') != null ? $request->query('nombre') : null;
+        $tipo = $request->query('tipo') != null ? $request->query('tipo') : null;
 
         $countRows = Componente::when(isset($nombre), function ($query) use ($nombre) {
             $query->where('Nombre', 'like', '%' . $nombre . '%');
-        })->count();
+        })->when(isset($tipo), function ($query) use ($tipo) {
+            $query->where('tipo_componente_id', '=', $tipo );})->count();
 
         $componentes  = Componente::skip($offset)->take($maxRows)->when(isset($nombre), function ($query) use ($nombre) {
             $query->where('Nombre', 'like', '%' . $nombre . '%');
+        })->when(isset($tipo), function ($query) use ($tipo) {
+            $query->where('tipo_componente_id', '=', $tipo );
         })->get();
 
         $result = array();

@@ -92,7 +92,7 @@ Route::prefix('api')->group(function () {
 
         Route::post("/procesos/{id}/usuarios", 'addUsersToProcess');
         Route::delete("/procesos/{id}/usuarios/{userId}", 'removeUserFromProcess');
-
+        Route::get('/procesos-usuario', 'getByUser');
 
     });
 
@@ -143,9 +143,10 @@ Route::prefix('api')->group(function () {
         Route::get('/alarmas', 'list');
         Route::get("/alarmas/{id}/usuarios", 'getUsers');
         Route::post('/alarmas', 'create');
+        Route::get('/alarmas-usuario', 'getByUser');
     });
 
-     /*ALARMA ENDPOINTS*/
+     /*NODOS ENDPOINTS*/
      Route::controller(NodoController::class)->group(function () {
         Route::post('/nodos', 'create');
         Route::delete('/nodos/{id}', 'delete');
@@ -154,7 +155,7 @@ Route::prefix('api')->group(function () {
         Route::get('/nodos/{etapaId}', 'list');
     });
 
-     /*ALARMA ENDPOINTS*/
+     /*LINKS ENDPOINTS*/
      Route::controller(LinkController::class)->group(function () {
         Route::post('/links', 'create');
         Route::delete('/links/{id}', 'delete');

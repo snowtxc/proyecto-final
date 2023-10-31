@@ -122,7 +122,7 @@ export default {
                 this.page = 1;
                 this.loading = true;
                 this.getComponentes();
-            }, 200);
+            }, 300);
         },
         handleSelectedDevice(item) {
             this.$emit('dispositivoSelected', item);

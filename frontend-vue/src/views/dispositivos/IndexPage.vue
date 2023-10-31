@@ -12,8 +12,25 @@
         <div class="flex gap-10 mt-4">
             <div class="min-w-[350px]">
                 <BaseCard>
+                    
+                    <label class="text-sm text-gray-600" for="tipo">Tipo:</label>
+                    <select
+                            v-model="filters.tipo"
+                            id="small"
+                            @change="handleFilter"
+                            class="w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                        >
+                        <option :value="''"> Todos </option>
+                        <option
+                            v-for="tipoComponente in tiposComponentes"
+                            :key="tipoComponente.id"
+                            :value="tipoComponente.id"
+                        >
+                            {{ tipoComponente.Nombre }}                                
+                        </option>
+                    </select>
                     <input
-                        class="w-full px-4 py-1 bg-gray-100 focus:outline-none border border-gray-400"
+                        class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
                         type="text"
                         placeholder="Buscar"
                         v-model="filters.search"
@@ -84,6 +101,7 @@ import Breadcrumb from '@/components/Breadcrumbs.vue'
 import CardDevice from '../../components/Cards/CardDevice.vue'
 import PanelDeviceInfo from   '../../components/Panel/PanelDeviceInfo.vue'
 import ComponenteController from '@/services/ComponenteController'
+import TipoComponenteController from '../../services/TipoComponenteController';
 
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css';
@@ -118,13 +136,17 @@ const page = ref(0)
 const maxRows = ref(10)
 const componentes = ref([]);
 const loading = ref(true);
+const tiposComponentes = ref([]);
 
 const filters = ref({
     search: '',
+    tipo: ''
 })
 
 onBeforeMount(async () => {
-
+    const tiposComponentesData = await TipoComponenteController.getAll();
+    console.log(tiposComponentesData);
+    tiposComponentes.value = tiposComponentesData;
 })
 
 const handleSelectedDevice = async(value) => {
@@ -150,7 +172,7 @@ const loadMoreData = async ($state) => {
 }
 
 const getComponentes = async () => {
-    $appStore.setGlobalLoading(true)
+    //$appStore.setGlobalLoading(true)
     loading.value = true;
     const result = await ComponenteController.list(
         page.value,
@@ -160,7 +182,7 @@ const getComponentes = async () => {
     const { data, countRows } = result
     componentes.value = [...componentes.value, ...data]
     hasMoreData.value = componentes.value.length < countRows
-    $appStore.setGlobalLoading(false)
+   // $appStore.setGlobalLoading(false)
     loading.value = false;
 
 }
@@ -176,6 +198,13 @@ const handleSearch = ($event) => {
         page.value = 1
         getComponentes()
     }, 500)
+}
+
+const handleFilter = () => {
+    componentes.value = []
+    page.value = 1
+    getComponentes()
+    
 }
 
 const componentesIsEmpty = computed(() => {
