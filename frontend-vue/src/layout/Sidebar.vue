@@ -122,7 +122,7 @@ let handleWindowResize = () => {
                             class="nav-item"
                         >
                             <div class="nav-item-hold">
-                                <i class="i-Find-User text-3xl"></i>
+                                <i class="fa-solid fa-users text-3xl"></i>
                                 <p>Usuarios</p>
                             </div>
                         </router-link>
