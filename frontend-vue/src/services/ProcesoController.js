@@ -76,13 +76,18 @@ export default {
         const response = await axios.get(url);
         const { data } = response;
         return data;
-    },
+     },
+    
 
     async getProcesosByUser(id) {
         const url = `procesos/${id}/procesos`;
         const response = await axios.get(url);
         const { data } = response;
         return data;
-    }
+    },
 
+
+    getByUser(id, page){
+        return axios.get("procesos-usuario?id="+id+"&page="+page);
+    }
 }

@@ -177,6 +177,15 @@ class ProcesoController extends Controller
 
     }
 
+    public function getByUser(Request $request){
+        $id = $request->query('id');
+        $page = $request->query('page');
+        $user = User::findOrFail($id);
+        $rows = 10; 
+        $procesos = $user->procesos()->paginate($rows, ['*'], 'page', $page);
+    
+        return response()->json($procesos, 200);
+    }
     public function getProcesosByUser($userId)
     {
         $user = User::find($userId);

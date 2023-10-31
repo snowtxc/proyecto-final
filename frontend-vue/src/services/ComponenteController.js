@@ -19,6 +19,9 @@ export default{
         if(filters.search){
             url+="&nombre="+filters.search;
         }
+        if(filters.tipo){
+            url+="&tipo="+filters.tipo;
+        }
         const response  = await axios.get(url);
         const { data } = response;
         return data;

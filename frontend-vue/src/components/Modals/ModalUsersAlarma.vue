@@ -20,9 +20,10 @@
                     </div>
                     <div class="px-5 ">
                         <div class="w-full">                          
-                            <div
-                                class="flex flex-wrap gap-5  mt-5"
-                            >
+                            <div class="flex flex-wrap gap-5  mt-5 text-center">
+                                <div class="w-full text-center mt-4">
+                                    <spinner v-if="loading" :show="loading"></spinner>
+                                </div>
                                 <div
                                     class="w-full bg-white p-8 rounded-md shadow-md"
                                     v-if="users.length == 0 && !loading"
@@ -62,6 +63,7 @@
 
 import AlarmaController from '../../services/AlarmaController';
 import { appStore } from '../../store/app';
+import spinner from '../../views/components/spinner/spinner.vue';
 
 const $appStore = appStore();
 
@@ -77,7 +79,6 @@ export default {
       };
     },
     created() {
-        $appStore.setGlobalLoading(true);
         this.getUsers();
     },
     methods: {
@@ -87,7 +88,6 @@ export default {
                     this.users = response.data;
                 }
                 this.loading = false;
-                $appStore.setGlobalLoading(false);
             });
         }
     },
@@ -95,7 +95,8 @@ export default {
         imageProfileDefault(){
             return $appStore.getImageProfileDefault;
         }
-    }
+    },
+    components: { spinner }
 }
 
 </script>

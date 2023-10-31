@@ -72,6 +72,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Proceso::class, 'proceso_user');
     }
 
+    public function alarmas(){
+        return $this->belongsToMany(Alarma::class, 'alarma_users');
+    }
 
 
 }
