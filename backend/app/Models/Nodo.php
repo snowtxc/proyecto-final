@@ -18,7 +18,7 @@ class Nodo extends Model
 
     public function  componente()
     {
-        return $this->hasOne(Componente::class);
+        return $this->belongsTo(Componente::class);
     }
 
     public function etapa(){

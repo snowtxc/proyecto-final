@@ -8,7 +8,7 @@ import {
 
 import { onBeforeMount } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
-
+import Diagrama from '../../components/Diagrama/Diagrama.vue';
 
 onBeforeMount(()=>{
     window.Echo.channel('channel-name').listen('Hello', (e)=>{
@@ -18,6 +18,7 @@ onBeforeMount(()=>{
 </script>
 
 <template>
+    
     <div class="container mx-auto">
         <Breadcrumbs parentTitle="Dashboard" subParentTitle="Dashboard v1" />
         <div class="grid grid-cols-12 gap-5">

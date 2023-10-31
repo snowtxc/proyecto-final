@@ -126,7 +126,6 @@ class ComponenteController extends Controller
             'Nombre' => 'required',
             'Descripcion' => 'required',
             "tipo_componente_id" => 'required',
-            "etapa_id" => "required|integer"
         ]);
 
         if ($validator->fails()) {
@@ -219,7 +218,31 @@ class ComponenteController extends Controller
     {
         $dispositivosSinNodo = Componente::doesntHave('nodo')->get();
 
-        return response()->json($dispositivosSinNodo);
+        $result = array();
+        foreach($dispositivosSinNodo as $componente){
+            $tipoComponente = $componente->tipoComponente;
+            $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
+            array_push($result,
+               [
+                "tipoComponenteImage" => $pathImage,
+                "tipoComponenteNombre" => $tipoComponente->Nombre,
+                "Nombre" => $componente->Nombre,
+                "Descripcion" => $componente->Descripcion,
+                "Unidad" => $componente->Unidad,
+                "DireccionIp" => $componente->DireccionIp,
+                "etapa_id" => $componente->etapa_id,
+                "tipo_componente_id" => $componente->tipo_componente_id,
+                "id" => $componente->id
+               ]
+            );
+        }
+        return ($result);
+    }
+
+
+    public function prueba(){
+        return response()->json(['message' => "Mi prueba"], 200);
+
     }
 
 

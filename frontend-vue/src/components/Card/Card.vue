@@ -4,7 +4,7 @@ const props = defineProps({
 })
 </script>
 <template>
-    <div class="card flex flex-col justify-center   cursor-pointer p-4 ">
+    <div class="card flex flex-col justify-center cursor-pointer p-4 ">
         <div class="card-body" :class="props.noPadding ? 'noPadding' : ''">
             <slot />
         </div>

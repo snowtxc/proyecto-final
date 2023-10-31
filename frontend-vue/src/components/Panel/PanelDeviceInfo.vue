@@ -34,96 +34,6 @@
                         />
                     </div>
                 </div>
-                <div class="flex gap-3 mt-3">
-                    <div class="grid grid-cols-12 w-full gap-1 flex-1">
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-up text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            19 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                    </div>
-                    <BaseCard class="overflow-hidden flex-1">
-                        <div class="p-5">
-                            <p class="text-primary text-2xl m-0">25 °C</p>
-                        </div>
-                        <div id="basicArea-chart">
-                            <apexchart
-                        type="line"
-                        :options="chartOptions"
-                        :series="chartSeries"
-                        width="500"
-                    />
-                        </div>
-                    </BaseCard>
-                </div>
-                
                 <div class="mt-3">
                     <BaseCard>
                         <template v-slot:cardHeader>
@@ -263,6 +173,92 @@
                         </div>
                     </BaseCard>
                 </div>
+                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto pa-5">
+                    <BaseCard v-for="(item,index) in items" :key="index">
+                        <Breadcrumbs :parent-title="item.title"></Breadcrumbs>
+                        <div class="grid grid-cols-12 w-full gap-1 flex-1">
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-up text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            19 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            35 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            35 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
+                        <div class="col-span-6">
+                            <BaseCard>
+                                <div class="flex align-center">
+                                    <i
+                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
+                                    ></i>
+                                    <div class="m-auto">
+                                        <p class="text-gray-400">
+                                            Registro mas alto en las ultimas 24
+                                            horas
+                                        </p>
+                                        <p class="text-xl text-primary">
+                                            35 °C
+                                        </p>
+                                    </div>
+                                </div>
+                            </BaseCard>
+                        </div>
+                        </div>
+                        <div class="flex gap-3 mt-3 gap-5">
+                            <ChartBar class="flex-1" ></ChartBar>
+                            <ChartLine class="flex-1"></ChartLine>
+                        </div>
+                    </BaseCard>
+                    
+                </div>
+                
+              
             </div>
         </BaseCard>
     </div>
@@ -314,6 +310,8 @@ import { appStore } from '../../store/app'
 import cutString from '../../shared/helpers/cutString'
 
 import Breadcrumbs from '../Breadcrumbs.vue'
+import ChartLine from '../Charts/ChartLine.vue';
+import ChartBar from '../Charts/ChartBar.vue';
 
 const $appStore = appStore()
 const $router = useRouter();
@@ -336,98 +334,16 @@ const showModalDeletePart = ref(false)
 const actionPart = ref('')
 const partSelected = ref(null)
 
-const chartOptions = ref({
-    chart: {
-        id: 'real-time-chart',
-        animations: {
-            enabled: true,
-            easing: 'linear',
-            dynamicAnimation: {
-                speed: 1000,
-            },
-        },
-    },
-    xaxis: {
-        type: 'datetime',
-    },
-})
 
-const chartSeries = ref([
+const items = ref([
     {
-        name: 'Load Average',
-        data: [],
-    },
-])
+    title: 'Temperatura'
+}, 
+{ title: 'Presion'},
 
-const splineAreaWidgetTwo = ref({
-    series: [
-        {
-            name: 'series2',
-            data: [11, 90, 45, 32, 34, 52, 41],
-        },
-    ],
 
-    chartOptions: {
-        chart: {
-            width: '90%',
-            height: 100,
-            toolbar: {
-                show: false,
-            },
-            sparkline: {
-                enabled: true,
-            },
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        stroke: {
-            curve: 'smooth',
-        },
-        legend: {
-            show: false,
-        },
-
-        xaxis: {
-            type: 'datetime',
-            categories: [
-                '2018-09-19T00:00:00',
-                '2018-09-19T01:30:00',
-                '2018-09-19T02:30:00',
-                '2018-09-19T03:30:00',
-                '2018-09-19T04:30:00',
-                '2018-09-19T05:30:00',
-                '2018-09-19T06:30:00',
-            ],
-            labels: {
-                show: false,
-            },
-            axisTicks: {
-                show: false,
-            },
-            axisBorder: {
-                show: false,
-            },
-        },
-        yaxis: {
-            show: false,
-        },
-        grid: {
-            show: false,
-        },
-        tooltip: {
-            enabled: true,
-            x: {
-                format: 'dd/MM/yy HH:mm',
-            },
-        },
-        colors: ['#8b5cf6'],
-        stroke: {
-            curve: 'smooth',
-            width: 1,
-        },
-    },
-})
+{ title :  'Humedad'}
+]);
 
 
 onBeforeMount(() => {
@@ -437,7 +353,10 @@ onBeforeMount(() => {
         loadingPartes.value = false
     })
 
-    setInterval(() => {
+
+    window.Echo.channel('componente.'+props.deviceInfo.id+'.update-registros').listen('appendRegistrosDevice', (newRegistro)=>{
+        const { created_at ,Marca } = newRegistro;
+
         const random = Math.floor(Math.random() * 10) + 1
         const timestamp = new Date().getTime()
 
@@ -445,7 +364,10 @@ onBeforeMount(() => {
             x: timestamp,
             y: random,
         })
-    }, 3000)
+
+
+    })
+
 })
 
 const onDelete = async () => {

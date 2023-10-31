@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "maatwebsite/excel": "3.1.48",
+        "phpseclib/phpseclib": "^3.0",
         "psr/simple-cache": "2.0",
         "pusher/pusher-php-server": "^7.2",
         "tymon/jwt-auth": "^2.0"
@@ -30,6 +31,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
+
         }
     },
     "autoload-dev": {

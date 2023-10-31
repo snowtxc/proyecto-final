@@ -1,113 +1,28 @@
 <template>
-  <div class="h-[750px] w-full ">
-    <Breadcrumb parentTitle='Procesos' subParentTitle="Etapa" />
-    <div class="h-full w-full flex flex-row justify-between ">
-      <div class="h-full w-1/5 p-4 space-y-4">
-        <p class="font-bold text-xl mb-4">
-          Dispositivos
-        </p>
-        <div class="flex flex-col items-center w-full ">
-          <spinner :show="showSpinnerComponentes"></spinner>
-        </div>
-        <template v-if="listaComponentes.length > 0">
-          <CardDevice v-for="item in listaComponentes" :key="item.id" :nombre="item.Nombre" :ipAddress="item.DireccionIp"
-            :value="25" :image="item.tipoComponenteImage" id="agregarNodoButton" @click="cardClicked(item)">
-          </CardDevice>
-        </template>
-        <template v-else>
-          <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
-        </template>
-
-      </div>
-      <div class="h-full flex items-center w-10">
-        <ArrowSpinner :show="true" />
-      </div>
-      <Card class="h-full w-3/4 ">
-        <!-- <spinner :show="true"></spinner> -->
-        <div ref="myDiagramDiv" class="w-full h-full"></div>
-      </Card>
-
-    </div>
-  </div>
+  <div ref="myDiagramDiv" class="w-full h-full"></div>
 </template>
+
 <script setup>
-import Breadcrumb from '@/components/Breadcrumbs.vue';
-import { onMounted, ref, onBeforeMount } from 'vue';
-import { useRoute } from 'vue-router';
+import { defineProps, onMounted, ref } from 'vue';
+import NodoController from '@/services/NodoController';
+import LinkController from '@/services/LinkController';
+import ComponenteController from '@/services/ComponenteController';
 import go from 'gojs';
-import Card from '@/components/Card/Card.vue';
-import ComponenteController from '../../services/ComponenteController';
-import NodoController from '../../services/NodoController';
-import LinkController from '../../services/LinkController';
-import { appStore } from "@/store/app.js";
-import CardDevice from '../../components/Cards/CardDevice.vue'
-import spinner from '../components/spinner/spinner.vue';
-import ArrowSpinner from '../components/spinner/ArrowSpinner.vue';
-import Diagrama from '../../components/Diagrama/Diagrama.vue';
 
-const $appstore = appStore();
-const MiDiagrama = ref(null);
+const props = defineProps({
+  procesoId: { type: Number, required: true },
+  etapaId: { type: Number, required: true },
+  readOnly: { type: Boolean, required: true }
+})
 
-const procesoId = ref(null);
-const etapaId = ref(null);
-const route = useRoute();
-const myDiagramDiv = ref(null);
-const listaComponentes = ref([]);
-const listaNodos = ref([]);
 let diagram = null;
 const nodeDataArray = [];
 const linkDataArray = [];
+const listaNodos = ref([]);
+const myDiagramDiv = ref(null);
 const showSpinnerComponentes = ref(false);
+const listaComponentes = ref([]);
 
-const listaComponentesPromise = ComponenteController.listDispositivosSinNodo();
-
-
-$appstore.setGlobalLoading(true)
-
-listaComponentesPromise
-  .then((response) => {
-    listaComponentes.value = response
-    $appstore.setGlobalLoading(false)
-  })
-  .catch((error) => {
-    console.error('Error al obtener la lista de componentes:', error);
-    $appstore.setGlobalLoading(false)
-  });
-
-const cargarListaComponentes = () => {
-  showSpinnerComponentes.value = true;
-  ComponenteController.listDispositivosSinNodo()
-    .then((response) => {
-      listaComponentes.value = response
-      showSpinnerComponentes.value = false;
-    })
-    .catch((error) => {
-      console.error('Error al obtener la lista de dispositivos:', error);
-      showSpinnerComponentes.value = false;
-    });
-};
-
-const createNode = async (id, name, image, pos) => {
-  Node(id, name, image, pos)
-  const data = {
-    Posicion: pos,
-    componente_id: id,
-    etapa_id: etapaId.value
-  }
-  try {
-    await NodoController.create(data).then(() => {
-      createDiagram();
-    })
-
-    const index = listaComponentes.value.findIndex(componente => componente.id === id);
-    if (index !== -1) {
-      listaComponentes.value.splice(index, 1);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-  MiDiagrama.value.appendNode()
-}
 
 
 const Node = (id, name, image, pos) => {
@@ -118,7 +33,6 @@ const Node = (id, name, image, pos) => {
     picture: image
   };
   nodeDataArray.push(newNodeData);
-
 }
 
 const Link = (id, from, to) => {
@@ -130,31 +44,33 @@ const Link = (id, from, to) => {
   linkDataArray.push(newLinkData);
 }
 
-const cardClicked = (dataComponente) => {
-  createNode(dataComponente.id, dataComponente.Nombre, dataComponente.tipoComponenteImage, "-200 -200")
-}
+const cargarListaComponentes = () => {
+  showSpinnerComponentes.value = true;
+  ComponenteController.listDispositivosSinNodo()
+    .then((response) => {
+      listaComponentes.value = response
+      showSpinnerComponentes.value = false;
+    })
+    .catch((error) => {
+      showSpinnerComponentes.value = false;
+    });
+};
 
 const createDiagram = async () => {
 
   nodeDataArray.splice(0, nodeDataArray.length);
-  const listaNodosPromise = await NodoController.list(etapaId.value);
-  const response = await listaNodosPromise;
+  const [response,responseLinks] = await Promise.all([NodoController.list(props.etapaId),LinkController.list(props.etapaId)]);
 
-  const listaLinksPromise = await LinkController.list(etapaId.value);
-  const responseLinks = await listaLinksPromise;
-  console.log(responseLinks)
-  for (const nodo of response) {
-    const componente = await ComponenteController.getById(nodo.componente_id)
+  await Promise.all(response.map(async(nodo)=>{
+    const { componente } = nodo;
     Node(nodo.id, componente.Nombre, componente.tipoComponenteImage, nodo.Posicion);
-  }
+  }));
 
-  for (const link of responseLinks) {
-    console.log(link)
+  responseLinks.map((link)=>{
     Link(link.id, link.nodo_from_id, link.nodo_to_id);
-  }
+  });
 
   listaNodos.value = response;
-
 
   const $ = go.GraphObject.make;
   if (diagram) {
@@ -162,7 +78,7 @@ const createDiagram = async () => {
   }
   diagram = $(go.Diagram, myDiagramDiv.value,
     {
-      //isReadOnly: true
+      isReadOnly: props.readOnly
     });
 
   var Colors = {
@@ -231,8 +147,8 @@ const createDiagram = async () => {
         const data = {
           nodo_from_id: newLink.data.from,
           nodo_to_id: newLink.data.to,
-          etapa_id: etapaId.value,
-          proceso_id: procesoId.value
+          etapa_id: props.etapaId,
+          proceso_id: props.procesoId
         };
 
         LinkController.create(data)
@@ -254,11 +170,8 @@ const createDiagram = async () => {
 
   diagram.addDiagramListener("SelectionMoved", async function (e) {
     e.subject.each(async function (part) {
-      console.log(part.data.pos)
       const { key, pos } = part.data
-      console.log(pos)
       const response = await NodoController.updatePosition(key, pos);
-      console.log(response)
     });
   });
 
@@ -307,31 +220,38 @@ const createDiagram = async () => {
       new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
       new go.Binding("toSpot", "toSpot", go.Spot.parse),
       new go.Binding("points").makeTwoWay(),
-      $(go.Shape, { isPanelMain: true, stroke: "gray", strokeWidth: 10 },
-        // get the default stroke color from the fromNode
-        new go.Binding("stroke", "fromNode", n => go.Brush.lighten((n && Colors[n.data.color]) || "gray")).ofObject(),
-        // but use the link's data.color if it is set
+      $(go.Shape, { isPanelMain: true, stroke: "#afd4fe", strokeWidth: 10 },
+        new go.Binding("stroke", "fromNode", "#faadc1").ofObject(),
         new go.Binding("stroke", "color", colorFunc)),
       $(go.Shape, { isPanelMain: true, stroke: "white", strokeWidth: 3, name: "PIPE", strokeDashArray: [20, 40] })
     );
 
+    var opacity = 1;
+    var down = true;
+    function loop() {
+    diagram.links.each(link => {
+      var shape = link.findObject("PIPE");
+      var off = shape.strokeDashOffset - 1;
+      // animate (move) the stroke dash
+      shape.strokeDashOffset = (off <= 0) ? 60 : off;
+      // animate (strobe) the opacity:
+      if (down) opacity = opacity - 0.01;
+      else opacity = opacity + 0.003;
+      if (opacity <= 0) { down = !down; opacity = 0; }
+      if (opacity > 1) { down = !down; opacity = 1; }
+      shape.opacity = opacity;
+    });
 
+    requestAnimationFrame(loop);
+  }
+  loop();
 
   diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray)
-  $appstore.setGlobalLoading(false)
 }
 
-onBeforeMount(()=>{
-  procesoId.value = route.params.procesoId;
-  etapaId.value = route.params.etapaId;
-    window.Echo.channel('update-nodo-position.' + etapaId.value + '.' + 'procesoId.value').listen('Hello', (e)=>{
-        console.log(e);
-    })
-})
+
 
 onMounted(() => {
-  $appstore.setGlobalLoading(true)
   createDiagram();
-  console.log(linkDataArray)
 });
 </script>
