@@ -55,6 +55,7 @@ class UsuarioController extends Controller
                 "profileImage" =>   isset($userInfo->profileImage) ? FileHelper::getRealPath($userInfo->profileImage) : null,
                 "created_at" => $userInfo->created_at,
                 "updated_at" => $userInfo->updated_at,
+                "rol" => $userInfo->rol
             );
 
             return compact('user', 'token');

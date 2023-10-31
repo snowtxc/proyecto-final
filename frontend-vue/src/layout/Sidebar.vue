@@ -99,7 +99,7 @@ let handleWindowResize = () => {
                         >
                             <div class="nav-item-hold">
                                 <i class="fa-solid fa-plug-circle-minus text-3xl"></i>
-                                <p>Tipos de Componentes</p>
+                                <p>Tipos de Dispositivos</p>
                             </div>
                         </router-link>
 
@@ -112,7 +112,7 @@ let handleWindowResize = () => {
                         >
                             <div class="nav-item-hold">
                                 <i class="fa-solid fa-microchip text-3xl"></i>
-                                <p>Componentes</p>
+                                <p>Dispositivos</p>
                             </div>
                         </router-link>
 

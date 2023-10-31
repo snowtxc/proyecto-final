@@ -20,6 +20,10 @@ export default{
 
     getUsers(idAlarma){
         return axios.get("alarmas/"+idAlarma+"/usuarios");
+    },
+
+    getByUser(id, page){
+        return axios.get("alarmas-usuario?id="+id+"&page="+page);
     }
 
 }

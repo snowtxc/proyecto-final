@@ -24,7 +24,13 @@
                         v-model="filter.search"
                         @input="handleSearch"
                     />
-                    <template v-if="componentes.length > 0">
+                    <div class="w-full text-center mt-4">
+                        <spinner v-if="loading" :show="loading"></spinner>
+                    </div>
+                    <template v-if="componentes.length == 0 && !loading">
+                        <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
+                    </template>
+                    <template v-if="componentes.length > 0 && !loading">
                         <div class="mt-2">
                         <CardDevice 
                             :selected="selected == null"
@@ -48,9 +54,6 @@
                         </CardDevice>
                         </div>
                     </template>
-                    <template v-else>
-                        <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
-                    </template>
                     
                     <div class="flex justify-center mt-2">
                         <infinite-loading
@@ -68,9 +71,10 @@
 
 import ComponenteController from '../../services/ComponenteController';
 import { appStore } from '../../store/app';
-import CardDevice from '../../components/Cards/CardDevice.vue'
+import CardDevice from '../../components/Cards/CardDevice.vue';
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css';
+import spinner from '../../views/components/spinner/spinner.vue';
 
 const $appStore = appStore();
 
@@ -88,11 +92,12 @@ export default {
             search: ''
         },
         loading: true,
-        hasMoreData: false
+        hasMoreData: false,
+        loading: true,
+        searchTimeout: null
       };
     },
     created() {
-        $appStore.setGlobalLoading(true);
         this.getComponentes();
     },
     methods: {
@@ -101,10 +106,8 @@ export default {
             ComponenteController.list(this.page, this.maxRows, this.filter).then((response) => {
                 console.log(response);
                 const { data, countRows } = response;
-                //this.componentes.push(data);
                 this.componentes = [...this.componentes, ...data]
                 this.hasMoreData = this.componentes.length < countRows;
-                $appStore.setGlobalLoading(false);
                 this.loading = false;
             });
         },
@@ -113,17 +116,20 @@ export default {
             this.getComponentes();
         },
         handleSearch(){
-            this.componentes = [];
-            this.page = 1;
-            $appStore.setGlobalLoading(true);
-            this.getComponentes();
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                this.componentes = [];
+                this.page = 1;
+                this.loading = true;
+                this.getComponentes();
+            }, 300);
         },
         handleSelectedDevice(item) {
             this.$emit('dispositivoSelected', item);
         }
 
     },
-    components: { InfiniteLoading, CardDevice }
+    components: { InfiniteLoading, CardDevice, spinner }
 }
 
 </script>

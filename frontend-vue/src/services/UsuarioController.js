@@ -43,7 +43,6 @@ export default{
         const response  = await  axios.post('auth/changeMeProfileImage', body);
         const { data } =  response;
         return data;
-    }
-
+    },
 
 }
