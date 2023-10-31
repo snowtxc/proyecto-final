@@ -35,6 +35,7 @@
                         placeholder="Buscar"
                         v-model="filters.search"
                         @input="handleSearch"
+                        
                     />
                     <div
                         class="flex flex-col overflow-y-scroll max-h-[60vh]"

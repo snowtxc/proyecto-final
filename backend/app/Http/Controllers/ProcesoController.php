@@ -55,13 +55,21 @@ class ProcesoController extends Controller
     }
 
     public function delete($id){
-        $process =  Proceso::find($id);
-        if(isset($process)){
-            $process->delete();
-            return response()->json(['success' => 'Proceso borrado'], 200);
+        $process = Proceso::find($id);
+    
+        if (!isset($process)) {
+            return response()->json(['error' => 'Proceso no encontrado'], 404);
         }
-        return response()->json(['error' => 'Proceso no encontrado'], 404);
+    
+        // Elimina todas las etapas asociadas al proceso
+        $process->etapas()->delete();
+    
+        // Elimina el proceso en sí
+        $process->delete();
+    
+        return response()->json(['success' => 'Proceso y etapas relacionadas borrados'], 200);
     }
+    
 
 
     public function getEtapasByProcess($id){
@@ -178,5 +186,29 @@ class ProcesoController extends Controller
     
         return response()->json($procesos, 200);
     }
+    public function getProcesosByUser($userId)
+    {
+        $user = User::find($userId);
+        if (!isset($user)) {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+
+        $procesos = $user->procesos;
+
+        $data = [];
+        foreach ($procesos as $proceso) {
+            $procesoFormatted = [
+                "id" => $proceso->id,
+                "Nombre" => $proceso->Nombre,
+                "Descripcion" => $proceso->Descripcion,
+                "created_at" => $proceso->created_at,
+                "updated_at" => $proceso->updated_at,
+            ];
+            array_push($data, $procesoFormatted);
+        }
+
+        return response()->json($data, 200);
+    }
+
 
 }
