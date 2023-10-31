@@ -1,11 +1,7 @@
 <script setup>
-import {
-    dashboardOne,
-    splineAreaWidgetTwo,
-    splineAreaWidgetThree,
-} from '@/data/dashboard.v1.js'
 
-import { onBeforeMount ,ref } from 'vue';
+
+import { onBeforeMount ,onMounted,onUnmounted,ref } from 'vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import EstadisticaController from "@/services/EstadisticaController";
 import { appStore } from '@/store/app';
@@ -13,6 +9,8 @@ import CardItemCount from '../../components/Cards/CardItemCount.vue';
 import { randomColor } from "@/shared/helpers/randomColor";  
 import ChartPie from '@/components/Charts/ChartPie.vue';
 import ChartBarActividadProcesos from '@/components/Charts/ChartBarActividadProcesos.vue';
+
+import { userAddedChannel , procesoAddedChannel, tipoComponenteAddedChannel, componenteAddedChannel , userDeletedChannel , procesoDeletedChannel, tipoComponenteDeletedChannel, componenteDeletedChannel}  from "@/shared/helpers/channels";
 
 const $appStore = appStore();
 
@@ -147,6 +145,54 @@ onBeforeMount(async()=>{
     $appStore.setGlobalLoading(false);
 
 })
+
+onMounted(()=>{
+      window.Echo.channel(userAddedChannel()).listen('userAdded', ()=>{
+            rowsCounts.value[0].count ++;
+      });
+
+      window.Echo.channel(procesoAddedChannel()).listen('procesoAdded', ()=>{
+            rowsCounts.value[1].count ++;
+      });
+
+      window.Echo.channel(componenteAddedChannel()).listen('componenteAdded', ()=>{
+            console.log('hola como andas!!!');
+            rowsCounts.value[2].count ++;
+      });
+
+      window.Echo.channel(tipoComponenteAddedChannel()).listen('tipoComponenteAdded', ()=>{
+            rowsCounts.value[3].count ++;
+      });
+
+      ///
+
+      window.Echo.channel(userDeletedChannel()).listen('userDeleted', ()=>{
+            rowsCounts.value[0].count --;
+      });
+
+      window.Echo.channel(procesoDeletedChannel()).listen('procesoDeleted', ()=>{
+            rowsCounts.value[1].count --;
+      });
+
+      window.Echo.channel(componenteDeletedChannel()).listen('componenteDeleted', ()=>{
+            rowsCounts.value[2].count --;
+      });
+
+      window.Echo.channel(tipoComponenteDeletedChannel()).listen('tipoComponenteDeleted', ()=>{
+            rowsCounts.value[3].count --;
+      });
+
+
+})
+
+onUnmounted(()=>{
+      window.Echo.leave(userAddedChannel());
+      window.Echo.leave(procesoAddedChannel());
+      window.Echo.leave(componenteAddedChannel());
+      window.Echo.leave(tipoComponenteAddedChannel());
+});
+
+
 </script>
 
 <template>

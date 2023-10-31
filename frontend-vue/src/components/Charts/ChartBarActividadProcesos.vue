@@ -98,12 +98,13 @@
 <template>
     
     <BaseCard>
+       <p>Actividad de procesos en la ultima hora</p>
         <div class="w-full">
         <div class="flex justify-center" v-if="loading">
             <spinner :show="loading"></spinner>
         </div>
         <apexchart type="bar" height="350" :options="chartOptions" :series="series" v-else></apexchart>
-    </div>
+       </div>
     </BaseCard>
    
 </template>

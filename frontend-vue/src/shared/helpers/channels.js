@@ -1,0 +1,10 @@
+export const procesoAddedChannel = () => 'added-proceso';
+export const userAddedChannel = () => 'added-user';
+export const tipoComponenteAddedChannel = () => 'added-tipo-componente';
+export const componenteAddedChannel = () => 'added-componente';
+export const procesoDeletedChannel = () => 'deleted-proceso';
+export const userDeletedChannel = () => 'deleted-user';
+export const tipoComponenteDeletedChannel = () => 'deleted-tipo-componente';  
+export const componenteDeletedChannel = () => 'deleted-componente';
+
+

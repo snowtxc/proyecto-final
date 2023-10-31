@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Helpers\FileHelper;
+use App\Events\userAdded;
+use App\Events\userDeleted;
+
+
 
 
 class UsuarioController extends Controller
@@ -175,7 +179,7 @@ class UsuarioController extends Controller
             $message->to($user->email);
             $message->subject('Restablecimiento de contraseña');
         });
-
+        broadcast(new userAdded());
         return $user;
     }
 
@@ -204,6 +208,8 @@ class UsuarioController extends Controller
     {
         $user = User::findOrFail($id);
         $user->delete();
+
+        broadcast(new userDeleted());
 
         return response()->json(['message' => 'Usuario eliminado']);
     }

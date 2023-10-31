@@ -107,30 +107,30 @@ class AlarmaController extends Controller
         $alarma->componente_id = $componenteId;
         $alarma->proceso_id = $procesoId;
         $alarma->save();
-        
+
         $usuarios = $proceso->users;
-    
+
         foreach ($usuarios as $usuario) {
             $data = [
                 'name' => $usuario->name,
                 'dispositivo' => $componente->Nombre,
                 'proceso' => $proceso->Nombre
             ];
-    
+
             Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
                 $message->to($usuario->email)->subject('Nueva Alarma');
             });
         }
-    
+
         foreach ($usuarios as $usuario) {
             $alarmaUser = new AlarmaUser;
             $alarmaUser->alarma_id = $alarma->id;
             $alarmaUser->user_id = $usuario->id;
             $alarmaUser->save();
         }
-    
+
         return response()->json(['message' => 'Alarma creada y notificaciones enviadas.']);
     }
-    
+
 
 }

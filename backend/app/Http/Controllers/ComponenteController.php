@@ -10,6 +10,10 @@ use App\Models\TipoComponente;
 
 use App\Helpers\FileHelper;
 
+use App\Events\componenteAdded;
+use App\Events\componenteDeleted;
+
+
 use Validator;
 
 class ComponenteController extends Controller
@@ -81,6 +85,8 @@ class ComponenteController extends Controller
                 ]);
               }
         }
+
+        broadcast(new componenteAdded());
         return $componente;
     }
 
@@ -140,6 +146,7 @@ class ComponenteController extends Controller
         $componente = Componente::find($id);
         if(isset($componente)){
             $componente->delete();
+            broadcast(new componenteDeleted());
             return response()->json(['success' => 'Componente borrado'], 200);
         }
         return response()->json(['error' => 'Componente no encontrado'], 404);

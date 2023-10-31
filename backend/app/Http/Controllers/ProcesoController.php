@@ -9,6 +9,10 @@ use App\Models\User;
 use Validator;
 use App\Http\Middleware\JwtMiddleware;
 use App\Helpers\FileHelper;
+use App\Events\procesoAdded;
+use App\Events\procesoDeleted;
+
+
 
 class ProcesoController extends Controller
 {
@@ -35,6 +39,8 @@ class ProcesoController extends Controller
             return response()->json($validator->errors());
         }
         $process = Proceso::create($request->all());
+
+        broadcast(new procesoAdded());
         return $process;
     }
 
@@ -66,6 +72,8 @@ class ProcesoController extends Controller
 
         // Elimina el proceso en sí
         $process->delete();
+
+        broadcast(new procesoDeleted());
 
         return response()->json(['success' => 'Proceso y etapas relacionadas borrados'], 200);
     }
