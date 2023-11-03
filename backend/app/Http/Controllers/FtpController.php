@@ -52,10 +52,12 @@ class FtpController extends Controller
         }
 
 
+
         foreach($result as $deviceRow){
             $deviceId = (string) $deviceRow->device->id;
             $componente = Componente::find($deviceId);
-            $etapa = $componente->etapa;
+
+            $etapa =  $componente->nodo->etapa;
 
             $registrosCreateds = array();
             foreach ($deviceRow->device->data as $data) {
@@ -63,14 +65,14 @@ class FtpController extends Controller
                 $dataValue = (float) $data->datavalue;
                 $dataUnit = (string) $data->dataunit;
                 $dataTime = (string) $data->datatime;
-
-                $newRegistro = [
+                $newRegistroBody = [
                     "Marca" => $dataValue,
-                    "created_at" => $dataUnit,
                     "etapa_id"  => $etapa->id,
+                    "unidad_id" => $dataId,
                     "componente_id" => $componente->id
                 ];
-                $componente->registros()->create($newRegistro);
+                $newRegistro = $componente->registros()->create($newRegistroBody);
+                $newRegistro->unidad;
                 array_push($registrosCreateds, $newRegistro);
 
             }

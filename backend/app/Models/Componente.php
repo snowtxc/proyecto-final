@@ -57,4 +57,10 @@ class Componente extends Model
         return $this->hasMany(Alarma::class);
     }
 
+    public function unidades(){
+        return $this->belongsToMany(Unidades::class, 'componente_unidads')->withPivot('min', 'max');
+
+    }
+
+
 }

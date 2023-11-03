@@ -1,5 +1,14 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted,defineProps } from 'vue';
+import { appendRegistrosDeviceChannel } from '../../shared/helpers/channels';
+
+
+const props =  defineProps({
+     componente_id: { type: Number, required: true},
+     unidad: {type: Object, required: true}
+  });
+
+
 
 const chartOptions = ref({
     chart: {
@@ -24,20 +33,28 @@ const chartSeries = ref([
     },
 ]);
 
-// Función para agregar datos al array de series
-const addDataPoint = () => {
-    const currentTime = new Date().getTime();
-    const newDataPoint = {
-        x: currentTime,
-        y: Math.floor(Math.random() * 100), // Ejemplo: datos aleatorios
-    };
-    chartSeries.value[0].data.push(newDataPoint);
+const addDataPoints = (registros) => {
+    registros.map(registro =>{
+      const { Marca,created_at } = registro;
+      const newDataPoint = {
+        x: created_at,
+        y: Marca 
+        };
+       chartSeries.value[0].data.push(newDataPoint);
+
+    });
+    
 };
 
-// Configuración del temporizador para actualizar los datos cada segundo
-const updateInterval = setInterval(addDataPoint, 1000);
 
-// Detener el temporizador cuando el componente se desmonta
+onMounted(()=>{
+    window.Echo.channel(appendRegistrosDeviceChannel(props.componente_id)).listen('appendRegistrosDevice', (newRegistros)=>{
+      const registrosByUnidad = newRegistros.filter(registro => registro.unidad.id == 1);
+      addDataPoints(registrosByUnidad);
+    });
+});
+
+
 onUnmounted(() => {
     clearInterval(updateInterval);
 });

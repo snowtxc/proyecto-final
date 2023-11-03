@@ -15,10 +15,7 @@ use App\Http\Controllers\LinkController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\FtpController;
 use App\Http\Controllers\EstadisticaController;
-
-
-
-
+use App\Http\Controllers\UnidadController;
 
 use App\Events\Hello;
 
@@ -204,5 +201,12 @@ Route::prefix('api')->group(function () {
         Route::get('/estadisticas/actividadPorProcesos', 'actividadPorProcesos');
 
     });
+
+    Route::controller(UnidadController::class)->group(function () {
+        Route::get('/unidades', 'list');
+
+
+    });
+
 
 });

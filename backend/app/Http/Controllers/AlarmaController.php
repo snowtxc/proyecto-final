@@ -131,15 +131,12 @@ class AlarmaController extends Controller
 
         return response()->json(['message' => 'Alarma creada y notificaciones enviadas.']);
     }
-<<<<<<< HEAD
 
-=======
-    
     public function getByUser(Request $request){
         $id = $request->query('id');
         $page = $request->query('page');
         $user = User::findOrFail($id);
-        $rows = 10; 
+        $rows = 10;
         $alarmas = $user->alarmas()->paginate($rows, ['*'], 'page', $page);
 
         $result = array();
@@ -164,12 +161,11 @@ class AlarmaController extends Controller
 
         $response = [
             'data' => $result,
-            'current_page' => $alarmas->currentPage(), 
+            'current_page' => $alarmas->currentPage(),
             'last_page' => $alarmas->lastPage()
         ];
-        
+
         return response()->json($response, 200);
     }
->>>>>>> 1a103959cc9aced277570fc976162c744947ac71
 
 }

@@ -7,6 +7,8 @@ use App\Models\Componente;
 use App\Models\Etapa;
 use App\Models\ComponenteImagen;
 use App\Models\TipoComponente;
+use App\Models\ComponenteUnidad;
+
 
 use App\Helpers\FileHelper;
 
@@ -65,12 +67,14 @@ class ComponenteController extends Controller
             "DireccionIp" => "required|Ipv4",
             "Descripcion" => "required",
             "tipo_componente_id" => "required",
+            "unidades" => "required",
             'imagenes.*' => 'file'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
         $body = $request->all();
+        $unidades = $body['unidades'];
 
         $tipoComponente = TipoComponente::find($body['tipo_componente_id']);
         if(!isset($tipoComponente)){
@@ -88,6 +92,17 @@ class ComponenteController extends Controller
                     'Nombre' => $fileName
                 ]);
               }
+        }
+        foreach($unidades as $unidad){
+            $unidad_id = $unidad['unidad_id'];
+            $min = $unidad['min'];
+            $max = $unidad['max'];
+            $unidadComponente = new ComponenteUnidad;
+            $unidadComponente->unidades_id = $unidad_id;
+            $unidadComponente->componente_id = $componente->id;
+            $unidadComponente->min = $min;
+            $unidadComponente->max = $max;
+            $unidadComponente->save();
         }
 
         broadcast(new componenteAdded());
@@ -109,6 +124,16 @@ class ComponenteController extends Controller
                     "Nombre" => $imagen->Nombre]);
             }
             $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
+
+            $unidades = array();
+            foreach($componente->unidades as $unidad){
+                    array_push($unidades, [
+                        "unidad_id" => $unidad->id,
+                        "min" => $unidad->pivot->min,
+                        "max" => $unidad->pivot->max,
+                        "nombre" => $unidad->nombre
+                    ]);
+            }
             return [
                 "tipoComponenteImage" => $pathImage,
                 "tipoComponenteNombre" => $tipoComponente->Nombre,
@@ -120,7 +145,8 @@ class ComponenteController extends Controller
                 "proceso_id" =>  isset($etapa) ?  $etapa->proceso_id : null,
                 "tipo_componente_id" => $componente->tipo_componente_id,
                 "id" => $componente->id,
-                "imagenes" => $imagenesPath
+                "imagenes" => $imagenesPath,
+                "unidades" => $unidades
             ];
         }
         return response()->json(['error' => 'Componente no encontrado'], 404);
@@ -132,16 +158,54 @@ class ComponenteController extends Controller
             'Nombre' => 'required',
             'Descripcion' => 'required',
             "tipo_componente_id" => 'required',
+            "unidades.*" => "required"
         ]);
-
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
+        $unidades = $request->all()['unidades'];
         $componente = Componente::find($id);
         if(isset($componente)){
+            $unidadesComponente = ComponenteUnidad::where(["componente_id" => $componente->id])->get();
+
+            foreach($unidades as $unidad){
+                $unidad_id = intval($unidad['unidad_id']);
+                $find = false;
+
+                for($i = 0; $i < count($unidadesComponente); $i++){
+                    if($unidadesComponente[$i]->unidades_id == $unidad_id){
+                        $find = true;
+                        $index = $i;
+                        break;
+                    }
+                }
+
+                if(!$find){
+                    $newUnidadComponente = new ComponenteUnidad;
+                    $newUnidadComponente->unidades_id = $unidad_id;
+                    $newUnidadComponente->componente_id = $componente->id;
+                    $newUnidadComponente->min = $unidad['min'];
+                    $newUnidadComponente->max = $unidad['max'];
+                    $newUnidadComponente->save();
+                }else{
+                    $componenteUnidad = ComponenteUnidad::where(["unidades_id"=> $unidad_id, "componente_id" => $componente->id])->first();
+                    $componenteUnidad->min = $unidad['min'];
+                    $componenteUnidad->max = $unidad['max'];
+                    $componenteUnidad->save();
+                    unset($unidadesComponente[$index]);
+                }
+            }
+            foreach($unidadesComponente as $unidadABorrar){
+                $unidadABorrar->delete();
+            }
+
             $componente->update($request->all());
             return $componente;
         }
+
+
+
+
         return response()->json(['error' => 'Componente no encontrado'], 404);
     }
 

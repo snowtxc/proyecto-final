@@ -17,24 +17,6 @@ class ComponenteSeeder extends Seeder
     public function run()
     {
 
-        /*
-
-
-
-
-
-
-
-
-
-
-
-        Válvula Flowguard Elite 600
-        Válvula  TurboValve 300
-
-        */
-
-
         DB::table('componentes')->insert([
             'Nombre' => "Bomba de Chorro J10S",
             'Descripcion' => "Esto es una descripcion.",

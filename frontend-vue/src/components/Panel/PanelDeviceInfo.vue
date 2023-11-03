@@ -1,6 +1,9 @@
 <template>
     <div class="w-full h-screen">
-        <BaseCard>
+        <div class="flex justify-center" v-if="loading">
+            <spinner :show="true"></spinner>
+        </div>
+        <BaseCard v-else>
             <div class="w-full flex justify-between items-center">
                 <Breadcrumbs :parentTitle="title"></Breadcrumbs>
 
@@ -12,8 +15,9 @@
                     <i class="fas fa-file-excel mr-2"></i> Visualizar Historicos
                 </BaseBtn>
             </div>
-
+            
             <div class="flex flex-col">
+
                 <div class="flex justify-end">
                     <div class="flex gap-4">
                         <font-awesome-icon
@@ -173,9 +177,31 @@
                         </div>
                     </BaseCard>
                 </div>
-                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto pa-5">
-                    <BaseCard v-for="(item,index) in items" :key="index">
-                        <Breadcrumbs :parent-title="item.title"></Breadcrumbs>
+                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5 mt-5">
+                    <div class="w-full flex justify-end">
+                        <div>
+                            <p>Unidad de medida seleccionada</p>
+                            <select
+                            id="small"
+                            class="p-2 mb-6 text-sm text-gray-900 brounded-lg  border border-gray-400 min-w-[400px]"
+                            @change="onSelectUnidadDeMedida">
+                               
+                            <option
+                                v-for="unidad in componenteUnidades"
+                                :key="unidad.unidad_id"
+                                :value="unidad.unidad_id"
+                            >
+                            <div class="p-5">
+                                {{ unidad.nombre }}
+
+                            </div>
+                            </option>
+                        </select>
+                        </div>
+                       
+                    </div>
+                    <BaseCard >
+                        <Breadcrumbs :parentTitle="unidadSelected.nombre"></Breadcrumbs>
                         <div class="grid grid-cols-12 w-full gap-1 flex-1">
                         <div class="col-span-6">
                             <BaseCard>
@@ -213,49 +239,13 @@
                                 </div>
                             </BaseCard>
                         </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
+                        
                         </div>
                         <div class="flex gap-3 mt-3 gap-5">
-                            <ChartBar class="flex-1" ></ChartBar>
-                            <ChartLine class="flex-1"></ChartLine>
+                            <ChartBar class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartBar>
+                            <ChartLine class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartLine>
                         </div>
                     </BaseCard>
-                    
                 </div>
                 
               
@@ -325,49 +315,31 @@ const { notify } = useNotification()
 const emit = defineEmits(['onDelete'])
 
 const showModalDeleteComponent = ref(false)
-const deleting = ref(false)
+const deleting = ref(false);
+const loading = ref(true);
 
 const partes = ref([])
 const loadingPartes = ref(true)
 const showModalPart = ref(false)
 const showModalDeletePart = ref(false)
 const actionPart = ref('')
-const partSelected = ref(null)
+const componenteInfo = ref(null);
+const partSelected = ref(null);
+const componenteUnidades = ref([]);
+const unidadSelected = ref(null)
 
 
-const items = ref([
-    {
-    title: 'Temperatura'
-}, 
-{ title: 'Presion'},
 
 
-{ title :  'Humedad'}
-]);
 
-
-onBeforeMount(() => {
-    ParteController.list(props.deviceInfo.id).then((partesList) => {
-        partes.value = partesList
-        console.log(partes.value)
-        loadingPartes.value = false
-    })
-
-
-    window.Echo.channel('componente.'+props.deviceInfo.id+'.update-registros').listen('appendRegistrosDevice', (newRegistro)=>{
-        const { created_at ,Marca } = newRegistro;
-
-        const random = Math.floor(Math.random() * 10) + 1
-        const timestamp = new Date().getTime()
-
-        chartSeries.value[0].data.push({
-            x: timestamp,
-            y: random,
-        })
-
-
-    })
-
+onBeforeMount(async() => {
+    const [componente , partesData ]  =  await Promise.all([ComponenteController.getById(props.deviceInfo.id) , ParteController.list(props.deviceInfo.id) ])
+    componenteInfo.value = componente;
+    componenteUnidades.value = componente.unidades;
+    unidadSelected.value = componenteUnidades.value[0]; 
+    partes.value = partesData;
+    loadingPartes.value = false;
+    loading.value = false;
 })
 
 const onDelete = async () => {
@@ -473,7 +445,12 @@ const emptyParts = computed(() => {
 })
 
 const title = computed(() => {
-    console.log(props.deviceInfo)
     return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
 })
+
+const onSelectUnidadDeMedida = (e)=>{
+      const value = e.target.value;
+      
+      unidadSelected.value =  componenteUnidades.value.find(unidad => unidad.unidad_id == value);
+}
 </script>

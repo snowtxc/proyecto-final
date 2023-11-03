@@ -6,5 +6,6 @@ export const procesoDeletedChannel = () => 'deleted-proceso';
 export const userDeletedChannel = () => 'deleted-user';
 export const tipoComponenteDeletedChannel = () => 'deleted-tipo-componente';  
 export const componenteDeletedChannel = () => 'deleted-componente';
+export const appendRegistrosDeviceChannel = (componenteId) => `componente.${componenteId}.update-registros`;
 
 

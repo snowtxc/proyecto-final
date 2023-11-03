@@ -78,6 +78,7 @@ const routes = [
                 path: '/dispositivos/:id/historicos',
                 name: 'VerHistoricos',
                 component: () => import('../views/historicos/VerHistorico.vue'),
+                
             },
 
             
