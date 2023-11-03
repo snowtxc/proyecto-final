@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Componente;
-use  App\Models\appendRegistrosDevice;
+use  App\Events\appendRegistrosDevice;
 
 
 
@@ -72,6 +72,7 @@ class ObtenerNuevosRegistros extends Command
             $deviceId = (string) $deviceRow->device->id;
             $componente = Componente::find($deviceId);
             $etapa = $componente->etapa;
+            $proceso = $etapa->proceso;
 
             $registrosCreateds = array();
             foreach ($deviceRow->device->data as $data) {
@@ -81,13 +82,21 @@ class ObtenerNuevosRegistros extends Command
                 $dataTime = (string) $data->datatime;
 
 
-                $newRegistro = $componente->registros()->create( $newRegistro = [
+                $newRegistro = $componente->registros()->create([
                     "Marca" => $dataValue,
                     "created_at" => $dataTime,
                     "etapa_id"  => $etapa->id,
                     "componente_id" => $componente->id
                 ]);
-                array_push($registrosCreateds, $newRegistro);
+
+                array_push($registrosCreateds, [
+                    "id" => $newRegistro->id,
+                    "fechaHora" => $newRegistro->created_at,
+                    "marca"  => $newRegistro->Marca,
+                    "unidad" => "°C",
+                    "proceso" => $proceso->Nombre,
+                    "etapa"  => $etapa->Nombre
+                ]);
 
             }
             broadcast(new appendRegistrosDevice($componente->id, $registrosCreateds));

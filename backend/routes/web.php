@@ -14,9 +14,8 @@ use App\Http\Controllers\NodoController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\FtpController;
-
-
-
+use App\Http\Controllers\EstadisticaController;
+use App\Http\Controllers\UnidadController;
 
 use App\Events\Hello;
 
@@ -191,5 +190,23 @@ Route::prefix('api')->group(function () {
     Route::get('/broadcast', function(Request $request){
         broadcast(new Hello());
     });
+
+    Route::controller(EstadisticaController::class)->group(function () {
+        Route::get('/estadisticas/cantidadUsuarios', 'countUsers');
+        Route::get('/estadisticas/cantidadProcesos', 'countProcesos');
+        Route::get('/estadisticas/cantidadComponentes', 'countComponentes');
+        Route::get('/estadisticas/cantidadTipoComponentes', 'countTiposDeComponentes');
+        Route::get('/estadisticas/cantidadComponentesPorProcesos', 'countComponentesPorProcesos');
+        Route::get('/estadisticas/cantidadEtapasPorProcesos', 'countEtapasPorProcesos');
+        Route::get('/estadisticas/actividadPorProcesos', 'actividadPorProcesos');
+
+    });
+
+    Route::controller(UnidadController::class)->group(function () {
+        Route::get('/unidades', 'list');
+
+
+    });
+
 
 });
