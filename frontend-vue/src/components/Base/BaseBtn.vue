@@ -52,5 +52,7 @@ const props = defineProps({
         font-size: 1.18rem;
         padding: 0.75rem 2rem;
     }
+    border-radius: 10px;
+    box-shadow: 0 4px 20px 1px rgb(0 0 0 / 6%), 0 1px 4px rgb(0 0 0 / 8%);
 }
 </style>

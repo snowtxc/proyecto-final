@@ -161,6 +161,7 @@ Route::prefix('api')->group(function () {
         Route::put('/nodos/{id}/updatePosition', 'updateNodePosition');
         Route::delete('/nodosByComponente/{id}', 'deleteByComponentId');
         Route::get('/nodos/{etapaId}', 'list');
+        Route::get('/nodos/nodo/{nodoId}', 'getById');
     });
 
      /*LINKS ENDPOINTS*/

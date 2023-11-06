@@ -7,35 +7,25 @@
             <div class="w-full flex justify-between items-center">
                 <Breadcrumbs :parentTitle="title"></Breadcrumbs>
 
-                <BaseBtn
-                         @click="handleViewHistoricos"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    
-                >
-                    <i class="fas fa-file-excel mr-2"></i> Visualizar Historicos
+                <BaseBtn @click="handleViewHistoricos"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-file-excel mr-2"></i> Historicos
                 </BaseBtn>
             </div>
-            
+
             <div class="flex flex-col">
 
                 <div class="flex justify-end">
                     <div class="flex gap-4">
-                        <font-awesome-icon
-                            :icon="['far', 'pen-to-square']"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                            @click="
-                                $router.push({
-                                    name: 'editarDispositivo',
-                                    params: { id: props.deviceInfo.id },
-                                })
-                            "
-                        />
+                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" @click="
+                            $router.push({
+                                name: 'editarDispositivo',
+                                params: { id: props.deviceInfo.id },
+                            })
+                            " />
 
-                        <font-awesome-icon
-                            :icon="['far', 'trash-can']"
-                            @click="showModalDeleteComponent = true"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                        />
+                        <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
+                            class="w-5 h-5 m-4 hover:text-primary" />
                     </div>
                 </div>
                 <div class="mt-3">
@@ -43,81 +33,52 @@
                         <template v-slot:cardHeader>
                             <div class="card-header flex justify-between">
                                 <div class="card-title py-3">Partes</div>
-                                <BaseBtn
-                                    rounded
-                                    @click="
-                                        ;(showModalPart = true),
-                                            (actionPart = Action.CREAR)
+                                <BaseBtn rounded @click="
+                                                                                                                                                                                                                                                                                                                                        ; (showModalPart = true),
+                                    (actionPart = Action.CREAR)
                                     "
-                                    class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center"
-                                >
-                                    Agregar parte
+                                    class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center">
+                                    Agregar
                                     <i class="fa-solid fa-plus ml-2"></i>
                                 </BaseBtn>
                             </div>
                         </template>
-                        <div
-                            class="block w-full overflow-x-auto whitespace-nowrap borderless hover"
-                        >
-                            <div
-                                class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
-                            >
+                        <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
+                            <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                                 <div
-                                    class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
-                                >
-                                    <div
-                                        class="flex justify-center w-full"
-                                        v-if="loadingPartes"
-                                    >
+                                    class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
+                                    <div class="flex justify-center w-full" v-if="loadingPartes">
                                         <spinner :show="true"></spinner>
                                     </div>
-                                    <div
-                                        class="w-full flex justify-center"
-                                        v-else-if="!loadingPartes && emptyParts"
-                                    >
+                                    <div class="w-full flex justify-center" v-else-if="!loadingPartes && emptyParts">
                                         <p class="text-gray-600">
                                             No existe ninguna parte asociada al
                                             componente
                                         </p>
                                     </div>
 
-                                    <div
-                                        class="max-h-[50vh] overflow-y-auto"
-                                        v-else
-                                    >
+                                    <div class="max-h-[50vh] overflow-y-auto" v-else>
                                         <table
-                                            class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto"
-                                        >
+                                            class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto">
                                             <thead>
                                                 <tr class="">
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Fecha
                                                     </th>
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Nombre de la parte
                                                     </th>
 
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Acciones
                                                     </th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                <tr
-                                                    class="hover:bg-gray-100 cursor-pointer"
-                                                    v-for="parte in partesFormatted"
-                                                    :key="parte.id"
-                                                >
-                                                    <td
-                                                        class="text-xs py-5 px-4"
-                                                    >
+                                                <tr class="hover:bg-gray-100 cursor-pointer"
+                                                    v-for="parte in partesFormatted" :key="parte.id">
+                                                    <td class="text-xs py-5 px-4">
                                                         {{ parte.Fecha }}
                                                     </td>
 
@@ -127,45 +88,19 @@
 
                                                     <td class="py-5">
                                                         <div class="flex gap-2">
-                                                            <ModalPartNotas
-                                                                :parteNombre="
-                                                                    parte.Nombre
-                                                                "
-                                                                :componenteId="
-                                                                    props
-                                                                        .deviceInfo
-                                                                        .id
-                                                                "
-                                                                :parteId="
-                                                                    parte.id
-                                                                "
-                                                            ></ModalPartNotas>
+                                                            <ModalPartNotas :parteNombre="parte.Nombre
+                                                                " :componenteId="props.deviceInfo.id"
+                                                                :parteId="parte.id"></ModalPartNotas>
 
-                                                            <font-awesome-icon
-                                                                :icon="[
-                                                                    'far',
-                                                                    'pen-to-square',
-                                                                ]"
-                                                                class="w-5 h-5 m-4 hover:text-primary"
-                                                                @click="
-                                                                    editPart(
-                                                                        parte
-                                                                    )
-                                                                "
-                                                            />
+                                                            <font-awesome-icon :icon="[
+                                                                'far',
+                                                                'pen-to-square',
+                                                            ]" class="w-5 h-5 m-4 hover:text-primary"
+                                                                @click="editPart(parte)" />
 
-                                                            <font-awesome-icon
-                                                                :icon="[
-                                                                    'far',
-                                                                    'trash-can',
-                                                                ]"
-                                                                @click="
-                                                                    deletePart(
-                                                                        parte
-                                                                    )
-                                                                "
-                                                                class="w-5 h-5 m-4 hover:text-primary"
-                                                            />
+                                                            <font-awesome-icon :icon="['far', 'trash-can',]"
+                                                                @click="deletePart(parte)"
+                                                                class="w-5 h-5 m-4 hover:text-primary" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -177,108 +112,82 @@
                         </div>
                     </BaseCard>
                 </div>
-                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5 mt-5">
+                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5">
                     <div class="w-full flex justify-end">
                         <div>
                             <p>Unidad de medida seleccionada</p>
-                            <select
-                            id="small"
-                            class="p-2 mb-6 text-sm text-gray-900 brounded-lg  border border-gray-400 min-w-[400px]"
-                            @change="onSelectUnidadDeMedida">
-                               
-                            <option
-                                v-for="unidad in componenteUnidades"
-                                :key="unidad.unidad_id"
-                                :value="unidad.unidad_id"
-                            >
-                            <div class="p-5">
-                                {{ unidad.nombre }}
+                            <select id="small"
+                                class="p-2 mb-6 text-sm text-gray-900 brounded-lg  border border-gray-400 min-w-[400px]"
+                                @change="onSelectUnidadDeMedida">
 
-                            </div>
-                            </option>
-                        </select>
+                                <option v-for="unidad in componenteUnidades" :key="unidad.unidad_id"
+                                    :value="unidad.unidad_id">
+                                    <div class="p-5">
+                                        {{ unidad.nombre }}
+
+                                    </div>
+                                </option>
+                            </select>
                         </div>
-                       
+
                     </div>
-                    <BaseCard >
+                    <div>
                         <Breadcrumbs :parentTitle="unidadSelected.nombre"></Breadcrumbs>
-                        <div class="grid grid-cols-12 w-full gap-1 flex-1">
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-up text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            19 °C
-                                        </p>
+                        <div class="grid md:grid-cols-12 w-full gap-1 flex-1">
+                            <div class="col-span-6">
+                                <BaseCard>
+                                    <div class="flex align-center">
+                                        <i class="fa-solid fa-temperature-arrow-up text-6xl text-purple-200"></i>
+                                        <div class="m-auto">
+                                            <p class="text-gray-400">
+                                                Registro mas alto en las ultimas 24
+                                                horas
+                                            </p>
+                                            <p class="text-xl text-primary">
+                                                19 °C
+                                            </p>
+
+                                        </div>
                                     </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
+                                </BaseCard>
+                            </div>
+                            <div class="col-span-6">
+                                <BaseCard>
+                                    <div class="flex align-center">
+                                        <i class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"></i>
+                                        <div class="m-auto">
+                                            <p class="text-gray-400">
+                                                Registro mas alto en las ultimas 24
+                                                horas
+                                            </p>
+                                            <p class="text-xl text-primary">
+                                                35 °C
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </BaseCard>
+                                </BaseCard>
+                            </div>
                         </div>
-                        
-                        </div>
-                        <div class="flex gap-3 mt-3 gap-5">
-                            <ChartBar class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartBar>
-                            <ChartLine class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartLine>
-                        </div>
-                    </BaseCard>
+                    </div>
                 </div>
-                
-              
+                <div class="flex flex-col md:flex-row mt-3 gap-5">
+                    <ChartBar class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartBar>
+                    <ChartLine class="flex-1" :componente_id="props.deviceInfo.id" :unidad="unidadSelected"></ChartLine>
+                </div>
             </div>
         </BaseCard>
     </div>
 
-    <ModalPartForm
-        v-if="showModalPart"
-        @onProcessed="handleParteModal"
-        :action="actionPart"
-        @onClose="showModalPart = false"
-        :componente_id="props.deviceInfo.id"
-        :partData="partSelected"
-    ></ModalPartForm>
+    <ModalPartForm v-if="showModalPart" @onProcessed="handleParteModal" :action="actionPart"
+        @onClose="showModalPart = false" :componente_id="props.deviceInfo.id" :partData="partSelected"></ModalPartForm>
 
-    <ConfirmationModal
-        v-if="showModalDeleteComponent"
-        :show="showModalDeleteComponent"
-        title="Eliminar componente"
-        message="Seguro deseas eliminar este componente?"
-        @cancel="showModalDeleteComponent = false"
-        @confirm="onDelete"
-    ></ConfirmationModal>
+    <ConfirmationModal v-if="showModalDeleteComponent" :show="showModalDeleteComponent" title="Eliminar componente"
+        message="Seguro deseas eliminar este componente?" @cancel="showModalDeleteComponent = false" @confirm="onDelete">
+    </ConfirmationModal>
 
-    <ConfirmationModal
-        v-if="showModalDeletePart && partSelected"
-        :show="showModalDeletePart"
-        title="Eliminar parte"
-        message="Seguro deseas eliminar esta parte?"
-        @cancel="showModalDeletePart = false"
-        @confirm="onConfirmDeletePart"
-    ></ConfirmationModal>
+    <ConfirmationModal v-if="showModalDeletePart && partSelected" :show="showModalDeletePart" title="Eliminar parte"
+        message="Seguro deseas eliminar esta parte?" @cancel="showModalDeletePart = false" @confirm="onConfirmDeletePart">
+    </ConfirmationModal>
 </template>
 
 <script setup>
@@ -328,15 +237,11 @@ const partSelected = ref(null);
 const componenteUnidades = ref([]);
 const unidadSelected = ref(null)
 
-
-
-
-
-onBeforeMount(async() => {
-    const [componente , partesData ]  =  await Promise.all([ComponenteController.getById(props.deviceInfo.id) , ParteController.list(props.deviceInfo.id) ])
+onBeforeMount(async () => {
+    const [componente, partesData] = await Promise.all([ComponenteController.getById(props.deviceInfo.id), ParteController.list(props.deviceInfo.id)])
     componenteInfo.value = componente;
     componenteUnidades.value = componente.unidades;
-    unidadSelected.value = componenteUnidades.value[0]; 
+    unidadSelected.value = componenteUnidades.value[0];
     partes.value = partesData;
     loadingPartes.value = false;
     loading.value = false;
@@ -385,9 +290,9 @@ const deletePart = (parte) => {
     showModalDeletePart.value = true
 }
 
-const handleViewHistoricos = ()=>{
-    const componentID =  props.deviceInfo.id;
-    $router.push({name: 'VerHistoricos',params: {id : componentID}});
+const handleViewHistoricos = () => {
+    const componentID = props.deviceInfo.id;
+    $router.push({ name: 'VerHistoricos', params: { id: componentID } });
 }
 
 const onConfirmDeletePart = async () => {
@@ -448,9 +353,9 @@ const title = computed(() => {
     return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
 })
 
-const onSelectUnidadDeMedida = (e)=>{
-      const value = e.target.value;
-      
-      unidadSelected.value =  componenteUnidades.value.find(unidad => unidad.unidad_id == value);
+const onSelectUnidadDeMedida = (e) => {
+    const value = e.target.value;
+
+    unidadSelected.value = componenteUnidades.value.find(unidad => unidad.unidad_id == value);
 }
 </script>

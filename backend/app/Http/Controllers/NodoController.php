@@ -134,5 +134,16 @@ class NodoController extends Controller
         return response()->json($result, 200);
     }
 
+    public function getById($nodoId) {
+        $nodo = Nodo::find($nodoId);
+    
+        if (!$nodo) {
+            return response()->json(['error' => 'Nodo no encontrado'], 404);
+        }
+    
+        return response()->json($nodo, 200);
+    }
+    
+
 
 }
