@@ -13,4 +13,11 @@ class Unidades extends Model
         return $this->belongsToMany(Componente::class, 'componente_unidads');
     }
 
+    public function registros(){
+        return $this->hasMany(Registro::class);
+
+    }
+
+
+
 }

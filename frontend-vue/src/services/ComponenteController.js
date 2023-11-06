@@ -57,4 +57,11 @@ export default{
         const { data } = response;
         return data;      
     },
+
+    async  marcaLast24Hours(id){
+        const response  = await axios.get("componentes/"+id+"/marcaLast24Hours");
+        const { data } = response;
+        return data;    
+
+    }
 } 
