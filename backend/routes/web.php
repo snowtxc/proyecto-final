@@ -121,7 +121,6 @@ Route::prefix('api')->group(function () {
      Route::controller(ComponenteController::class)->group(function () {
         Route::get('/componentes', 'list');
         Route::get('/componentes/prueba', 'prueba');
-
         Route::get('/componentes/{id}', 'getById');
         Route::post('/componentes', 'create');
         Route::post('/componentes/{id}', 'update');
@@ -130,6 +129,7 @@ Route::prefix('api')->group(function () {
         Route::post('/componentes/{id}/imagenes', 'addImageById');
         Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
         Route::get('/componentes-sin-nodo', 'listarDispositivosSinNodo');
+        Route::get('/componentes/{id}/marcaLast24Hours' , 'marcaLast24Hours');
 
     });
 
@@ -182,6 +182,10 @@ Route::prefix('api')->group(function () {
      /*FTP ENDPOINTS*/
      Route::controller(FtpController::class)->group(function () {
         Route::get('/ftp/download', 'downloadFileFromFTP');
+        Route::post('/ftp/nuevosRegistros', 'generarRegistros');
+        Route::post('/ftp/last', 'last24Hour');
+
+
 
     });
 

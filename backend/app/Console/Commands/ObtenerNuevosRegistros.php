@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Componente;
+use App\Models\Registro;
 use  App\Events\appendRegistrosDevice;
 
 
@@ -29,8 +30,11 @@ class ObtenerNuevosRegistros extends Command
      *
      * @return int
      */
+
+
     public function handle()
     {
+
         $ftpServer = env('FTP_HOST');
         $ftpUsername = env('FTP_USERNAME');
         $ftpPassword = env('FTP_PASSWORD');
@@ -46,6 +50,7 @@ class ObtenerNuevosRegistros extends Command
         if (!ftp_login($ftpConnection, $ftpUsername, $ftpPassword)) {
             $this->error('Las credenciales de la conexion stp son invalidas');
         }
+
 
         $remoteFiles = ftp_nlist($ftpConnection, $remoteDirectory);
 
@@ -68,11 +73,12 @@ class ObtenerNuevosRegistros extends Command
         }
 
 
+
         foreach($result as $deviceRow){
-            $deviceId = (string) $deviceRow->device->id;
+            $deviceId =  $deviceRow->device->id;
             $componente = Componente::find($deviceId);
-            $etapa = $componente->etapa;
-            $proceso = $etapa->proceso;
+
+            $etapa =  $componente->nodo->etapa;
 
             $registrosCreateds = array();
             foreach ($deviceRow->device->data as $data) {
@@ -80,26 +86,23 @@ class ObtenerNuevosRegistros extends Command
                 $dataValue = (float) $data->datavalue;
                 $dataUnit = (string) $data->dataunit;
                 $dataTime = (string) $data->datatime;
-
-
-                $newRegistro = $componente->registros()->create([
+                $newRegistroBody = [
                     "Marca" => $dataValue,
-                    "created_at" => $dataTime,
                     "etapa_id"  => $etapa->id,
-                    "componente_id" => $componente->id
-                ]);
-
-                array_push($registrosCreateds, [
-                    "id" => $newRegistro->id,
-                    "fechaHora" => $newRegistro->created_at,
-                    "marca"  => $newRegistro->Marca,
-                    "unidad" => "°C",
-                    "proceso" => $proceso->Nombre,
-                    "etapa"  => $etapa->Nombre
-                ]);
+                    "unidad_id" => $dataId,
+                    "componente_id" => $componente->id,
+                ];
+                $newRegistro = $componente->registros()->create($newRegistroBody);
+                $newRegistro->unidad;
+                $newRegistro->etapa;
+                $newRegistro->etapa->proceso;
+                array_push($registrosCreateds, $newRegistro);
 
             }
+
             broadcast(new appendRegistrosDevice($componente->id, $registrosCreateds));
         }
+
+
     }
 }

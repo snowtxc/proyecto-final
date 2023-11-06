@@ -18,6 +18,10 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         $schedule->command('command:obtener-nuevos-registros')->everyMinute();
+        $schedule->command('command:generar-nuevos-registros')->everyMinute();
+
+
+
 
     }
 
