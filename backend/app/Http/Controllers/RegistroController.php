@@ -42,6 +42,7 @@ class RegistroController extends Controller
         foreach($registros as $registro){
             $etapa = $registro->etapa;
             $proceso =  $etapa->proceso;
+            $unidad =  $registro->unidad;
 
             $etapaNombre = $etapa->Nombre;
             $procesoNombre = $proceso->Nombre;
@@ -50,7 +51,7 @@ class RegistroController extends Controller
                 [
                 "fechaHora" => $registro->created_at,
                 "marca"  => $registro->Marca,
-                "unidad" => "°C",
+                "unidad" => $unidad->unidad,
                 "proceso" => $procesoNombre,
                 "etapa"  => $etapaNombre
                 ]

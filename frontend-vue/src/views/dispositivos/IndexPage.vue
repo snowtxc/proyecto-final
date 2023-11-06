@@ -153,8 +153,10 @@ onBeforeMount(async () => {
 const handleSelectedDevice = async(value) => {
     const { id}  = value;
     try{
+        $appStore.setGlobalLoading(true);
         loading.value = true;
         const compontenteData =  await ComponenteController.getById(id);
+        $appStore.setGlobalLoading(false);
         deviceSelected.value = compontenteData;
         loading.value = false;
 

@@ -9,7 +9,9 @@
      import Breadcrumbs from "../../components/Breadcrumbs.vue";
      import ComponenteController from "../../services/ComponenteController";
     
+     import { useNotification } from '@kyvg/vue3-notification'
 
+     const { notify } = useNotification()
 
      const route = useRoute();
      const $appStore = appStore();
@@ -27,13 +29,14 @@
      const hasMoreData = ref(true);
      const title = ref("");
      const filterActive = ref(false);
+     const countRegistros = ref(0);
 
      const channel = `componente.${id}.update-registros`;
 
 
      onMounted(()=>{
         window.Echo.channel(channel).listen('appendRegistrosDevice', (nuevosRegistros) => {
-                appendNewRows(nuevosRegistros)
+            appendNewRows(nuevosRegistros)
         });
      })
      
@@ -48,11 +51,30 @@
      }
 
      const appendNewRows  = (nuevosRegistros)=>{
-             $appStore.setGlobalLoading(true)
+            countRegistros.value +=  nuevosRegistros.length;
+            if(filterActive.value){
+                    notify({
+                        title: 'Error',
+                        text:  `Se ha agregado nuevos ${countRegistros.value} registros al historico , desactiva el filtro para visualizarlo` ,
+                        type: 'warn',
+                    })
+                    return;
+            }
+            $appStore.setGlobalLoading(true)
+
             setTimeout(()=>{
+               
                 nuevosRegistros.map(row =>{
-                historicos.value.unshift(row);
-                })
+                    const { Marca, created_at,unidad,etapa} = row;
+                    const  newRow = {
+                        "fechaHora" : dayjs(created_at).format("DD/MM/YYYY hh:mm a"),
+                        "marca" : Marca,
+                        "unidad": unidad.unidad,
+                        "proceso" : etapa.proceso.Nombre,
+                        "etapa" : etapa.Nombre
+                    }
+                    historicos.value.unshift(newRow);
+                    })
                 $appStore.setGlobalLoading(false)
 
             }, 500)
@@ -67,12 +89,12 @@
                 }
             })
      })
-        onBeforeMount(async()=>{
-            $appStore.setGlobalLoading(true);
-            const  [ componenteData ]  =  await Promise.all([ComponenteController.getById(id) ,getHistoricos()]);
-            title.value  = `Históricos del componente "${componenteData.Nombre}""`;
-            $appStore.setGlobalLoading(false);
-        });
+    onBeforeMount(async()=>{
+        $appStore.setGlobalLoading(true);
+        const  [ componenteData ]  =  await Promise.all([ComponenteController.getById(id) ,getHistoricos()]);
+        title.value  = `Históricos del componente "${componenteData.Nombre}""`;
+        $appStore.setGlobalLoading(false);
+    });
 
      const getHistoricos = async()=>{
          loading.value = true;
@@ -119,6 +141,7 @@
      const removeFilter = ()=>{
         historicos.value = [];
         filterActive.value = false;
+        countRegistros.value = 0;
         page.value = 1;
         clearFilters();
         $appStore.setGlobalLoading(true);
