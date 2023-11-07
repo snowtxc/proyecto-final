@@ -47,7 +47,6 @@ class NodoController extends Controller
             return response()->json(['error' => 'Ya existe un nodo con ese componente'], 404);
         }
         $nodoCreated = Nodo::create($request->all());
-
         return response()->json($nodoCreated, 200);
 
     }

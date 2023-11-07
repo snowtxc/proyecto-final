@@ -42,7 +42,7 @@
                         <div class="flex flex-col">
                             <p class="font-bold text-xl">{{ user.name }}</p>
                             <p>{{ user.email }}</p>
-                            <p class="text-gray-500">Observador</p>
+                            <p class="text-gray-500">{{ user.rol }}</p>
                         </div>
                     </div>
 
@@ -70,8 +70,8 @@
 import { ref, computed, defineEmits } from 'vue'
 import { appStore } from '../../store/app'
 import ConfirmationModal from '../ConfirmationModal.vue'
-import ModalSelectUserProcess from '../Modals/ModalSelectUserProcess.vue'
-import ProcesoController from '../../services/ProcesoController'
+import ModalSelectUserProcess from '../Modals/ModalSelectUserProcess.vue';
+import ProcesoController from '../../services/ProcesoController';
 
 import { useNotification } from '@kyvg/vue3-notification'
 
@@ -155,7 +155,9 @@ const addNewUsersToProcess = async (users) => {
 
 const usersEmpty = computed(()=>{
     return props.usuarios.length === 0;
-})
+});
+
+
 </script>
 
 <style scoped>

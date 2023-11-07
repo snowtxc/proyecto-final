@@ -10,8 +10,8 @@
     import TipoComponenteController from '../../services/TipoComponenteController';
     import { useNotification } from '@kyvg/vue3-notification';
     import spinner from '../../views/components/spinner/spinner.vue';
-    
 
+    
     const props = defineProps({
         show: { type: Boolean,  required: true},
         action : { type: String , required: true},
@@ -98,8 +98,6 @@
             defaultImgUrl.value = Imagen;
          }
     })
-
-   
 
 </script>
 

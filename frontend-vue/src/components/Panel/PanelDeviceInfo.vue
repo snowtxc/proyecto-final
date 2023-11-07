@@ -1,17 +1,10 @@
 <template>
     <div class="w-full h-screen">
-        <BaseCard>
-            <div class="w-full flex justify-between items-center">
-                <Breadcrumbs :parentTitle="title"></Breadcrumbs>
-
-                <BaseBtn
-                         @click="handleViewHistoricos"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    
-                >
-                    <i class="fas fa-file-excel mr-2"></i> Visualizar Historicos
-                </BaseBtn>
-            </div>
+        <div class="flex justify-center" v-if="loading">
+            <spinner :show="true"></spinner>
+        </div>
+        <BaseCard v-else>
+            <Breadcrumbs :parentTitle="title"></Breadcrumbs>
 
             <div class="flex flex-col">
                 <div class="flex justify-end">
@@ -34,6 +27,71 @@
                         />
                     </div>
                 </div>
+                <div
+                    class="bg-white p-4 rounded-lg shadow-md flex justify-between items-start"
+                >
+                    <div>
+                        <div class="text-lg font-semibold mb-2">
+                            Información Operativa
+                        </div>
+
+                        <div class="mb-2">
+                            Estado:
+                            <BaseBadge
+                                :bgColor="
+                                    deviceIsActive
+                                        ? 'bg-green-100'
+                                        : 'bg-red-100'
+                                "
+                                :text="
+                                    deviceIsActive ? 'Operativo' : 'Inactivo'
+                                "
+                            ></BaseBadge>
+                        </div>
+                        <div class="mb-2 flex">
+                            Proceso:
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2">
+                                {{
+                                    deviceIsActive
+                                        ? props.deviceInfo.nodoInfo.proceso
+                                        : 'Sin Informacion'
+                                }}
+                            </a>
+                        </div>
+                        
+                        <div class="mb-2">
+                            Etapa:
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2">
+                                {{
+                                deviceIsActive
+                                    ? props.deviceInfo.nodoInfo.etapa
+                                    : 'Sin Informacion'
+                            }}
+                            </a>
+                            
+                        </div>
+                        
+                        <div>
+                            Desde:
+                            {{
+                                deviceIsActive
+                                    ? dayjs(
+                                          props.deviceInfo.nodoInfo
+                                              .fechaDeIngreso
+                                      ).format('DD/MM/YYYY hh:mm A')
+                                    : 'Sin Informacion'
+                            }}
+                        </div>
+                    </div>
+                    <BaseBtn
+                        @click="handleViewHistoricos"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
+                    >
+                        <i class="fas fa-file-excel mr-2"></i> Visualizar
+                        Historicos
+                    </BaseBtn>
+                </div>
+
                 <div class="mt-3">
                     <BaseCard>
                         <template v-slot:cardHeader>
@@ -173,92 +231,51 @@
                         </div>
                     </BaseCard>
                 </div>
-                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto pa-5">
-                    <BaseCard v-for="(item,index) in items" :key="index">
-                        <Breadcrumbs :parent-title="item.title"></Breadcrumbs>
-                        <div class="grid grid-cols-12 w-full gap-1 flex-1">
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-up text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            19 °C
-                                        </p>
+                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5 mt-5" v-if="deviceIsActive">
+                    <div class="w-full flex justify-end">
+                        <div>
+                            <p>Unidad de medida seleccionada</p>
+                            <select
+                                id="small"
+                                class="p-2 mb-6 text-sm text-gray-900 brounded-lg border border-gray-400 min-w-[400px]"
+                                @change="onSelectUnidadDeMedida"
+                            >
+                                <option
+                                    v-for="unidad in componenteUnidades"
+                                    :key="unidad.unidad_id"
+                                    :value="unidad.unidad_id"
+                                >
+                                    <div class="p-5">
+                                        {{ unidad.nombre }}
                                     </div>
-                                </div>
-                            </BaseCard>
+                                </option>
+                            </select>
                         </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        <div class="col-span-6">
-                            <BaseCard>
-                                <div class="flex align-center">
-                                    <i
-                                        class="fa-solid fa-temperature-arrow-down text-6xl text-purple-200"
-                                    ></i>
-                                    <div class="m-auto">
-                                        <p class="text-gray-400">
-                                            Registro mas alto en las ultimas 24
-                                            horas
-                                        </p>
-                                        <p class="text-xl text-primary">
-                                            35 °C
-                                        </p>
-                                    </div>
-                                </div>
-                            </BaseCard>
-                        </div>
-                        </div>
-                        <div class="flex gap-3 mt-3 gap-5">
-                            <ChartBar class="flex-1" ></ChartBar>
-                            <ChartLine class="flex-1"></ChartLine>
+                    </div>
+                    <BaseCard>
+                        <Breadcrumbs
+                            :parentTitle="unidadSelected.nombre"
+                        ></Breadcrumbs>
+                        
+                        <div class="flex gap-3 mt-3 gap-10">
+                            <ChartBar
+                                class="flex-1"
+                                :componente_id="props.deviceInfo.id"
+                                :unidad="unidadSelected"
+                                :unidades="componenteUnidades" 
+                            ></ChartBar>
+                            <ChartLine
+                                class="flex-1"
+                                :componente_id="props.deviceInfo.id"
+                                :unidad="unidadSelected"
+                                :unidades="componenteUnidades"
+                            ></ChartLine>
                         </div>
                     </BaseCard>
-                    
                 </div>
-                
-              
+                <div class="bg-gray-100   rounded-md text-center mt-5 py-5" v-else>
+                    El dispositivo no se encuentra operativo ya que no está asociado a una etapa de un Proceso
+                </div>
             </div>
         </BaseCard>
     </div>
@@ -293,12 +310,14 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, onBeforeMount, computed } from 'vue'
-import ComponenteController from '../../services/ComponenteController';
-import { useRouter } from 'vue-router';
+import ComponenteController from '../../services/ComponenteController'
+import { useRouter } from 'vue-router'
 import ParteController from '../../services/ParteController'
 
 import ModalPartForm from '../Modals/ModalPartForm.vue'
 import ModalPartNotas from '../Modals/ModalPartNotas.vue'
+import BaseBadge from '../Base/BaseBadge.vue'
+import MinMaxMarcaDevice from '../MinMaxMarcaDevice.vue'
 
 import ConfirmationModal from '../ConfirmationModal.vue'
 import { Action } from '../../shared/enums/Action'
@@ -310,11 +329,11 @@ import { appStore } from '../../store/app'
 import cutString from '../../shared/helpers/cutString'
 
 import Breadcrumbs from '../Breadcrumbs.vue'
-import ChartLine from '../Charts/ChartLine.vue';
-import ChartBar from '../Charts/ChartBar.vue';
+import ChartLine from '../Charts/ChartLine.vue'
+import ChartBar from '../Charts/ChartBar.vue'
 
 const $appStore = appStore()
-const $router = useRouter();
+const $router = useRouter()
 
 const props = defineProps({
     deviceInfo: { required: true, type: Object },
@@ -326,48 +345,29 @@ const emit = defineEmits(['onDelete'])
 
 const showModalDeleteComponent = ref(false)
 const deleting = ref(false)
+const loading = ref(true)
 
 const partes = ref([])
 const loadingPartes = ref(true)
 const showModalPart = ref(false)
 const showModalDeletePart = ref(false)
 const actionPart = ref('')
+const componenteInfo = ref(null)
 const partSelected = ref(null)
+const componenteUnidades = ref([])
+const unidadSelected = ref(null); 
 
-
-const items = ref([
-    {
-    title: 'Temperatura'
-}, 
-{ title: 'Presion'},
-
-
-{ title :  'Humedad'}
-]);
-
-
-onBeforeMount(() => {
-    ParteController.list(props.deviceInfo.id).then((partesList) => {
-        partes.value = partesList
-        console.log(partes.value)
-        loadingPartes.value = false
-    })
-
-
-    window.Echo.channel('componente.'+props.deviceInfo.id+'.update-registros').listen('appendRegistrosDevice', (newRegistro)=>{
-        const { created_at ,Marca } = newRegistro;
-
-        const random = Math.floor(Math.random() * 10) + 1
-        const timestamp = new Date().getTime()
-
-        chartSeries.value[0].data.push({
-            x: timestamp,
-            y: random,
-        })
-
-
-    })
-
+onBeforeMount(async () => {
+    const [componente, partesData] = await Promise.all([
+        ComponenteController.getById(props.deviceInfo.id),
+        ParteController.list(props.deviceInfo.id),
+    ])
+    componenteInfo.value = componente
+    componenteUnidades.value = componente.unidades
+    unidadSelected.value = componenteUnidades.value[0]
+    partes.value = partesData
+    loadingPartes.value = false
+    loading.value = false
 })
 
 const onDelete = async () => {
@@ -413,9 +413,9 @@ const deletePart = (parte) => {
     showModalDeletePart.value = true
 }
 
-const handleViewHistoricos = ()=>{
-    const componentID =  props.deviceInfo.id;
-    $router.push({name: 'VerHistoricos',params: {id : componentID}});
+const handleViewHistoricos = () => {
+    const componentID = props.deviceInfo.id
+    $router.push({ name: 'VerHistoricos', params: { id: componentID } })
 }
 
 const onConfirmDeletePart = async () => {
@@ -473,7 +473,18 @@ const emptyParts = computed(() => {
 })
 
 const title = computed(() => {
-    console.log(props.deviceInfo)
     return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
 })
+
+const deviceIsActive = computed(() => {
+    return props.deviceInfo.nodoInfo ? true : false
+})
+
+const onSelectUnidadDeMedida = (e) => {
+    const value = e.target.value
+
+    unidadSelected.value = componenteUnidades.value.find(
+        (unidad) => unidad.unidad_id == value
+    )
+}
 </script>

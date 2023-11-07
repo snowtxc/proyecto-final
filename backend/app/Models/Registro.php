@@ -13,13 +13,20 @@ class Registro extends Model
         'FechaHora',
         'Marca',
         'etapa_id',
-        'componente_id'
+        'componente_id',
+        'unidad_id'
     ];
 
     public function componente()
     {
         return $this->belongsTo(Componente::class);
     }
+
+    public function unidad()
+    {
+        return $this->belongsTo(Unidades::class);
+    }
+
 
     public function etapa()
     {

@@ -14,9 +14,8 @@ use App\Http\Controllers\NodoController;
 use App\Http\Controllers\LinkController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\FtpController;
-
-
-
+use App\Http\Controllers\EstadisticaController;
+use App\Http\Controllers\UnidadController;
 
 use App\Events\Hello;
 
@@ -122,7 +121,6 @@ Route::prefix('api')->group(function () {
      Route::controller(ComponenteController::class)->group(function () {
         Route::get('/componentes', 'list');
         Route::get('/componentes/prueba', 'prueba');
-
         Route::get('/componentes/{id}', 'getById');
         Route::post('/componentes', 'create');
         Route::post('/componentes/{id}', 'update');
@@ -131,6 +129,7 @@ Route::prefix('api')->group(function () {
         Route::post('/componentes/{id}/imagenes', 'addImageById');
         Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
         Route::get('/componentes-sin-nodo', 'listarDispositivosSinNodo');
+        Route::get('/componentes/{id}/marcaLast24Hours' , 'marcaLast24Hours');
 
     });
 
@@ -183,6 +182,10 @@ Route::prefix('api')->group(function () {
      /*FTP ENDPOINTS*/
      Route::controller(FtpController::class)->group(function () {
         Route::get('/ftp/download', 'downloadFileFromFTP');
+        Route::post('/ftp/nuevosRegistros', 'generarRegistros');
+        Route::post('/ftp/last', 'last24Hour');
+
+
 
     });
 
@@ -191,5 +194,23 @@ Route::prefix('api')->group(function () {
     Route::get('/broadcast', function(Request $request){
         broadcast(new Hello());
     });
+
+    Route::controller(EstadisticaController::class)->group(function () {
+        Route::get('/estadisticas/cantidadUsuarios', 'countUsers');
+        Route::get('/estadisticas/cantidadProcesos', 'countProcesos');
+        Route::get('/estadisticas/cantidadComponentes', 'countComponentes');
+        Route::get('/estadisticas/cantidadTipoComponentes', 'countTiposDeComponentes');
+        Route::get('/estadisticas/cantidadComponentesPorProcesos', 'countComponentesPorProcesos');
+        Route::get('/estadisticas/cantidadEtapasPorProcesos', 'countEtapasPorProcesos');
+        Route::get('/estadisticas/actividadPorProcesos', 'actividadPorProcesos');
+
+    });
+
+    Route::controller(UnidadController::class)->group(function () {
+        Route::get('/unidades', 'list');
+
+
+    });
+
 
 });
