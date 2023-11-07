@@ -1,15 +1,13 @@
 <template>
     <div>
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-start">
             <Breadcrumb parentTitle="Dispositivos" />
 
-            <BaseBtn maxWidth="500px" 
-            @click="$router.push({name: 'nuevoDispositivo'})"
-                >Agregar nuevo Dispositivo
+            <BaseBtn maxWidth="500px" @click="$router.push({ name: 'nuevoDispositivo' })">Agregar
                 <i class="fa-solid fa-plus"></i>
             </BaseBtn>
         </div>
-        <div class="flex gap-10 mt-4">
+        <div class="flex flex-col gap-10 mt-4 md:flex-row">
             <div class="min-w-[350px]">
                 <BaseCard>
                     
@@ -18,7 +16,7 @@
                             v-model="filters.tipo"
                             id="small"
                             @change="handleFilter"
-                            class="w-full p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                            class="w-full p-2 mb-6 text-sm text-gray-900 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
                         >
                         <option :value="''"> Todos </option>
                         <option
@@ -30,7 +28,7 @@
                         </option>
                     </select>
                     <input
-                        class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                        class="w-full p-2 mb-2 text-sm text-gray-900 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
                         type="text"
                         placeholder="Buscar"
                         v-model="filters.search"
@@ -49,32 +47,17 @@
                             <p class="text-gray-600">
                                 Lo sentimos, no hemos encontrado ningún
                                 dispositivo en este momento.
-                     
+
                             </p>
                         </div>
-                        <div
-                            v-else
-                            class="mt-2"
-                            v-for="item in componentes"
-                            :key="item.id"
-                        >
-                            <CardDevice
-                                :nombre="item.Nombre"
-                                :ipAddress="item.DireccionIp"
-                                :value="25"
-                                :image="item.tipoComponenteImage"
-                                :selected="
-                                    deviceSelected &&
+                        <div v-else class="mt-2" v-for="item in componentes" :key="item.id">
+                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp" :value="25"
+                                :image="item.tipoComponenteImage" :selected="deviceSelected &&
                                     deviceSelected.id == item.id
-                                "
-                                @onSelect="handleSelectedDevice(item)"
-                            ></CardDevice>
+                                    " @onSelect="handleSelectedDevice(item)"></CardDevice>
                         </div>
                         <div class="flex justify-center mt-2">
-                            <infinite-loading
-                                @infinite="loadMoreData"
-                                v-if="hasMoreData"
-                            ></infinite-loading>
+                            <infinite-loading @infinite="loadMoreData" v-if="hasMoreData"></infinite-loading>
                         </div>
                     </div>
                 </BaseCard>
@@ -96,11 +79,11 @@
 
 <script setup>
 import { appStore } from '@/store/app'
-import  { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { computed, onBeforeMount, ref } from 'vue';
 import Breadcrumb from '@/components/Breadcrumbs.vue'
 import CardDevice from '../../components/Cards/CardDevice.vue'
-import PanelDeviceInfo from   '../../components/Panel/PanelDeviceInfo.vue'
+import PanelDeviceInfo from '../../components/Panel/PanelDeviceInfo.vue'
 import ComponenteController from '@/services/ComponenteController'
 import TipoComponenteController from '../../services/TipoComponenteController';
 
@@ -160,7 +143,7 @@ const handleSelectedDevice = async(value) => {
         deviceSelected.value = compontenteData;
         loading.value = false;
 
-    }catch(e){
+    } catch (e) {
         notify({
             type: 'error',
             title: 'Error',
@@ -214,7 +197,7 @@ const componentesIsEmpty = computed(() => {
     return componentes.value.length == 0
 })
 
-const handleDeleteDevice = (deviceId)=>{
+const handleDeleteDevice = (deviceId) => {
     const index = componentes.value.findIndex(componente => componente.id == deviceId);
     componentes.value.splice(index, 1);
     deviceSelected.value = null;
