@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\AlarmaUser;
+
 use PhpParser\Node\Stmt\TryCatch;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -304,5 +306,44 @@ class UsuarioController extends Controller
 
         return response()->json($path,200);
     }
+
+    function getNotificacionesAlarmas(){
+        $userInfo = Auth::user();
+        $userId = $userInfo->id;
+
+        $user  = User::find($userId);
+        $alarmasNoLeidas =  $user->alarmasNoLeidas;
+        $result = array();
+        foreach($alarmasNoLeidas as $alarmaNoLeida){
+           $componente =  $alarmaNoLeida->componente;
+           $tipoComponente = $componente->tipoComponente;
+           $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
+
+           $componenteInfo  =[
+            "tipoComponenteImage" => $pathImage,
+            "tipoComponenteNombre" => $tipoComponente->Nombre,
+            "Nombre" => $componente->Nombre,
+            "Descripcion" => $componente->Descripcion,
+            "Unidad" => $componente->Unidad,
+            "DireccionIp" => $componente->DireccionIp,
+            "tipo_componente_id" => $componente->tipo_componente_id,
+            "id" => $componente->id,
+           ];
+
+           $proceso = $alarmaNoLeida->proceso;
+           array_push($result, [
+            "id" => $alarmaNoLeida->id,
+            "componente" => $componenteInfo,
+            "create_at" => $alarmaNoLeida->created_at,
+            "proceso"  => $proceso
+           ]);
+        }
+        return response()->json($result,200);
+
+
+
+
+    }
+
 
 }

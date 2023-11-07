@@ -3,12 +3,13 @@ import axios from 'axios';
 import { API_BASE_URL, LOGIN_ENDPOINT } from '@/config/api-config';
 
 export const appStore = defineStore('appStore', {   
-    state: () => ({ userdata: null , token: null , globalLoading: false , imageProfileDefault: '/src/assets/images/user.png'}),   
+    state: () => ({ userdata: null , token: null , globalLoading: false , imageProfileDefault: '/src/assets/images/user.png' , alarmsNotifications: []}),   
     getters: {     
         getUserData: (state) => state.userdata,
         getToken: (state) => state.token,   
         getGlobalLoading: (state) => state.globalLoading,
-        getImageProfileDefault: (state) => state.imageProfileDefault
+        getImageProfileDefault: (state) => state.imageProfileDefault,
+        getAlarmsNotifications: (state) => state.alarmsNotifications
     },   
     actions: {     
         async login(email, password) {
@@ -35,6 +36,10 @@ export const appStore = defineStore('appStore', {
                 ...this.userdata,
                 profileImage: pathUrl
             }
+        },
+
+        setAlarmsNotifications(alarmas){
+            this.alarmsNotifications = alarmas;
         }
     }, 
 
