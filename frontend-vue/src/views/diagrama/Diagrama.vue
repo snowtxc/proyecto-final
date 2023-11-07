@@ -24,28 +24,13 @@
         </div>
         <p v-else class="text-center mt-4">Selecciona un proceso para ver sus etapas.</p>
       </Card>
-      <Card class=" h-auto w-full  mt-2 mb-2" :style="{ 'pointer-events': 'none' }">
-        <p class="text-xl font-semibold mr-2">Informacion del dispositivo </p>
-        <div v-if="showSpinner == false" class="h-auto w-full flex flex-row space-x-4" :style="{ 'pointer-events': 'none' }">
-          <div class="w-2/6" v-if="dispositivoData.length != 0">
-            <CardDevice :nombre="dispositivoData.Nombre" :value="25" :image="dispositivoData.tipoComponenteImage"
-              :selected="false" :ipAddress="dispositivoData.DireccionIp" />
-          </div>
-          <div class="w-2/6" v-if="dispositivoData.length != 0" :unidad="unidad">
-            <ChartLine />
-          </div>
-          <div class="w-2/6" v-if="dispositivoData.length != 0">
-            <ChartBar :componente_id="dispositivoData.id" :unidad="unidad" />
-          </div>
-          <div class="w-full" v-else v-if="showSpinner == false">
-            <p class="text-center mt-4">Selecciona un dispositivo para ver su informacion.</p>
-          </div>
-        </div>
-          <div class="w-full" v-if="showSpinner != false">
-            <spinner :show="showSpinner"></spinner>
-          </div>
-        
-      </Card>
+      <MiniPanelDevice v-if="dispositivoData != null && !showSpinner" :dispositivo-data="dispositivoData"/>
+      <div class="w-full" v-else-if="dispositivoData == null && !showSpinner">
+        <p class="text-center mt-4">Selecciona un dispositivo para ver su informacion.</p>
+      </div>
+      <div class="w-full" v-if="showSpinner != false">
+        <spinner :show="showSpinner"></spinner>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +43,7 @@ import EtapaController from '@/services/EtapaController.js';
 import ComponenteController from '../../services/ComponenteController';
 import Diagrama from '../../components/Diagrama/Diagrama.vue';
 import Card from '@/components/Card/Card.vue';
+import MiniPanelDevice from '../../components/Panel/MiniPanelDevice.vue';
 import CardDevice from '../../components/Cards/CardDevice.vue';
 import ChartLine from '@/components/Charts/ChartLine.vue';
 import ChartBar from '@/components/Charts/ChartBar.vue';
@@ -71,7 +57,8 @@ const listaProcesos = ref([]);
 const selectedProcess = ref("");
 const listaEtapas = ref([]);
 const nodeData = ref()
-const dispositivoData = ref([])
+const dispositivoData = ref(null)
+const unidades = ref([])
 const showSpinner = ref(false)
 const emits = defineEmits();
 
@@ -88,8 +75,8 @@ watch(nodeData, () => {
   showSpinner.value = true;
   const data = ComponenteController.getById(nodeData.value.mensaje.componente_id)
     .then((response) => {
+      console.log(response)
       dispositivoData.value = response
-      unidad.nombre = response.Unidad
       showSpinner.value = false;
     })
     .catch((error) => {

@@ -19,15 +19,16 @@
         </div>
       </div>
       <Card class="h-[1000px] md:h-full md:w-3/4 mb-4">
-        <Diagrama :proceso-id="parseInt(procesoId)" :etapa-id="parseInt(etapaId)" :read-only="false" :reload="reloadDiagram" @nodo-borrado="cargarListaComponentes"></Diagrama>
+        <Diagrama :proceso-id="parseInt(procesoId)" :etapa-id="parseInt(etapaId)" :read-only="false" :reload="reloadDiagram" @nodo-borrado="cargarListaComponentes" @info-nodo="setNodeData"></Diagrama>
       </Card>
 
     </div>
+    <MiniPanelDevice v-if="dispositivoData != null && !showSpinner" :dispositivo-data="dispositivoData"/>
   </div>
 </template>
 <script setup>
 import Breadcrumb from '@/components/Breadcrumbs.vue';
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Card from '@/components/Card/Card.vue';
 import ComponenteController from '../../services/ComponenteController';
@@ -36,6 +37,7 @@ import { appStore } from "@/store/app.js";
 import CardDevice from '../../components/Cards/CardDevice.vue'
 import spinner from '../components/spinner/spinner.vue';
 import Diagrama from '../../components/Diagrama/Diagrama.vue';
+import MiniPanelDevice from '../../components/Panel/MiniPanelDevice.vue';
 
 const $appstore = appStore();
 
@@ -47,7 +49,24 @@ const showSpinnerComponentes = ref(false);
 const reloadDiagram = ref(0)
 const listaComponentesPromise = ComponenteController.listDispositivosSinNodo();
 const disableInteractions = ref(false);
+const nodeData = ref()
+const dispositivoData = ref(null)
 
+const setNodeData = (data) => {
+  nodeData.value = data;
+};
+
+watch(nodeData, () => {
+  //showSpinner.value = true;
+  const data = ComponenteController.getById(nodeData.value.mensaje.componente_id)
+    .then((response) => {
+      dispositivoData.value = response
+      // showSpinner.value = false;
+    })
+    .catch((error) => {
+      console.error('Error al crear el enlace:', error);
+    });
+});
 
 $appstore.setGlobalLoading(true)
 

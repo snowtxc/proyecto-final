@@ -195,7 +195,7 @@
                             :parentTitle="unidadSelected.nombre"
                         ></Breadcrumbs>
                         
-                        <div class="flex gap-3 mt-3 gap-10">
+                        <div class="flex mt-3 gap-10">
                             <ChartBar
                                 class="flex-1"
                                 :componente_id="props.deviceInfo.id"
