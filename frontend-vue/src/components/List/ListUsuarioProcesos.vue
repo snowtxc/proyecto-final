@@ -1,6 +1,12 @@
 <template>
-    <div class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center">
-        <ModalSelectUserProcess :processId="props.procesoId" @onAddUsers="addNewUsersToProcess"></ModalSelectUserProcess>
+
+    <div
+        class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center"
+    >
+        <ModalSelectUserProcess v-if="rol == 'Administrador'"
+            :processId="props.procesoId"
+            @onAddUsers="addNewUsersToProcess"
+        ></ModalSelectUserProcess>
         <spinner v-if="loading" :show="loading"></spinner>
         <div v-if="!loading && usersEmpty" class="w-full">
             <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="usersEmpty && !loading">
@@ -30,7 +36,12 @@
                         </div>
                     </div>
 
-                    <font-awesome-icon :icon="['far', 'trash-can']" class="delete" @click="removeUser(user)" />
+                    <font-awesome-icon
+                        v-if="rol == 'Administrador'"
+                        :icon="['far', 'trash-can']"
+                        class="delete"
+                        @click="removeUser(user)"
+                    />
                 </div>
             </Card>
         </div>
@@ -51,6 +62,8 @@ import { useNotification } from '@kyvg/vue3-notification'
 
 const { notify } = useNotification()
 const $appStore = appStore()
+
+const rol = $appStore.getUserData?.rol;
 
 const loading = ref(false)
 const props = defineProps({

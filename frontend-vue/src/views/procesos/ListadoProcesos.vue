@@ -2,13 +2,14 @@
     <Breadcrumb parentTitle='Procesos' />
     <div class="flex justify-between ">
         <input v-model="searchTerm" class=" bg-gray-100 h-10 w-72 px-5 rounded-full text-sm focus:outline-none mb-4 ml-12"
-            type="search" name="search" placeholder="Search" @input="filterProcesos">
+            type="search" name="search" placeholder="Buscar" @input="filterProcesos">
     </div>
     <div class="h-full w-auto flex flex-col md:flex-row space-y-2 ">
         <div class="md:w-1/4 h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
             <div class="w-full">
-                <Card
+                <Card v-if="rol == 'Administrador'"
                     class="w-full h-17 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
+
                     @click="showModal = true">
                     <div class="flex flex-row items-center justify-center ">
                         <p class="font-bold text-xl">
@@ -24,7 +25,7 @@
                 <div class="flex flex-row items-center justify-between">
                     <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
                     </p>
-                    <div class="space-x-3">
+                    <div class="space-x-3" v-if="rol == 'Administrador'" >
                         <font-awesome-icon :icon="['far', 'pen-to-square']"
                             :class="{ 'white-icon': index === selectedCardIndex }" class="edit"
                             @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
@@ -87,8 +88,11 @@
                                     <div class="space-x-3">
                                         <font-awesome-icon :icon="['far', 'pen-to-square']" class="edit"
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
-                                        <font-awesome-icon :icon="['far', 'trash-can']" class="delete"
-                                            @click.stop="openModalConfirm(etapa.id)" />
+                                        <font-awesome-icon 
+                                            v-if="rol == 'Administrador'"
+                                            :icon="['far', 'trash-can']" class="delete"
+                                            @click.stop="openModalConfirm(etapa.id)" 
+                                        />
                                     </div>
                                 </div>
                             </Card>
@@ -245,6 +249,8 @@ const usuariosArr = ref([])
 const loadingUsers = ref(false);
 
 const $appstore = appStore();
+
+const rol = $appstore.getUserData?.rol;
 
 const filterProcesos = () => {
     if (searchTerm.value === '') {

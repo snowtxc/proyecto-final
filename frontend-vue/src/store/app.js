@@ -35,6 +35,13 @@ export const appStore = defineStore('appStore', {
                 ...this.userdata,
                 profileImage: pathUrl
             }
+        },
+
+        setUserName(name){
+            this.userdata = {
+                ...this.userdata,
+                name: name
+            }
         }
     }, 
 

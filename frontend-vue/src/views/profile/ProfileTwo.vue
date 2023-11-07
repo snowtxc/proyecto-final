@@ -1,6 +1,6 @@
 <script setup>
   import Breadcrumb from '@/components/Breadcrumbs.vue'
-  import { ref ,computed} from 'vue'
+  import { ref ,computed, reactive} from 'vue'
   import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
   import { appStore } from '@/store/app';
   import Card from '@/components/Card/Card.vue';
@@ -9,6 +9,9 @@
   import 'v3-infinite-loading/lib/style.css';
   import AlarmaController from '../../services/AlarmaController';
   import dayjs from "dayjs";
+  import FilePicker from "@/components/FilePicker/FilePicker.vue";
+  import spinner from '../../views/components/spinner/spinner.vue';
+  import UsuarioController from '../../services/UsuarioController';
 
   const $appStore = appStore();
   const userData = $appStore.userdata;
@@ -24,16 +27,20 @@
 
   const listaProcesos = ref([]);
   const showSpinnerProcesos = ref(true);
-  const hasMoreProcesos = ref(true)
-  const pageProcesos = ref(1)
+  const hasMoreProcesos = ref(true);
+  const pageProcesos = ref(1);
   const listaProcesosPromise = ProcesoController.getByUser(userData.id, pageProcesos.value);
 
   const listaAlarmas = ref([]);
   const showSpinnerAlarmas = ref(true);
-  const hasMoreAlarmas = ref(true)
-  const pageAlarmas = ref(1)
+  const hasMoreAlarmas = ref(true);
+  const pageAlarmas = ref(1);
   const listaAlarmasPromise = AlarmaController.getByUser(userData.id, pageAlarmas.value);
-  
+
+  const showEdit = ref(false);
+  const newData = reactive({ name: userData.name, profileImage: ''});
+  const errorName = ref(false);
+
   listaProcesosPromise
     .then((response) => {
         listaProcesos.value = response.data.data;
@@ -48,6 +55,7 @@
 
   listaAlarmasPromise
     .then((response) => {
+      console.log(response);
         listaAlarmas.value = response.data.data;
         hasMoreAlarmas.value = response.data.last_page > response.data.current_page;
         console.log(hasMoreAlarmas.value);
@@ -58,6 +66,32 @@
         showSpinnerAlarmas.value = false;
     });
 
+  const loadMoreAlarmas = async () => {
+    try {
+      pageAlarmas.value++;
+      const response = await AlarmaController.getByUser(userData.id, pageAlarmas.value);
+      const newAlarmas = response.data.data;
+      listaAlarmas.value = [...listaAlarmas.value, ...newAlarmas];
+
+      hasMoreAlarmas.value = response.data.last_page > response.data.current_page;
+    } catch (error) {
+      console.error('Error al cargar más alarmas:', error);
+    }
+  };
+
+  const loadMoreProcesos = async () => {
+    try {
+      pageProcesos.value++;
+      const response = await ProcesoController.getByUser(userData.id, pageProcesos.value);
+      const newProcesos = response.data.data;
+      listaProcesos.value = [...listaProcesos.value, ...newProcesos];
+
+      hasMoreProcesos.value = response.data.last_page > response.data.current_page;
+    } catch (error) {
+      console.error('Error al cargar más procesos:', error);
+    }
+  };
+
   const formattedDate = (fechaHora) => {
     return dayjs(fechaHora).format('DD/MM/YYYY HH:mm A');
   }
@@ -65,6 +99,47 @@
   const selectCard = (index) => {
     //redirect
   };
+
+  const editProfile = ()=>{
+    showEdit.value = true;
+  }
+
+  const changeFilePicker = (file)=>{
+    newData.profileImage = file;
+    console.log(newData.profileImage);
+  }
+
+  const guardarCambios = async () => {
+    if (newData.name.trim() === '') {
+      errorName.value = true;
+    } else {
+      $appStore.setGlobalLoading(true);
+      try {
+        if(newData.profileImage != userProfileImage){
+          const body = new FormData();
+          body.append('profileImage', newData.profileImage);
+          console.log(body);
+          const newProfileImageUrl =  await UsuarioController.changeMeProfileImage(body);
+          console.log(newProfileImageUrl)
+          $appStore.setProfileImage(newProfileImageUrl);
+        }
+        const response = await UsuarioController.editarUsuario(
+          userData.id, newData.name, userData.email, userData.rol
+        );
+
+        if(response){
+          $appStore.setUserName(newData.name);
+          userData.name = newData.name;
+        }
+        $appStore.setGlobalLoading(false);
+        errorName.value = false;
+        showEdit.value = false;
+      } catch (error) {
+        console.error('Error al guardar los cambios:', error);
+      }
+    }
+  };
+
 
 </script>
 
@@ -74,12 +149,27 @@
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12">
         <BaseCard noPadding class="flex items-center w-full">
-          <div class="flex flex-col items-center justify-center pb-8">
+          <div class="flex flex-col items-center justify-center pb-8" v-if="showEdit">
+            <div class="space-4 mb-8 max-w-md">
+              <FilePicker 
+                  @onChangeFile="changeFilePicker" 
+                  @onClearFile="newData.profileImage = ''" 
+                  :defaultImgUrl="userProfileImage">
+              </FilePicker>
+            </div>
+              <input v-model="newData.name" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full" type="text" placeholder="Nombre">
+                <span v-if="errorName" class="px-2 py-2 text-red-500 text-xs">Por favor ingrese el nombre del usuario</span>
+              <p class="text-gray-600">{{ userData.rol }}</p>
+              <p class="text-gray-600">{{ userData.email }}</p>
+              <BaseBtn block class="bg-[#25CEDE] mt-8 text-white rounded-full" @click="guardarCambios" >Guardar cambios</BaseBtn>
+          </div>
+
+          <div class="flex flex-col items-center justify-center pb-8" v-if="!showEdit">
               <div class="text-center"><img class="relative z-1 w-24 h-24 m-auto rounded-full border-2 border-white object-fill" :src="userProfileImage ? userProfileImage : userProfileDefault" /></div>
               <p class="text-2xl">{{ userData.name }}</p>
               <p class="text-gray-600">{{ userData.rol }}</p>
               <p class="text-gray-600">{{ userData.email }}</p>
-              <BaseBtn block class="bg-[#25CEDE] mt-8 text-white rounded-full" >Editar</BaseBtn>
+              <BaseBtn block class="bg-[#25CEDE] mt-8 text-white rounded-full" @click="editProfile" >Editar</BaseBtn>
           </div>
         </BaseCard>
       </div>
@@ -157,4 +247,11 @@
     </div>
 
 </div>
+
+<!--EditProfile
+    v-if="showEdit" 
+    :show="showEdit"
+    @onClose="showEdit = false" >
+</EditProfile-->
+
 </template>

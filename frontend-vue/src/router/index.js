@@ -5,6 +5,8 @@ import SignIn from '../views/sessions/SignIn.vue'
 import SignUp from '../views/sessions/SignUp.vue';
 import ResetPassword from '../views/sessions/ResetPassword.vue'
 import ForgotPassword from '../views/sessions/ForgotPassword.vue'
+import { AdminGuard, OperadorGuard, ObservadorGuard } from './guards';
+import AccesoDenegado from '../views/AccesoDenegado.vue'
 
 
 const routes = [
@@ -12,7 +14,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: () => import('../layout/index.vue'),
-        redirect: '/dashboards/dashboard-version-one',
+        redirect: '/diagrama',
         meta: {
             title: 'Home',
         },
@@ -30,22 +32,7 @@ const routes = [
                         name: 'dashboard-version-one',
                         component: () =>
                             import('../views/dashboards/Dashboards.v1.vue'),
-                    },
-                ],
-            },
-            {
-                path: '/components',
-                name: 'components',
-                component: () => import('../views/components/index.vue'),
-                meta: {
-                    title: 'Components',
-                },
-                children: [
-                    {
-                        path: 'button',
-                        name: 'button',
-                        component: () =>
-                            import('../views/components/Button.vue'),
+                        beforeEnter: OperadorGuard
                     },
                 ],
             },
@@ -57,6 +44,7 @@ const routes = [
                 meta: {
                     title: 'Dispositivos',
                 },
+                beforeEnter: OperadorGuard 
     
             },
 
@@ -64,7 +52,7 @@ const routes = [
                 path: '/dispositivos/nuevo',
                 name: 'nuevoDispositivo',
                 component: () => import('../views/dispositivos/DevicePage.vue'),
-
+                beforeEnter: OperadorGuard 
             },
 
             
@@ -72,13 +60,15 @@ const routes = [
                 path: '/dispositivos/:id/editar',
                 name: 'editarDispositivo',
                 component: () => import('../views/dispositivos/DevicePage.vue'),
+                beforeEnter: OperadorGuard 
             },
 
             {
                 path: '/dispositivos/:id/historicos',
                 name: 'VerHistoricos',
                 component: () => import('../views/historicos/VerHistorico.vue'),
-                
+                beforeEnter: OperadorGuard 
+
             },
 
             
@@ -86,6 +76,7 @@ const routes = [
                 path: '/tipos-componentes',
                 name: 'TipoComponentes',
                 component: () => import('../views/tipos-componentes/IndexPage.vue'),
+                beforeEnter: AdminGuard 
             },
 
 
@@ -94,37 +85,42 @@ const routes = [
                 path: '/profile',
                 name: 'profile',
                 component: () => import('../views/profile/ProfileTwo.vue'),
-                
+                beforeEnter: ObservadorGuard 
             },
 
             { 
                 path: '/usuarios', 
                 name: 'ListaUsuarios',
                 component: ()=> import("../views/usuarios/ListadoUsuarios.vue"),
+                beforeEnter: AdminGuard
             },
 
             { 
                 path: '/procesos', 
                 name: 'ListaProcesos',
                 component: ()=> import("../views/procesos/ListadoProcesos.vue"),
+                beforeEnter: OperadorGuard 
             },
 
             { 
                 path: '/diagrama', 
                 name: 'Diagrama',
                 component: ()=> import("../views/diagrama/Diagrama.vue"),
+                beforeEnter: ObservadorGuard
             },
 
             { 
                 path: '/etapas/:procesoId/:etapaId', 
                 name: 'editarEtapa',
                 component: ()=> import("../views/etapas/etapa.vue"),
+                beforeEnter: OperadorGuard 
             },
 
             { 
                 path: '/alarmas', 
                 name: 'ListaAlarmas',
                 component: ()=> import("../views/alarmas/ListadoAlarmas.vue"),
+                beforeEnter: OperadorGuard 
             },
         ],
     },
@@ -146,6 +142,7 @@ const routes = [
 
     { path: '/:path(.*)', component: NotFound },
 
+    { path: '/acceso-denegado', component: AccesoDenegado },
 
 ]
 
