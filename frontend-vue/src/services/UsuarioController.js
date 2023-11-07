@@ -39,7 +39,7 @@ export default{
     },
 
     async changeMeProfileImage(body){
-        
+        console.log(body);
         const response  = await  axios.post('auth/changeMeProfileImage', body);
         const { data } =  response;
         return data;

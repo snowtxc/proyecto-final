@@ -40,6 +40,13 @@ export const appStore = defineStore('appStore', {
 
         setAlarmsNotifications(alarmas){
             this.alarmsNotifications = alarmas;
+        },
+        
+        setUserName(name){
+            this.userdata = {
+                ...this.userdata,
+                name: name
+            }
         }
     }, 
 

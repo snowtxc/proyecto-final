@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, watchEffect ,computed} from 'vue'
+import { onMounted, ref, watch, watchEffect, computed } from 'vue'
 import { Switch } from '@headlessui/vue'
 import HeaderSearch from '../components/HeaderSearch.vue'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
@@ -30,31 +30,31 @@ const sideBarToggle = () => {
     }
 }
 
-const onLogout = ()=>{
+const onLogout = () => {
     $appStore.logout();
-    $router.push({name: 'SignIn'});   
+    $router.push({ name: 'SignIn' });
 }
 
-const myProfile = ()=>{
-    $router.push({name: 'profile'});   
+const myProfile = () => {
+    $router.push({ name: 'profile' });
 }
 
-const changeProfileImage = ()=>{
-        inputFile.value.click();
+const changeProfileImage = () => {
+    inputFile.value.click();
 }
 
-const onAvatarSelected = async($event)=>{
+const onAvatarSelected = async ($event) => {
     const file = $event.target.files[0];
     $appStore.setGlobalLoading(true);
-    try{
+    try {
         const body = new FormData();
         body.append('profileImage', file);
-        const newProfileImageUrl =  await UsuarioController.changeMeProfileImage(body);
+        const newProfileImageUrl = await UsuarioController.changeMeProfileImage(body);
         console.log(newProfileImageUrl)
         $appStore.setProfileImage(newProfileImageUrl);
         $appStore.setGlobalLoading(false);
 
-    }catch(e){
+    } catch (e) {
         $appStore.setGlobalLoading(false);
         notify({
             title: 'Error',
@@ -62,16 +62,16 @@ const onAvatarSelected = async($event)=>{
             type: 'error'
         });
     }
-    
-    
+
+
 }
 
-const userProfileImage = computed(()=>{
+const userProfileImage = computed(() => {
     console.log($appStore.getUserData);
     return $appStore.getUserData?.profileImage;
 })
 
-const userProfileDefault = computed(()=>{
+const userProfileDefault = computed(() => {
     return $appStore.getImageProfileDefault;
 })
 
@@ -81,34 +81,20 @@ const userProfileDefault = computed(()=>{
 <template>
     <div class="header-wrapper flex bg-white justify-between px-4">
         <div class="flex items-center">
-            <div class="logo flex justify-center">
-                
+            <div class="logo flex justify-center w-10 h-14 ">
+                <img src="/images/LogoScada.png" alt="Logo">
             </div>
             <div class="mx-0 sm:mx-3">
-                <button
-                    @click="sideBarToggle"
-                    class="
+                <button @click="sideBarToggle" class="
                         menu-toggle
                         cursor-pointer
                         text-gray-500
                         align-middle
                         focus:outline-none
-                    "
-                    type="button"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        />
+                    " type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
@@ -119,8 +105,7 @@ const userProfileDefault = computed(()=>{
             <!-- profile-dropdown  -->
             <Menu as="div" class="relative inline-block text-left">
                 <div>
-                    <MenuButton
-                        class="
+                    <MenuButton class="
                             inline-flex
                             justify-center
                             w-full
@@ -128,18 +113,13 @@ const userProfileDefault = computed(()=>{
                             py-2
                             text-sm
                             font-medium
-                        "
-                    >
-                        <img
-                            class="avatar rounded-full"
-                            :src="userProfileImage ? userProfileImage : userProfileDefault" 
-                            alt=""
-                        />
+                        ">
+                        <img class="avatar rounded-full" :src="userProfileImage ? userProfileImage : userProfileDefault"
+                            alt="" />
                     </MenuButton>
                 </div>
 
-                <MenuItems
-                    class="
+                <MenuItems class="
                         absolute
                         right-0
                         w-44
@@ -150,56 +130,46 @@ const userProfileDefault = computed(()=>{
                         rounded-md
                         custom-box-shadow
                         focus:outline-none
-                    "
-                >
+                    ">
                     <div class="">
                         <MenuItem v-slot="{ active }">
-                            <button
-                                @click="myProfile"
-                                :class="[
-                                    active
-                                        ? 'bg-[#25CEDE] text-white'
-                                        : 'text-gray-900',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                            >
-                                Mi Perfil
-                            </button>
+                        <button @click="myProfile" :class="[
+                            active
+                                ? 'bg-[#25CEDE] text-white'
+                                : 'text-gray-900',
+                            'group flex  items-center w-full px-4 py-2 text-sm',
+                        ]">
+                            Mi Perfil
+                        </button>
                         </MenuItem>
 
                         <MenuItem v-slot="{ active }">
-                            <button
-                                @click="changeProfileImage"
-                                :class="[
-                                    active
-                                        ? 'bg-[#25CEDE] text-white'
-                                        : 'text-gray-900',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                            >
-                                Cambiar foto de perfil
-                            </button>
+                        <button @click="changeProfileImage" :class="[
+                            active
+                                ? 'bg-[#25CEDE] text-white'
+                                : 'text-gray-900',
+                            'group flex  items-center w-full px-4 py-2 text-sm',
+                        ]">
+                            Cambiar foto de perfil
+                        </button>
                         </MenuItem>
 
 
                         <MenuItem v-slot="{ active }">
-                            <button
-                                 @click="onLogout"
-                                :class="[
-                                    active
-                                        ? 'bg-[#25CEDE] text-white'
-                                        : 'text-gray-900',
-                                    'group flex  items-center w-full px-4 py-2 text-sm',
-                                ]"
-                            >
-                                Cerrar sesion
-                            </button>
+                        <button @click="onLogout" :class="[
+                            active
+                                ? 'bg-[#25CEDE] text-white'
+                                : 'text-gray-900',
+                            'group flex  items-center w-full px-4 py-2 text-sm',
+                        ]">
+                            Cerrar sesion
+                        </button>
                         </MenuItem>
                     </div>
                 </MenuItems>
             </Menu>
 
-            <input type="file" class="hidden" ref="inputFile" @change="onAvatarSelected"/>
+            <input type="file" class="hidden" ref="inputFile" @change="onAvatarSelected" />
         </div>
     </div>
 </template>
@@ -213,11 +183,14 @@ const userProfileDefault = computed(()=>{
     z-index: 100;
     box-shadow: 0 1px 15px rgb(0 0 0 / 4%), 0 1px 6px rgb(0 0 0 / 4%);
 }
+
 .mega-menu {
     width: 1200px;
 }
+
 ul.links {
     column-count: 2;
+
     li {
         margin-bottom: 8px;
     }
