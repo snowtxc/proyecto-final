@@ -137,7 +137,7 @@ class AlarmaController extends Controller
         $page = $request->query('page');
         $user = User::findOrFail($id);
         $rows = 10; 
-        $alarmas = $user->alarmas()->paginate($rows, ['*'], 'page', $page);
+        $alarmas = $user->alarmas()->orderBy('created_at','desc')->paginate($rows, ['*'], 'page', $page);
 
         $result = array();
         foreach($alarmas as $alarma){

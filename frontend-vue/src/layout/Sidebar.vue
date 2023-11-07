@@ -6,6 +6,7 @@ import { useRoute } from 'vue-router';
 import { appStore } from '../store/app';
 
 const $appStore = appStore();
+const userData = $appStore.userdata;
 
 let store = useStore()
 let route = useRoute()
@@ -38,7 +39,7 @@ let handleWindowResize = () => {
 }
 </script>
 <template>
-    <div class="side-content-wrap">
+    <div class="side-content-wrap" v-if="userData.rol != 'Observador'">
         <div class="side-content-wrap">
             <div
                 :class="
@@ -58,7 +59,7 @@ let handleWindowResize = () => {
                             data-item="dashboards"
                             
                         ></div> -->
-                        <router-link
+                        <router-link 
                             to="/dashboards/dashboard-version-one"
                             tag="li"
                             class="nav-item"
@@ -93,19 +94,6 @@ let handleWindowResize = () => {
                         </router-link>
 
                         <router-link
-                            to="/tipos-componentes"
-                            tag="li"
-                            class="nav-item"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="fa-solid fa-plug-circle-minus text-3xl"></i>
-                                <p>Tipos de Dispositivos</p>
-                            </div>
-                        </router-link>
-
-
-
-                        <router-link
                             to="/dispositivos"
                             tag="li"
                             class="nav-item"
@@ -127,64 +115,32 @@ let handleWindowResize = () => {
                             </div>
                         </router-link>
                         
-                       
-                        <router-link
-                            to="/usuarios"
-                            tag="li"
-                            class="nav-item"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="fa-solid fa-users text-3xl"></i>
-                                <p>Usuarios</p>
-                            </div>
-                        </router-link>
+                        <div v-if="userData.rol == 'Administrador'">
 
+                            <router-link
+                                to="/tipos-componentes"
+                                tag="li"
+                                class="nav-item"
+                            >
+                                <div class="nav-item-hold">
+                                    <i class="fa-solid fa-plug-circle-minus text-3xl"></i>
+                                    <p>Tipos de Dispositivos</p>
+                                </div>
+                            </router-link>
 
-                        <!--
-                        <router-link
-                            to="/components/button"
-                            tag="li"
-                            class="nav-item"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="i-Wallet text-3xl"></i>
-                                <p>Buttons</p>
-                            </div>
-                        </router-link>
-                        <router-link
-                            to="/profile/profileTwo"
-                            tag="li"
-                            class="nav-item"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="i-Find-User text-3xl"></i>
-                                <p>Profile</p>
-                            </div>
-                        </router-link>
-                        <router-link to="/signIn" tag="li" class="nav-item">
-                            <div class="nav-item-hold">
-                                <i class="i-Checked-User text-3xl"></i>
-                                <p>Sign In</p>
-                            </div>
-                        </router-link>
-                        <router-link to="/signUp" tag="li" class="nav-item">
-                            <div class="nav-item-hold">
-                                <i class="i-Checked-User text-3xl"></i>
-                                <p>Sign Up</p>
-                            </div>
-                        </router-link>
+                            <router-link
+                                to="/usuarios"
+                                tag="li"
+                                class="nav-item"
+                            >
+                                <div class="nav-item-hold">
+                                    <i class="fa-solid fa-users text-3xl"></i>
+                                    <p>Usuarios</p>
+                                </div>
+                            </router-link>
 
-                        <a
-                            href="https://aatorx-vue-doc.vercel.app/"
-                            tag="a"
-                            class="nav-item"
-                            target="_blank"
-                        >
-                            <div class="nav-item-hold">
-                                <i class="i-File-Word text-3xl"></i>
-                                <p>Doc</p>
-                            </div>
-                        </a> -->
+                        </div>
+                        
                     </ul>
                 </perfect-scrollbar>
             </div>
