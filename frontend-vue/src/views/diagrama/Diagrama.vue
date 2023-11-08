@@ -58,9 +58,10 @@ const selectedProcess = ref("");
 const listaEtapas = ref([]);
 const nodeData = ref()
 const dispositivoData = ref(null)
+
+console.log(dispositivoData);
 const unidades = ref([])
 const showSpinner = ref(false)
-const emits = defineEmits();
 
 const setNodeData = (data) => {
   nodeData.value = data;
