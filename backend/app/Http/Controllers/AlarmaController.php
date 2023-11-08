@@ -169,4 +169,7 @@ class AlarmaController extends Controller
         return response()->json($response, 200);
     }
 
+
+
+
 }

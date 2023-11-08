@@ -8,6 +8,7 @@ import { appStore } from '../store/app'
 import { useRouter } from 'vue-router';
 import { useNotification } from '@kyvg/vue3-notification'
 
+import NotificacionsComponent from "@/components/Notifications/NotificationsComponent.vue"
 import UsuarioController from "@/services/UsuarioController.js";
 
 const { notify } = useNotification();
@@ -99,73 +100,9 @@ const userProfileDefault = computed(() => {
             </div>
         </div>
         <div class="flex items-center">
-            <!-- notification-dropdown  -->
-            <Menu as="div" class="relative inline-block text-left">
-                <div>
-                    <MenuButton class="
-                            btn btn-sm
-                            hover:bg-gray-100
-                            rounded
-                            badge-top-container
-                            inline-flex
-                            justify-center
-                            w-full
-                            px-4
-                            py-2
-                            text-sm
-                            font-medium
-                        ">
-                        <span class="badge-count text-white bg-primary">3</span>
-                        <i class="i-Bell text-xl header-icon text-gray-800"></i>
-                    </MenuButton>
-                </div>
 
-                <MenuItems class="
-                        absolute
-                        right-0
-                        w-44
-                        mt-2
-                        overflow-hidden
-                        origin-top-right
-                        bg-white
-                        rounded-md
-                        custom-box-shadow
-                        focus:outline-none
-                    ">
-                    <div class="">
-                        <MenuItem v-for="(item, index) in 4" :key="index" v-slot="{ active }">
-                        <button :class="[
-                            active
-                                ? 'bg-primary text-white'
-                                : 'text-gray-900',
-                            'group flex  items-center w-full px-4 py-2 text-sm',
-                        ]">
-                            <div class="flex flex-1 justify-between">
-                                <div>
-                                    <h6>New Message</h6>
-                                    <p :class="[
-                                        active
-                                            ? 'text-gray-300'
-                                            : 'text-gray-500',
-                                    ]">
-                                        How are you ?
-                                    </p>
-                                </div>
-                                <div>
-                                    <p :class="[
-                                        active
-                                            ? 'text-gray-200'
-                                            : 'text-gray-400',
-                                    ]">
-                                        10s
-                                    </p>
-                                </div>
-                            </div>
-                        </button>
-                        </MenuItem>
-                    </div>
-                </MenuItems>
-            </Menu>
+            <NotificacionsComponent></NotificacionsComponent>
+
 
             <!-- profile-dropdown  -->
             <Menu as="div" class="relative inline-block text-left">

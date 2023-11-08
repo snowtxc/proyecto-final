@@ -40,8 +40,6 @@ import { appStore } from "@/store/app.js";
 import {ref} from 'vue'
 import { useRouter } from 'vue-router';
 
-
-
 const $appStore = appStore();
 const router = useRouter();
 
@@ -69,7 +67,7 @@ const validateEmail = (email) => {
 
 const makeAPICall = async () => {
   try {
-    const response = await $appStore.login(email.value, password.value);
+    const response = await $appStore.login(email.value, password.value); 
     showErrorBanner.value = false;
     router.push('/');
   } catch (error) {

@@ -67,6 +67,7 @@ Route::prefix('api')->group(function () {
         Route::post('/checkEmail', 'checkEmail');
         Route::post('/setPassword', 'setPassword');
         Route::post('/forgotPassword', 'forgotPassword');
+        Route::get('/auth/notificaciones-alarmas', 'getNotificacionesAlarmas');
     });
 
     /*USUARIO ENDPOINTS*/
@@ -152,6 +153,8 @@ Route::prefix('api')->group(function () {
         Route::get("/alarmas/{id}/usuarios", 'getUsers');
         Route::post('/alarmas', 'create');
         Route::get('/alarmas-usuario', 'getByUser');
+        Route::get('/componentes/{id}/marcaLast24Hours' , 'marcaLast24Hours');
+
     });
 
      /*NODOS ENDPOINTS*/

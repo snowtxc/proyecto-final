@@ -45,4 +45,10 @@ export default{
         return data;
     },
 
+    async getMyAlarmsNotifications(){
+        const response  = await  axios.get('auth/notificaciones-alarmas');
+        const { data } =  response;
+        return data;
+    }
+
 }
