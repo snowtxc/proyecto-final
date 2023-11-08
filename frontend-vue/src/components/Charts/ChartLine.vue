@@ -88,7 +88,6 @@ watch(() => props.unidad, (newUnidadSelected, oldValue) => {
 
 onUnmounted(() => {
     window.Echo.leave(appendRegistrosDeviceChannel(props.componente_id));
-
 });
 </script>
 

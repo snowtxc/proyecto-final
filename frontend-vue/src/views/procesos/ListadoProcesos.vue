@@ -2,14 +2,14 @@
     <Breadcrumb parentTitle='Procesos' />
     <div class="flex justify-between ">
         <input v-model="searchTerm" class=" bg-gray-100 h-10 w-72 px-5 rounded-full text-sm focus:outline-none mb-4 ml-12"
-            type="search" name="search" placeholder="Search" @input="filterProcesos">
+            type="search" name="search" placeholder="Buscar" @input="filterProcesos">
     </div>
-    <div class="h-full w-auto flex flex-row space-y-2 ">
+    <div class="h-full w-auto flex flex-col md:flex-row space-y-2 ">
+        <div class="md:w-1/4 h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
+            <div class="w-full">
+                <Card v-if="rol == 'Administrador'"
+                    class="w-full h-17 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
 
-        <div class="w-1/5 h-auto max-h- flex flex-col items-center space-y-2 overflow-y-auto p-3 ">
-            <div>
-                <Card
-                    class="w-64 h-17 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
                     @click="showModal = true">
                     <div class="flex flex-row items-center justify-center ">
                         <p class="font-bold text-xl">
@@ -20,12 +20,12 @@
             </div>
             <spinner :show="showSpinnerProcesos"></spinner>
             <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
-                class="w-64 h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
+                class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
                 :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
                 <div class="flex flex-row items-center justify-between">
                     <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
                     </p>
-                    <div class="space-x-3">
+                    <div class="space-x-3" v-if="rol == 'Administrador'" >
                         <font-awesome-icon :icon="['far', 'pen-to-square']"
                             :class="{ 'white-icon': index === selectedCardIndex }" class="edit"
                             @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
@@ -38,7 +38,7 @@
         </div>
         <div class="w-full flex flex-col">
 
-            <div class="ml-5 h-20 border-l-[1px] border-gray-300">
+            <div class="md:ml-5 h-20 md:border-l-[1px] md:border-gray-300">
                 <p class="font-bold text-xl ml-5" v-if="dataDescripcion !== ''">
                     Descripcion:
                 </p>
@@ -50,9 +50,9 @@
             <div class="w-full flex flex-col justify-center h-full">
                 <p v-if="selectedCardIndex === null" class="text-center">Seleccione un proceso para ver su información.</p>
 
-                <div class="w-full h-full flex " v-else>
+                <div class="w-full h-full flex flex-col md:flex-row " v-else>
                     <div
-                        class="w-full h-auto max-h-[730px] ml-5 border-l-[1px] border-gray-300 overflow-y-auto flex justify-center">
+                        class="w-full h-auto max-h-96 md:max-h-[600px] md:ml-5 md:border-l-[1px] md:border-gray-300 overflow-y-auto flex justify-center">
                         <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
@@ -88,8 +88,11 @@
                                     <div class="space-x-3">
                                         <font-awesome-icon :icon="['far', 'pen-to-square']" class="edit"
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
-                                        <font-awesome-icon :icon="['far', 'trash-can']" class="delete"
-                                            @click.stop="openModalConfirm(etapa.id)" />
+                                        <font-awesome-icon 
+                                            v-if="rol == 'Administrador'"
+                                            :icon="['far', 'trash-can']" class="delete"
+                                            @click.stop="openModalConfirm(etapa.id)" 
+                                        />
                                     </div>
                                 </div>
                             </Card>
@@ -212,7 +215,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 const { notify } = useNotification()
 
 
-import ListUsuarioProcesos from '../../components/List/ListUsuarioProcesos.vue';
+import ListUsuarioProcesos from '@/components/List/ListUsuarioProcesos.vue';
 
 const router = useRouter();
 
@@ -246,6 +249,8 @@ const usuariosArr = ref([])
 const loadingUsers = ref(false);
 
 const $appstore = appStore();
+
+const rol = $appstore.getUserData?.rol;
 
 const filterProcesos = () => {
     if (searchTerm.value === '') {

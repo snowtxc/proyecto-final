@@ -13,8 +13,14 @@ export default{
         return data;
      },
 
-    async deleteByComponent(id) {
-        const response  = await axios.delete("nodosByComponente/"+ id);
+     async getById(id) {
+      const response  = await axios.get("nodos/nodo/" + id);
+      const { data } = response;
+      return data;
+   },
+
+    async delete(id) {
+        const response  = await axios.delete("nodos/" + id);
         const { data } = response;
         return data;
      },

@@ -1,18 +1,24 @@
 <template>
-  <div ref="myDiagramDiv" class="w-full h-full"></div>
+  <div class="h-full w-full flex flex-col items-center">
+    <div>
+      <spinner :show="showSpinner"></spinner>
+    </div>
+    <div ref="myDiagramDiv" class="w-full h-full"></div>
+  </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, ref } from 'vue';
+import { defineProps, onMounted, ref, watchEffect, defineEmits } from 'vue';
 import NodoController from '@/services/NodoController';
 import LinkController from '@/services/LinkController';
-import ComponenteController from '@/services/ComponenteController';
+import spinner from '../../views/components/spinner/spinner.vue';
 import go from 'gojs';
 
 const props = defineProps({
   procesoId: { type: Number, required: true },
   etapaId: { type: Number, required: true },
-  readOnly: { type: Boolean, required: true }
+  readOnly: { type: Boolean, required: true },
+  reload: { type: Number, default: 0 },
 })
 
 let diagram = null;
@@ -20,10 +26,13 @@ const nodeDataArray = [];
 const linkDataArray = [];
 const listaNodos = ref([]);
 const myDiagramDiv = ref(null);
-const showSpinnerComponentes = ref(false);
+const showSpinner = ref(false);
 const listaComponentes = ref([]);
+const emit = defineEmits(['nodo-borrado', 'Info-Nodo'])
 
-
+function NodoBorrado() {
+  emit('nodo-borrado')
+}
 
 const Node = (id, name, image, pos) => {
   const newNodeData = {
@@ -44,29 +53,17 @@ const Link = (id, from, to) => {
   linkDataArray.push(newLinkData);
 }
 
-const cargarListaComponentes = () => {
-  showSpinnerComponentes.value = true;
-  ComponenteController.listDispositivosSinNodo()
-    .then((response) => {
-      listaComponentes.value = response
-      showSpinnerComponentes.value = false;
-    })
-    .catch((error) => {
-      showSpinnerComponentes.value = false;
-    });
-};
-
 const createDiagram = async () => {
-
+  showSpinner.value = true;
   nodeDataArray.splice(0, nodeDataArray.length);
-  const [response,responseLinks] = await Promise.all([NodoController.list(props.etapaId),LinkController.list(props.etapaId)]);
+  const [response, responseLinks] = await Promise.all([NodoController.list(props.etapaId), LinkController.list(props.etapaId)]);
 
-  await Promise.all(response.map(async(nodo)=>{
+  await Promise.all(response.map(async (nodo) => {
     const { componente } = nodo;
     Node(nodo.id, componente.Nombre, componente.tipoComponenteImage, nodo.Posicion);
   }));
 
-  responseLinks.map((link)=>{
+  responseLinks.map((link) => {
     Link(link.id, link.nodo_from_id, link.nodo_to_id);
   });
 
@@ -119,10 +116,10 @@ const createDiagram = async () => {
     for (const nodeData of deletedNodes) {
       const nodo = listaNodos.value.find((nodo) => nodo.id === nodeData.key);
       if (nodo) {
-        const id = nodo.componente_id;
+        const id = nodo.id;
         try {
-          await NodoController.deleteByComponent(id);
-          cargarListaComponentes();
+          await NodoController.delete(id);
+          NodoBorrado();
         } catch (error) {
           console.error('Error al eliminar el nodo:', error);
         }
@@ -176,6 +173,22 @@ const createDiagram = async () => {
   });
 
 
+  diagram.addDiagramListener('ChangedSelection', (event) => {
+    const selectedNode = diagram.selection.first();
+    if (selectedNode instanceof go.Node) {
+      const nodeData = selectedNode.data;
+      const node = NodoController.getById(nodeData.key)
+        .then((response) => {
+          emit('Info-Nodo', { mensaje: response })
+        })
+        .catch((error) => {
+          console.error('Error al crear el enlace:', error);
+        });
+    }
+  });
+
+
+
   diagram.nodeTemplate =
     $(go.Node, "Auto",
       {
@@ -226,9 +239,9 @@ const createDiagram = async () => {
       $(go.Shape, { isPanelMain: true, stroke: "white", strokeWidth: 3, name: "PIPE", strokeDashArray: [20, 40] })
     );
 
-    var opacity = 1;
-    var down = true;
-    function loop() {
+  var opacity = 1;
+  var down = true;
+  function loop() {
     diagram.links.each(link => {
       var shape = link.findObject("PIPE");
       var off = shape.strokeDashOffset - 1;
@@ -247,9 +260,15 @@ const createDiagram = async () => {
   loop();
 
   diagram.model = new go.GraphLinksModel(nodeDataArray, linkDataArray)
+  showSpinner.value = false;
 }
 
-
+watchEffect(() => {
+  console.log(props.reload);
+  if (props.reload != 0) {
+    createDiagram();
+  }
+});
 
 onMounted(() => {
   createDiagram();

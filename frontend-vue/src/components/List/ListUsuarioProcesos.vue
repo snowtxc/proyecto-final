@@ -1,17 +1,15 @@
 <template>
+
     <div
         class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center"
     >
-        <ModalSelectUserProcess
+        <ModalSelectUserProcess v-if="rol == 'Administrador'"
             :processId="props.procesoId"
             @onAddUsers="addNewUsersToProcess"
         ></ModalSelectUserProcess>
         <spinner v-if="loading" :show="loading"></spinner>
         <div v-if="!loading && usersEmpty" class="w-full">
-            <div
-                class="w-full bg-white p-8 rounded-md shadow-md"
-                v-if="usersEmpty && !loading"
-            >
+            <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="usersEmpty && !loading">
                 <h2 class="text-2xl font-semibold mb-4">
                     No se encontraron usuarios
                 </h2>
@@ -22,22 +20,14 @@
             </div>
         </div>
         <div v-if="!loading && !usersEmpty" class="w-full flex flex-col gap-4">
-            <Card
-                v-for="user in props.usuarios"
-                :key="user.id"
-                class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-4 rounded-md cursor-pointer"
-            >
+            <Card v-for="user in props.usuarios" :key="user.id"
+                class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-4 rounded-md cursor-pointer">
                 <div class="flex flex-row items-center justify-between">
                     <div class="flex items-center">
-                        <img
-                            :src="
-                                user.profileImage
-                                    ? user.profileImage
-                                    : imageProfileDefault
-                            "
-                            alt="User Image"
-                            class="w-12 h-12 rounded-full mr-2 object-cover"
-                        />
+                        <img :src="user.profileImage
+                                ? user.profileImage
+                                : imageProfileDefault
+                            " alt="User Image" class="w-12 h-12 rounded-full mr-2 object-cover" />
 
                         <div class="flex flex-col">
                             <p class="font-bold text-xl">{{ user.name }}</p>
@@ -47,6 +37,7 @@
                     </div>
 
                     <font-awesome-icon
+                        v-if="rol == 'Administrador'"
                         :icon="['far', 'trash-can']"
                         class="delete"
                         @click="removeUser(user)"
@@ -56,13 +47,8 @@
         </div>
     </div>
 
-    <ConfirmationModal
-        :title="title"
-        :message="text"
-        :show="showModalRemove"
-        @cancel="showModalRemove = false"
-        @confirm="onRemoveUser"
-    ></ConfirmationModal>
+    <ConfirmationModal :title="title" :message="text" :show="showModalRemove" @cancel="showModalRemove = false"
+        @confirm="onRemoveUser"></ConfirmationModal>
 </template>
 
 <script setup>
@@ -76,6 +62,8 @@ import { useNotification } from '@kyvg/vue3-notification'
 
 const { notify } = useNotification()
 const $appStore = appStore()
+
+const rol = $appStore.getUserData?.rol;
 
 const loading = ref(false)
 const props = defineProps({
@@ -150,7 +138,7 @@ const addNewUsersToProcess = async (users) => {
 }
 
 
-const usersEmpty = computed(()=>{
+const usersEmpty = computed(() => {
     return props.usuarios.length === 0;
 });
 
