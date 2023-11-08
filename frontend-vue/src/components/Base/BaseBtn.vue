@@ -8,6 +8,7 @@ const props = defineProps({
     icon: Boolean,
     rounded: Boolean,
     maxWidth: String,
+    bgColor: String
     
 })
 </script>
@@ -17,6 +18,7 @@ const props = defineProps({
         type="button"
         class="btn rounded-lg border transition-all bg-primary text-white  hover:bg-white hover:text-primary hover:border-primary  dark:hover:bg-red-800"
         :class="[
+            props.bgColor ? props.bgColor :  'bg-primary',
             props.block ? 'block w-full' : 'inline-block',
             props.sm ? 'sm' : '',
             props.xl ? 'xl' : '',

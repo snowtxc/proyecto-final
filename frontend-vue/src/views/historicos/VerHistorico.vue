@@ -1,5 +1,5 @@
 <script setup>
-     import { computed, ref ,onBeforeMount }  from "vue";
+     import { computed, ref ,onBeforeMount, onMounted ,onBeforeUnmount}  from "vue";
      import dayjs from "dayjs";
      import { useRoute } from "vue-router";
      import   RegistroController  from "../../services/RegistroController";
@@ -8,8 +8,10 @@
      import 'v3-infinite-loading/lib/style.css';
      import Breadcrumbs from "../../components/Breadcrumbs.vue";
      import ComponenteController from "../../services/ComponenteController";
+    
+     import { useNotification } from '@kyvg/vue3-notification'
 
-     
+     const { notify } = useNotification()
 
      const route = useRoute();
      const $appStore = appStore();
@@ -26,6 +28,57 @@
      const loading = ref(true);
      const hasMoreData = ref(true);
      const title = ref("");
+     const filterActive = ref(false);
+     const countRegistros = ref(0);
+
+     const channel = `componente.${id}.update-registros`;
+
+
+     onMounted(()=>{
+        window.Echo.channel(channel).listen('appendRegistrosDevice', (nuevosRegistros) => {
+            appendNewRows(nuevosRegistros)
+        });
+     })
+     
+     onBeforeUnmount(()=>{
+        window.Echo.leave(channel);
+     })
+
+
+     const clearFilters = ()=>{
+        filters.value.startDate = null;
+        filters.value.endDate = null;
+     }
+
+     const appendNewRows  = (nuevosRegistros)=>{
+            countRegistros.value +=  nuevosRegistros.length;
+            if(filterActive.value){
+                    notify({
+                        title: 'Error',
+                        text:  `Se ha agregado nuevos ${countRegistros.value} registros al historico , desactiva el filtro para visualizarlo` ,
+                        type: 'warn',
+                    })
+                    return;
+            }
+            $appStore.setGlobalLoading(true)
+
+            setTimeout(()=>{
+               
+                nuevosRegistros.map(row =>{
+                    const { Marca, created_at,unidad,etapa} = row;
+                    const  newRow = {
+                        "fechaHora" : dayjs(created_at).format("DD/MM/YYYY hh:mm a"),
+                        "marca" : Marca,
+                        "unidad": unidad.unidad,
+                        "proceso" : etapa.proceso.Nombre,
+                        "etapa" : etapa.Nombre
+                    }
+                    historicos.value.unshift(newRow);
+                    })
+                $appStore.setGlobalLoading(false)
+
+            }, 500)
+     }
 
      const historicosFormatted = computed(()=>{
             return historicos.value.map(historico => {
@@ -36,12 +89,12 @@
                 }
             })
      })
-        onBeforeMount(async()=>{
-            $appStore.setGlobalLoading(true);
-            const  [ componenteData ]  =  await Promise.all([ComponenteController.getById(id) ,getHistoricos()]);
-            title.value  = `Históricos del componente "${componenteData.Nombre}""`;
-            $appStore.setGlobalLoading(false);
-        });
+    onBeforeMount(async()=>{
+        $appStore.setGlobalLoading(true);
+        const  [ componenteData ]  =  await Promise.all([ComponenteController.getById(id) ,getHistoricos()]);
+        title.value  = `Históricos del componente "${componenteData.Nombre}""`;
+        $appStore.setGlobalLoading(false);
+    });
 
      const getHistoricos = async()=>{
          loading.value = true;
@@ -62,6 +115,7 @@
         getHistoricos().then(()=>{
             $appStore.setGlobalLoading(false);
             loading.value = false;
+            filterActive.value = true;
         });
      }
 
@@ -83,6 +137,19 @@
         document.body.appendChild(link);
         link.click();
      }
+
+     const removeFilter = ()=>{
+        historicos.value = [];
+        filterActive.value = false;
+        countRegistros.value = 0;
+        page.value = 1;
+        clearFilters();
+        $appStore.setGlobalLoading(true);
+        getHistoricos().then(()=>{
+            $appStore.setGlobalLoading(false);
+
+        })
+     }
 </script> 
 
 <template>
@@ -103,10 +170,15 @@
                     <input type="datetime-local" v-model="filters.endDate" class="border rounded px-2 py-1">
                     <BaseBtn @click="applyFilters" class="bg-blue-500 text-white px-3 py-1 rounded">
                         Aplicar Filtros
+                        <i class="fa-solid fa-filter"></i>
+                    </BaseBtn>
+                    <BaseBtn bgColor="bg-red-600" v-if="filterActive" @click="removeFilter">
+                        Quitar filtro
+                        <i class="fa-solid fa-filter-circle-xmark"></i>
                     </BaseBtn>
              </div>
-
-            <div class="w-full mt-5 h-screen max-h-[70vh]	overflow-y-auto px-5	 ">
+             <BaseCard class="mt-5">
+                <div class="w-full mt-5 h-screen max-h-[70vh] overflow-y-auto px-5 transition-all animate-fade-in">
                 <div
                     class="w-full bg-white p-8 rounded-md shadow-md"
                     v-if="historicosEmpty && !loading"
@@ -118,9 +190,8 @@
                 </div>
                 <div v-else>
                     <div v-for="(item, index) in historicosFormatted" :key="index" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl py-5">
-                    <div class="flex">
-                    </div>
-                    <div class="flex pl-2 flex-1">
+                    
+                    <div class="historicoItem flex pl-2 flex-1 transition-all animate-fade-in">
                         <div class="flex flex-grow flex-col self-center justify-between lg:items-center lg:flex-row">
                             <a class="hover:text-purple-500" href="">
                                 {{item.fechaHora}}</a>
@@ -141,5 +212,23 @@
                 </div>
                
             </div>
+            </BaseCard>
+            
              
 </template>
+
+<style scoped>
+        @keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+</style>

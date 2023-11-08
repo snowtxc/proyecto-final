@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TipoComponente;
 use App\Helpers\FileHelper;
+use App\Events\tipoComponenteAdded;
+use App\Events\tipoComponenteDeleted;
+
 
 use Validator;
 class TipoComponenteController extends Controller
@@ -52,6 +55,8 @@ class TipoComponenteController extends Controller
             'Nombre' => $body['Nombre'],
             'Imagen' => $pathUploaded
         ]);
+
+        broadcast(new tipoComponenteAdded());
         return [
             "id" => $tipoComponente->id,
             'Nombre' => $tipoComponente->Nombre,
@@ -63,8 +68,10 @@ class TipoComponenteController extends Controller
         $tipo_componente = TipoComponente::find($id);
         if(isset($tipo_componente)){
             $tipo_componente->delete();
+            broadcast(new tipoComponenteDeleted());
             return response()->json($tipo_componente, 200);
         }
+
 
         return response()->json(['error' => 'Componente no encontrado'], 404);
     }

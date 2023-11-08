@@ -63,7 +63,7 @@
                                             <div class="flex flex-col">
                                                 <p class="font-bold text-xl">{{ user.name }}</p>  
                                                 <p>{{ user.email }}</p>
-                                                <p class="text-gray-500">Observador</p>
+                                                <p class="text-gray-500">{{ user.rol }}</p>
                                             </div>
                                             </div>
                                             <input type="checkbox"  class="form-checkbox h-5 w-5 text-primary focus:ring-primary" @change="toggleSelection(user,$event.target.checked)" />

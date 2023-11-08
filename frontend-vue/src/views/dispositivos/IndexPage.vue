@@ -90,7 +90,7 @@
                         Por favor, selecciona un dispositivo de la lista.
                     </p>
                  </div>
-                <PanelDeviceInfo v-if="deviceSelected" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></PanelDeviceInfo>
+                <PanelDeviceInfo v-if="deviceSelected && !loading" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></PanelDeviceInfo>
             </div>
         </div>
     </div>
@@ -156,9 +156,11 @@ const handleSelectedDevice = async(value) => {
     const { id}  = value;
     try{
         $appStore.setGlobalLoading(true);
+        loading.value = true;
         const compontenteData =  await ComponenteController.getById(id);
-        deviceSelected.value = compontenteData;
         $appStore.setGlobalLoading(false);
+        deviceSelected.value = compontenteData;
+        loading.value = false;
 
     }catch(e){
         notify({

@@ -115,7 +115,6 @@
                                 </div>
                             </Card>
                         </div>
-
                     </div>
                     <div class="w-full flex justify-center">
                         <spinner :show="loadingUsers"></spinner>

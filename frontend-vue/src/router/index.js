@@ -68,6 +68,7 @@ const routes = [
                 name: 'VerHistoricos',
                 component: () => import('../views/historicos/VerHistorico.vue'),
                 beforeEnter: OperadorGuard 
+
             },
 
             
