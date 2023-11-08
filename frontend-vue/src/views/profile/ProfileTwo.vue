@@ -115,7 +115,7 @@
     } else {
       $appStore.setGlobalLoading(true);
       try {
-        if(newData.profileImage != userProfileImage){
+        if(newData.profileImage != ''){
           const body = new FormData();
           body.append('profileImage', newData.profileImage);
           console.log(body);
