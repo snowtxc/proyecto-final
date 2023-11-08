@@ -162,7 +162,5 @@ class ObtenerNuevosRegistros extends Command
 
             $this->generarAlarma($alarma["componente"], $alarma["motivo"]);
         }
-
-
     }
 }
