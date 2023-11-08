@@ -76,5 +76,10 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Alarma::class, 'alarma_users');
     }
 
+    public function alarmasNoLeidas(){
+        return $this->belongsToMany(Alarma::class, 'alarma_users')->wherePivot('leida', false);
+
+    }
+
 
 }

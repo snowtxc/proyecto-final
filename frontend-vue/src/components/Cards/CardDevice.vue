@@ -1,13 +1,13 @@
 <template>
-    <div @click="emit('onSelect')" class="card flex flex-col  hover:bg-gray-100 dark:text-white group  cursor-pointer"
+    <div @click="emit('onSelect')" class="card flex flex-col  hover:bg-gray-100 dark:text-white group  cursor-pointer w-80 md:w-auto"
         :class="props.selected ? 'bg-[#25CEDE] text-white' : 'bg-white'">
-        <div class="card-body flex felx-row justify-between items-center">
+        <div class="card-body flex felx-row justify-between items-center w-full">
             <div class="flex align-center">
                 <img :src="props.image" alt="Image" class=" w-16 h-16 object-fill" />
                 <div class="m-auto">
                     <p :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.nombre }}</p>
                     <p class="text-xl" :class="props.selected ? 'text-white' : 'text-primary'">{{ props.value }}</p>
-                    <p class="text-sm">{{ props.ipAddress }}</p>
+                    <p class="text-sm" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
 
                 </div>
             </div>

@@ -9,22 +9,15 @@
             <div class="flex flex-col">
                 <div class="flex justify-end">
                     <div class="flex gap-4">
-                        <font-awesome-icon
-                            :icon="['far', 'pen-to-square']"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                            @click="
-                                $router.push({
-                                    name: 'editarDispositivo',
-                                    params: { id: props.deviceInfo.id },
-                                })
-                            "
-                        />
+                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" @click="
+                            $router.push({
+                                name: 'editarDispositivo',
+                                params: { id: props.deviceInfo.id },
+                            })
+                            " />
 
-                        <font-awesome-icon
-                            :icon="['far', 'trash-can']"
-                            @click="showModalDeleteComponent = true"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                        />
+                        <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
+                            class="w-5 h-5 m-4 hover:text-primary" />
                     </div>
                 </div>
                 <div
@@ -107,68 +100,42 @@
                                 </BaseBtn>
                             </div>
                         </template>
-                        <div
-                            class="block w-full overflow-x-auto whitespace-nowrap borderless hover"
-                        >
-                            <div
-                                class="dataTable-wrapper dataTable-loading no-footer fixed-columns"
-                            >
+                        <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
+                            <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                                 <div
-                                    class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover"
-                                >
-                                    <div
-                                        class="flex justify-center w-full"
-                                        v-if="loadingPartes"
-                                    >
+                                    class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
+                                    <div class="flex justify-center w-full" v-if="loadingPartes">
                                         <spinner :show="true"></spinner>
                                     </div>
-                                    <div
-                                        class="w-full flex justify-center"
-                                        v-else-if="!loadingPartes && emptyParts"
-                                    >
+                                    <div class="w-full flex justify-center" v-else-if="!loadingPartes && emptyParts">
                                         <p class="text-gray-600">
                                             No existe ninguna parte asociada al
                                             componente
                                         </p>
                                     </div>
 
-                                    <div
-                                        class="max-h-[50vh] overflow-y-auto"
-                                        v-else
-                                    >
+                                    <div class="max-h-[50vh] overflow-y-auto" v-else>
                                         <table
-                                            class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto"
-                                        >
+                                            class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto">
                                             <thead>
                                                 <tr class="">
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Fecha
                                                     </th>
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Nombre de la parte
                                                     </th>
 
-                                                    <th
-                                                        class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold"
-                                                    >
+                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Acciones
                                                     </th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
-                                                <tr
-                                                    class="hover:bg-gray-100 cursor-pointer"
-                                                    v-for="parte in partesFormatted"
-                                                    :key="parte.id"
-                                                >
-                                                    <td
-                                                        class="text-xs py-5 px-4"
-                                                    >
+                                                <tr class="hover:bg-gray-100 cursor-pointer"
+                                                    v-for="parte in partesFormatted" :key="parte.id">
+                                                    <td class="text-xs py-5 px-4">
                                                         {{ parte.Fecha }}
                                                     </td>
 
@@ -178,45 +145,19 @@
 
                                                     <td class="py-5">
                                                         <div class="flex gap-2">
-                                                            <ModalPartNotas
-                                                                :parteNombre="
-                                                                    parte.Nombre
-                                                                "
-                                                                :componenteId="
-                                                                    props
-                                                                        .deviceInfo
-                                                                        .id
-                                                                "
-                                                                :parteId="
-                                                                    parte.id
-                                                                "
-                                                            ></ModalPartNotas>
+                                                            <ModalPartNotas :parteNombre="parte.Nombre
+                                                                " :componenteId="props.deviceInfo.id"
+                                                                :parteId="parte.id"></ModalPartNotas>
 
-                                                            <font-awesome-icon
-                                                                :icon="[
-                                                                    'far',
-                                                                    'pen-to-square',
-                                                                ]"
-                                                                class="w-5 h-5 m-4 hover:text-primary"
-                                                                @click="
-                                                                    editPart(
-                                                                        parte
-                                                                    )
-                                                                "
-                                                            />
+                                                            <font-awesome-icon :icon="[
+                                                                'far',
+                                                                'pen-to-square',
+                                                            ]" class="w-5 h-5 m-4 hover:text-primary"
+                                                                @click="editPart(parte)" />
 
-                                                            <font-awesome-icon
-                                                                :icon="[
-                                                                    'far',
-                                                                    'trash-can',
-                                                                ]"
-                                                                @click="
-                                                                    deletePart(
-                                                                        parte
-                                                                    )
-                                                                "
-                                                                class="w-5 h-5 m-4 hover:text-primary"
-                                                            />
+                                                            <font-awesome-icon :icon="['far', 'trash-can',]"
+                                                                @click="deletePart(parte)"
+                                                                class="w-5 h-5 m-4 hover:text-primary" />
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -228,7 +169,7 @@
                         </div>
                     </BaseCard>
                 </div>
-                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5 mt-5" v-if="deviceIsActive">
+                <div class="w-full mt-5 max-h-[70vh] overflow-y-auto p-5" v-if="deviceIsActive">
                     <div class="w-full flex justify-end">
                         <div>
                             <p>Unidad de medida seleccionada</p>
@@ -254,7 +195,7 @@
                             :parentTitle="unidadSelected.nombre"
                         ></Breadcrumbs>
                         
-                        <div class="flex gap-3 mt-3 gap-10">
+                        <div class="flex mt-3 gap-10">
                             <ChartBar
                                 class="flex-1"
                                 :componente_id="props.deviceInfo.id"
@@ -277,32 +218,16 @@
         </BaseCard>
     </div>
 
-    <ModalPartForm
-        v-if="showModalPart"
-        @onProcessed="handleParteModal"
-        :action="actionPart"
-        @onClose="showModalPart = false"
-        :componente_id="props.deviceInfo.id"
-        :partData="partSelected"
-    ></ModalPartForm>
+    <ModalPartForm v-if="showModalPart" @onProcessed="handleParteModal" :action="actionPart"
+        @onClose="showModalPart = false" :componente_id="props.deviceInfo.id" :partData="partSelected"></ModalPartForm>
 
-    <ConfirmationModal
-        v-if="showModalDeleteComponent"
-        :show="showModalDeleteComponent"
-        title="Eliminar componente"
-        message="Seguro deseas eliminar este componente?"
-        @cancel="showModalDeleteComponent = false"
-        @confirm="onDelete"
-    ></ConfirmationModal>
+    <ConfirmationModal v-if="showModalDeleteComponent" :show="showModalDeleteComponent" title="Eliminar componente"
+        message="Seguro deseas eliminar este componente?" @cancel="showModalDeleteComponent = false" @confirm="onDelete">
+    </ConfirmationModal>
 
-    <ConfirmationModal
-        v-if="showModalDeletePart && partSelected"
-        :show="showModalDeletePart"
-        title="Eliminar parte"
-        message="Seguro deseas eliminar esta parte?"
-        @cancel="showModalDeletePart = false"
-        @confirm="onConfirmDeletePart"
-    ></ConfirmationModal>
+    <ConfirmationModal v-if="showModalDeletePart && partSelected" :show="showModalDeletePart" title="Eliminar parte"
+        message="Seguro deseas eliminar esta parte?" @cancel="showModalDeletePart = false" @confirm="onConfirmDeletePart">
+    </ConfirmationModal>
 </template>
 
 <script setup>

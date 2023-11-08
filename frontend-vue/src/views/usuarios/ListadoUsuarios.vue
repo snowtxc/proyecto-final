@@ -14,52 +14,46 @@
                     </div>
                     </div>
                 </div>
-                
+
             </template>
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
                     <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
-
                         <ul v-if="usuarios.length > 1">
-                            <li v-for="(user, index) in usuarios" :key="index" >
-                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center mb-4 md:flex-row">
-                                    <img
-                                        class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
-                                        :src= "user.profileImage ? user.profileImage : imageProfileDefault"
-                                        alt=""
-                                    />
+                            <li v-for="(user, index) in usuarios" :key="index">
+                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center  mb-4 md:flex-row">
+                                    <img class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
+                                        :src="user.profileImage ? user.profileImage : imageProfileDefault" alt="" />
                                     <div class="flex-grow md:text-left">
                                         <h5>
-                                            <p
-                                                class="text-gray-800"
-                                            >
-                                                {{ user.name }}  -  {{ user.rol }}
+                                            <p class="text-gray-800">
+                                                {{ user.name }} - {{ user.rol }}
                                             </p>
                                         </h5>
                                         <p class="text-gray-400 text-xs mb-3 md:mb-0">
                                             {{ user.email }}
                                         </p>
                                     </div>
+                                    <div>
+                                         <font-awesome-icon :icon="['far', 'pen-to-square']"
+                                        @click="this.selectedUser = user.id, this.showModalUsuario = true"
+                                        class="w-5 h-5 m-4 hover:text-primary" />
+                                    <font-awesome-icon :icon="['far', 'trash-can']"
+                                        @click="this.userDelete = user.id, this.showConfirmationModal = true"
+                                        class="w-5 h-5 m-4 hover:text-primary" />
+                                    </div>
                                    
-                                        <font-awesome-icon 
-                                            :icon="['far', 'pen-to-square']" 
-                                            @click="this.selectedUser = user.id, this.showModalUsuario = true" 
-                                            class="w-5 h-5 m-4 hover:text-primary"/>
-                                        <font-awesome-icon 
-                                            :icon="['far', 'trash-can']" 
-                                            @click="this.userDelete = user.id, this.showConfirmationModal = true" 
-                                            class="w-5 h-5 m-4 hover:text-primary"/>
                                 </div>
                             </li>
 
 
                         </ul>
                         <p class="px-4 py-3" v-if="usuarios.length <= 1"> No se encontraron usuarios</p>
-                    
+
                     </div>
                     <div class="dataTable-bottom">
                         <div class="dataTable-info">
-                            
+
                         </div>
                         <nav class="dataTable-pagination">
                             <ul class="dataTable-pagination-list"></ul>
@@ -70,21 +64,11 @@
         </BaseCard>
     </div>
 
-    <DetalleUsuario 
-        v-if="showModalUsuario" 
-        :show="showModalUsuario" 
-        :userId="selectedUser" 
-        @onClose="showModalUsuario = false" 
-        @onConfirm="onConfirmEvent">
+    <DetalleUsuario v-if="showModalUsuario" :show="showModalUsuario" :userId="selectedUser"
+        @onClose="showModalUsuario = false" @onConfirm="onConfirmEvent">
     </DetalleUsuario>
-    <ConfirmationModal
-      v-if="showConfirmationModal"
-      :show="showConfirmationModal"
-      :title="modalTitle"
-      :message="modalMessage"
-      @confirm="eliminar"
-      @cancel="cancelar"
-    />
+    <ConfirmationModal v-if="showConfirmationModal" :show="showConfirmationModal" :title="modalTitle"
+        :message="modalMessage" @confirm="eliminar" @cancel="cancelar" />
 </template>
 
 <script>
@@ -97,12 +81,12 @@ import BaseBtn from '../../components/Base/BaseBtn.vue';
 
 const $appStore = appStore();
 
-export default{
+export default {
 
-    data(){
+    data() {
         return {
-            usuarios : [],
-            selectedUser : 0,
+            usuarios: [],
+            selectedUser: 0,
             showModalUsuario: false,
             showConfirmationModal: false,
             modalTitle: "Confirmación",
@@ -112,33 +96,33 @@ export default{
         }
     },
 
-    created(){
+    created() {
         $appStore.setGlobalLoading(true);
         this.getUsuarios();
     },
 
     methods: {
-        getUsuarios(){
+        getUsuarios() {
             UsuarioController.listaUsuarios().then((response) => {
-                if(response.status == 200){
+                if (response.status == 200) {
                     this.usuarios = response.data;
                     console.log(this.usuarios);
                 }
                 $appStore.setGlobalLoading(false);
             })
         },
-        onConfirmEvent(){
+        onConfirmEvent() {
             this.getUsuarios();
-            this.showModalUsuario = false; 
+            this.showModalUsuario = false;
             this.selectedUser = 0;
         },
-        async eliminar(){
+        async eliminar() {
             $appStore.setGlobalLoading(true);
-            UsuarioController.eliminarUsuario(this.userDelete).then((response) =>{
+            UsuarioController.eliminarUsuario(this.userDelete).then((response) => {
                 console.log(response);
                 if (response.status === 200) {
                     this.getUsuarios();
-                }else{
+                } else {
                     $appStore.setGlobalLoading(false);
                     //mensaje de error
                     console.error("Error al eliminar usuario:", error);
@@ -148,18 +132,18 @@ export default{
             this.userDelete = null;
         },
 
-        cancelar(){
+        cancelar() {
             this.userDelete = null;
             this.showConfirmationModal = false;
         }
     },
 
-    computed:{
-        imageProfileDefault: ()=>{
+    computed: {
+        imageProfileDefault: () => {
             return $appStore.getImageProfileDefault;
         }
     },
-    components:{
+    components: {
         DetalleUsuario,
         ConfirmationModal,
         BaseBtn
@@ -170,13 +154,3 @@ export default{
 
 
 </script>
-
-<style scoped>
-.end-align {
-  display: flex !important;
-  justify-content: flex-end !important;
-  align-items: center !important;
-}
-
-
-</style>

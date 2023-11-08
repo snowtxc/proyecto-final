@@ -1,9 +1,9 @@
 
 
 <template>
-  <div class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center" style="">
+  <div class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center" style="background-image: url('/images/LoginBackground.jpg');">
         <div class="container-session-v1 max-w-2xl">
-            <BaseCard noPadding class="overflow-hidden ">
+            <BaseCard noPadding class="overflow-hidden md:p-10 ">
                 <div class="p-5 flex flex-col">
                     <h1 class="mb-3 text-2xl">Inicio de sesion</h1>
                     <form @submit.prevent="login">
@@ -40,8 +40,6 @@ import { appStore } from "@/store/app.js";
 import {ref} from 'vue'
 import { useRouter } from 'vue-router';
 
-
-
 const $appStore = appStore();
 const router = useRouter();
 
@@ -69,7 +67,7 @@ const validateEmail = (email) => {
 
 const makeAPICall = async () => {
   try {
-    const response = await $appStore.login(email.value, password.value);
+    const response = await $appStore.login(email.value, password.value); 
     showErrorBanner.value = false;
     router.push('/');
   } catch (error) {

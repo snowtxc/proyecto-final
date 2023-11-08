@@ -13,25 +13,19 @@
     </div>
 
     <div class="flex gap-10 mt-4">
-            <div class="min-w-[350px]">
-                <BaseCard>
-                    <input
-                        class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
-                        type="text"
-                        placeholder="Buscar"
-                        v-model="searchTerm"
-                        @input="filterProcesos"                        
-                    />
+        <div class="min-w-[350px]">
+            <BaseCard>
+                <input
+                    class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                    type="text"
+                    placeholder="Buscar"
+                    v-model="searchTerm"
+                    @input="filterProcesos"                        
+                />
+       
 
-
-
-    <!--div class="flex justify-between ">
-        <input v-model="searchTerm" class=" bg-gray-100 h-10 w-72 px-5 rounded-full text-sm focus:outline-none mb-4 ml-12"
-            type="search" name="search" placeholder="Buscar" @input="filterProcesos">
-    </div>-->
-    <div class="h-full w-auto flex flex-col space-y-2 overflow-y-auto">
-
-        <!--div class="h-auto flex flex-col items-center space-y-2 overflow-y-auto p-3 "-->
+    <div class="h-full w-full flex flex-col md:flex-row space-y-2 ">
+        <div class="h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
             
             <spinner :show="showSpinnerProcesos"></spinner>
             <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
@@ -51,12 +45,13 @@
                 </div>
             </Card>
         </div>
-                </BaseCard>
+    </div>
+    </BaseCard>
                 </div>
     
         <div class="w-full flex flex-col">
 
-            <div class="ml-5 h-20 border-l-[1px] border-gray-300">
+            <div class="md:ml-5 h-20 md:border-l-[1px] md:border-gray-300">
                 <p class="font-bold text-xl ml-5" v-if="dataDescripcion !== ''">
                     Descripcion:
                 </p>
@@ -68,9 +63,9 @@
             <div class="w-full flex flex-col justify-center h-full">
                 <p v-if="selectedCardIndex === null" class="text-center">Seleccione un proceso para ver su información.</p>
 
-                <div class="w-full h-full flex " v-else>
+                <div class="w-full h-full flex flex-col md:flex-row " v-else>
                     <div
-                        class="w-full h-auto max-h-[730px] ml-5 border-l-[1px] border-gray-300 overflow-y-auto flex justify-center">
+                        class="w-full h-auto max-h-96 md:max-h-[600px] md:ml-5 md:border-l-[1px] md:border-gray-300 overflow-y-auto flex justify-center">
                         <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
@@ -233,7 +228,7 @@ import { useNotification } from '@kyvg/vue3-notification'
 const { notify } = useNotification()
 
 
-import ListUsuarioProcesos from '../../components/List/ListUsuarioProcesos.vue';
+import ListUsuarioProcesos from '@/components/List/ListUsuarioProcesos.vue';
 
 const router = useRouter();
 
