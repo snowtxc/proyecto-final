@@ -1,26 +1,41 @@
 <template>
-    <Breadcrumb parentTitle='Procesos' />
-    <div class="flex justify-between ">
+    
+    <div class="card-header flex justify-between items-center">
+        <div class="card-title">
+            <p class="text-xl font-semibold mr-2"> Procesos </p>
+        </div>
+        <BaseBtn v-if="rol == 'Administrador'"
+            @click="showModal = true"
+        >
+            <i class="fa-solid fa-plus mr-2"></i>
+            Nuevo Proceso
+        </BaseBtn>
+    </div>
+
+    <div class="flex gap-10 mt-4">
+            <div class="min-w-[350px]">
+                <BaseCard>
+                    <input
+                        class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                        type="text"
+                        placeholder="Buscar"
+                        v-model="searchTerm"
+                        @input="filterProcesos"                        
+                    />
+
+
+
+    <!--div class="flex justify-between ">
         <input v-model="searchTerm" class=" bg-gray-100 h-10 w-72 px-5 rounded-full text-sm focus:outline-none mb-4 ml-12"
             type="search" name="search" placeholder="Buscar" @input="filterProcesos">
-    </div>
-    <div class="h-full w-auto flex flex-row space-y-2 ">
+    </div>-->
+    <div class="h-full w-auto flex flex-col space-y-2 overflow-y-auto">
 
-        <div class="w-1/5 h-auto max-h- flex flex-col items-center space-y-2 overflow-y-auto p-3 ">
-            <div>
-                <Card v-if="rol == 'Administrador'"
-                    class="w-64 h-17 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
-                    @click="showModal = true">
-                    <div class="flex flex-row items-center justify-center ">
-                        <p class="font-bold text-xl">
-                            Agregar
-                        </p>
-                    </div>
-                </Card>
-            </div>
+        <!--div class="h-auto flex flex-col items-center space-y-2 overflow-y-auto p-3 "-->
+            
             <spinner :show="showSpinnerProcesos"></spinner>
             <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
-                class="w-64 h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
+                class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
                 :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
                 <div class="flex flex-row items-center justify-between">
                     <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
@@ -36,6 +51,9 @@
                 </div>
             </Card>
         </div>
+                </BaseCard>
+                </div>
+    
         <div class="w-full flex flex-col">
 
             <div class="ml-5 h-20 border-l-[1px] border-gray-300">

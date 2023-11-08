@@ -6,11 +6,10 @@
                     <div class="card-title pt-3">Usuarios 
                     <div class="end-align">
                     <BaseBtn 
-                        rounded
-                        class="border border-primary text-primary hover:bg-primary hover:text-white"
                         @click="this.selectedUser = 0, this.showModalUsuario = true"
-                        >
-                        Nuevo
+                    >
+                        <i class="mr-2 fa-solid fa-plus"></i>
+                        Nuevo Usuario 
                     </BaseBtn>
                     </div>
                     </div>
@@ -94,6 +93,7 @@ import UsuarioController from '../../services/UsuarioController'
 import DetalleUsuario from './DetalleUsuario.vue'
 import ConfirmationModal from '../../components/ConfirmationModal.vue';
 import { appStore } from "@/store/app.js";
+import BaseBtn from '../../components/Base/BaseBtn.vue';
 
 const $appStore = appStore();
 
@@ -161,7 +161,8 @@ export default{
     },
     components:{
         DetalleUsuario,
-        ConfirmationModal
+        ConfirmationModal,
+        BaseBtn
     }
 
 

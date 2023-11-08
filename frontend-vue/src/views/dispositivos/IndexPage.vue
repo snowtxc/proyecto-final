@@ -1,12 +1,14 @@
 <template>
     <div>
-        <div class="flex justify-between items-center">
-            <Breadcrumb parentTitle="Dispositivos" />
-
-            <BaseBtn maxWidth="500px" 
-            @click="$router.push({name: 'nuevoDispositivo'})"
-                >Agregar nuevo Dispositivo
-                <i class="fa-solid fa-plus"></i>
+        <div class="card-header flex justify-between items-center">           
+            <div class="card-title ">
+                <p class="text-xl font-semibold mr-2"> Dispositivos </p>
+            </div>
+            <BaseBtn 
+                @click="$router.push({name: 'nuevoDispositivo'})"
+                >
+                <i class="mr-2 fa-solid fa-plus"></i>
+                Nuevo Dispositivo
             </BaseBtn>
         </div>
         <div class="flex gap-10 mt-4">

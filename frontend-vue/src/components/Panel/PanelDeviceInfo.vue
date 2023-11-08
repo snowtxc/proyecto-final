@@ -1,54 +1,53 @@
 <template>
     <div class="w-full h-screen">
         <BaseCard>
-            <div class="w-full flex justify-between items-center">
-                <Breadcrumbs :parentTitle="title"></Breadcrumbs>
-
-                <BaseBtn
-                         @click="handleViewHistoricos"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    
-                >
-                    <i class="fas fa-file-excel mr-2"></i> Visualizar Historicos
-                </BaseBtn>
-            </div>
+            <template v-slot:cardHeader>               
+                <div class="card-header flex justify-between items-center">
+                    <div class="flex ">
+                        <div class="card-title">
+                            <p class="text-xl font-semibold mr-2"> {{ title }} </p>
+                        </div>
+                        <div class="flex items-center">
+                            <font-awesome-icon
+                                :icon="['far', 'pen-to-square']"
+                                class="w-5 h-5 mx-2 hover:text-primary"
+                                @click="
+                                    $router.push({
+                                        name: 'editarDispositivo',
+                                        params: { id: props.deviceInfo.id },
+                                    })
+                                "
+                            />
+                            <font-awesome-icon
+                                :icon="['far', 'trash-can']"
+                                @click="showModalDeleteComponent = true"
+                                class="w-5 h-5 mx-2 hover:text-primary"
+                            />
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <BaseBtn
+                            @click="handleViewHistoricos"   
+                        >
+                            <i class="fas fa-history mr-2"></i> Ver Historico
+                        </BaseBtn>
+                    </div>                   
+                </div>
+            </template>
 
             <div class="flex flex-col">
-                <div class="flex justify-end">
-                    <div class="flex gap-4">
-                        <font-awesome-icon
-                            :icon="['far', 'pen-to-square']"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                            @click="
-                                $router.push({
-                                    name: 'editarDispositivo',
-                                    params: { id: props.deviceInfo.id },
-                                })
-                            "
-                        />
-
-                        <font-awesome-icon
-                            :icon="['far', 'trash-can']"
-                            @click="showModalDeleteComponent = true"
-                            class="w-5 h-5 m-4 hover:text-primary"
-                        />
-                    </div>
-                </div>
                 <div class="mt-3">
                     <BaseCard>
                         <template v-slot:cardHeader>
-                            <div class="card-header flex justify-between">
-                                <div class="card-title py-3">Partes</div>
+                            <div class="card-header flex justify-between items-center">
+                                <div class="card-title">
+                                    <p class="text-xl font-semibold mr-2"> Partes </p>
+                                </div>
                                 <BaseBtn
-                                    rounded
-                                    @click="
-                                        ;(showModalPart = true),
-                                            (actionPart = Action.CREAR)
-                                    "
-                                    class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center"
+                                    @click=";(showModalPart = true), (actionPart = Action.CREAR)"
                                 >
-                                    Agregar parte
-                                    <i class="fa-solid fa-plus ml-2"></i>
+                                    <i class="fa-solid fa-plus mr-2"></i>
+                                    Nueva Parte
                                 </BaseBtn>
                             </div>
                         </template>
@@ -474,6 +473,6 @@ const emptyParts = computed(() => {
 
 const title = computed(() => {
     console.log(props.deviceInfo)
-    return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
+    return `Información del dispositivo:  "${props.deviceInfo.Nombre}" `
 })
 </script>
