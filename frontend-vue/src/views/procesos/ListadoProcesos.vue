@@ -69,29 +69,25 @@
                         <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
-                            <Card
-                                class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
-                                @click="showModalEtapas = true">
-                                <div class="flex flex-row items-center justify-center ">
-                                    <p class="font-bold text-xl">
-                                        Agregar
-                                    </p>
-                                </div>
-                            </Card>
+                            <BaseBtn 
+                                @click="showModalEtapas = true"
+                                :block="true"
+                                >
+                                <i class="mr-2 fa-solid fa-plus"></i>
+                                Nueva Etapa
+                            </BaseBtn>
                             <spinner :show="showSpinnerEtapas"></spinner>
                             <p v-if="showSpinnerEtapas == false">No hay etapas para este proceso.</p>
                         </div>
                         <div v-else
                             class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center ">
-                            <Card
-                                class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
-                                @click="showModalEtapas = true">
-                                <div class="flex flex-row items-center justify-center ">
-                                    <p class="font-bold text-xl">
-                                        Agregar Nueva Etapa
-                                    </p>
-                                </div>
-                            </Card>
+                            <BaseBtn 
+                                @click="showModalEtapas = true"
+                                :block="true"
+                                >
+                                <i class="mr-2 fa-solid fa-plus"></i>
+                                Nueva Etapa
+                            </BaseBtn>
                             <spinner :show="showSpinnerEtapas"></spinner>
                             <Card v-if="showSpinnerEtapas == false" v-for="etapa in listaEtapas" :key="etapa.id"
                                 @click="navigateToEtapas(etapa.id);"

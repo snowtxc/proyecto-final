@@ -1,9 +1,11 @@
 <template>
-    <Card
-        class="card w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150 flex items-center justify-center rounded-lg shadow-sm"
-        @click="showModal">
-        <p class="font-bold text-xl cursor-pointer">Agregar Nuevo Usuario</p>
-    </Card>
+    <BaseBtn 
+        @click="showModal"
+        :block="true"
+        >
+        <i class="mr-2 fa-solid fa-plus"></i>
+        Agregar Usuario
+    </BaseBtn>
 
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="modal-overlay fixed inset-0 bg-black opacity-50"></div>
@@ -48,21 +50,24 @@
                                                     <p>{{ user.email }}</p>
                                                     <p class="text-gray-500">{{ user.rol }}</p>
                                                 </div>
-                                                <input type="checkbox"
-                                                    class="form-checkbox h-5 w-5 text-primary focus:ring-primary"
-                                                    @change="toggleSelection(user, $event.target.checked)" />
-
+                                                
                                             </div>
+                                            <div class="flex justify-end">
+                                                    <input type="checkbox"
+                                                        class="form-checkbox h-5 w-5 text-primary focus:ring-primary"
+                                                        @change="toggleSelection(user, $event.target.checked)" />
+                                                </div>
                                         </div>
                                     </Card>
                                 </div>
 
                                 <div class="w-full mt-5">
-                                    <Card
-                                        class="cursor-pointer w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150 flex items-center justify-center"
-                                        @click="onSubmit">
-                                        <p class="font-bold text-xl">Agregar</p>
-                                    </Card>
+                                    <BaseBtn 
+                                        @click="onSubmit"
+                                        >
+                                        <i class="mr-2 fa-solid fa-plus"></i>
+                                        Agregar
+                                    </BaseBtn>
                                 </div>
                                 <!--
                                 <div class="w-full flex justify-center mt-2">
