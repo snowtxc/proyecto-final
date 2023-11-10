@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, watch, defineEmits } from 'vue';
+import { ref, watch } from 'vue';
 import { appStore } from "@/store/app.js";
 import ProcesoController from '@/services/ProcesoController.js';
 import EtapaController from '@/services/EtapaController.js';
@@ -60,7 +60,6 @@ const nodeData = ref()
 const dispositivoData = ref(null)
 const unidades = ref([])
 const showSpinner = ref(false)
-const emits = defineEmits();
 
 const setNodeData = (data) => {
   nodeData.value = data;
