@@ -23,7 +23,8 @@ class RegistroSeeder extends Seeder
             'componente_id' => 2,
             'Marca' => 40,
             'created_at' => $mutable,
-            'etapa_id' => 3
+            'etapa_id' => 3,
+            'unidad_id' => 3
         ]);
         $mutable->add(1, 'day');
 
@@ -32,7 +33,8 @@ class RegistroSeeder extends Seeder
             'componente_id' => 2,
             'Marca' => 40,
             'created_at' => $mutable,
-            'etapa_id' => 3
+            'etapa_id' => 3,
+            'unidad_id' => 3
         ]);
         $mutable->add(1, 'day');
 
@@ -41,107 +43,8 @@ class RegistroSeeder extends Seeder
             'componente_id' => 2,
             'Marca' => 40,
             'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
-        ]);
-        $mutable->add(1, 'day');
-
-        $mutable = Carbon::now();
-        DB::table('registros')->insert([
-            'componente_id' => 2,
-            'Marca' => 40,
-            'created_at' => $mutable,
-            'etapa_id' => 3
+            'etapa_id' => 3,
+            'unidad_id' => 3
         ]);
         $mutable->add(1, 'day');
 
@@ -151,11 +54,120 @@ class RegistroSeeder extends Seeder
             'componente_id' => 2,
             'Marca' => 40,
             'created_at' => $mutable,
-            'etapa_id' => 2
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
+
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 3,
+            'unidad_id' => 3
         ]);
         $mutable->add(1, 'day');
 
 
-
+        $mutable = Carbon::now();
+        DB::table('registros')->insert([
+            'componente_id' => 2,
+            'Marca' => 40,
+            'created_at' => $mutable,
+            'etapa_id' => 2,
+            'unidad_id' => 3
+        ]);
+        $mutable->add(1, 'day');
     }
 }
