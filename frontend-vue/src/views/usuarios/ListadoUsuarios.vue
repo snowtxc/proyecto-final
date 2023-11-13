@@ -2,17 +2,16 @@
     <div class="col-span-12">
         <BaseCard>
             <template v-slot:cardHeader>
-                <div class="card-header">
-                    <div class="card-title pt-3">Usuarios 
-                    <div class="end-align">
+                <div class="card-header flex justify-between items-center">           
+                    <div class="card-title ">
+                        <p class="text-xl font-semibold mr-2"> Usuarios </p>
+                    </div>
                     <BaseBtn 
                         @click="this.selectedUser = 0, this.showModalUsuario = true"
                     >
                         <i class="mr-2 fa-solid fa-plus"></i>
                         Nuevo Usuario 
                     </BaseBtn>
-                    </div>
-                    </div>
                 </div>
 
             </template>

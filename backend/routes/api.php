@@ -44,6 +44,7 @@ Route::group(["prefix" => 'procesos'],function () {
 
 Route::group(["prefix" => 'etapas'],function () {
     Route::get('/{procesoId}', [EtapaController::class, "list"]);
+    Route::get('/find/{id}', [EtapaController::class, "find"]);
     Route::post('/', [EtapaController::class, "create"]);
     Route::put('/{id}', [EtapaController::class, 'update']);
     Route::delete('/{id}', [EtapaController::class, 'delete']);

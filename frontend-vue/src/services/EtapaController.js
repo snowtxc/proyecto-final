@@ -16,7 +16,7 @@ export default{
     },
 
     buscarEtapa(id){
-        return axios.get("etapas/"+id);
+        return axios.get("etapas/find/"+id);
     },
 
     editarEtapa(id, nombre, descripcion, proceso_id) {

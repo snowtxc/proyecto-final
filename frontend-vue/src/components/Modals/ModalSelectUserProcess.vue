@@ -9,14 +9,23 @@
 
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="modal-overlay fixed inset-0 bg-black opacity-50"></div>
-        <div class="modal-container bg-white md:w-1/3 mx-auto rounded shadow-lg z-50 overflow-y-auto h-[70vh]">
+        <div class="modal-container bg-white md:w-1/3 mx-auto rounded shadow-lg z-50 ">
             <div class="modal-content py-4 text-left px-6">
                 <div class="flex flex-col">
-                    <div class="flex justify-end items-center">
-                        <button class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    <!--div class="flex justify-end items-center"-->
+                        <div class="card-header flex justify-between items-center">
+                        <div class="card-title">
+                            <p class="text-xl font-semibold mr-2"> Seleccionar usuarios </p>
+                        </div>
+                        <BaseBtn
+                            sm
                             @click="show = false">
                             <i class="fas fa-times"></i>
-                        </button>
+                        </BaseBtn>
+                        <!--button class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            @click="show = false">
+                            <i class="fas fa-times"></i>
+                        </button-->
                     </div>
 
                     <div class="px-5 py-5 mt-5">
@@ -24,9 +33,9 @@
                             <spinner :show="true" :width="12" height="12"></spinner>
                         </div>
                         <div class="w-full" v-else>
-                            <div class="w-full flex justify-between items-center">
+                            <!--div class="w-full flex justify-between items-center">
                                 <Breadcrumb parentTitle="Seleccionar usuario" />
-                            </div>
+                            </div-->
 
                             <div class="flex flex-wrap gap-5  mt-5">
                                 <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="usersEmpty && !loading">
@@ -37,7 +46,7 @@
                                         No existe ningun usuario para agregar al grupo de este proceso
                                     </p>
                                 </div>
-                                <div v-else class="w-full flex flex-col gap-10">
+                                <div v-else class="w-full flex flex-col gap-10 overflow-y-auto  h-[50vh]">
                                     <Card v-for="user in users" :key="user.id"
                                         class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-1 rounded-md	cursor-pointer">
                                         <div class="flex flex-row items-center justify-between">
@@ -61,7 +70,7 @@
                                     </Card>
                                 </div>
 
-                                <div class="w-full mt-5">
+                                <div class="w-full mt-5 flex justify-end">
                                     <BaseBtn 
                                         @click="onSubmit"
                                         >

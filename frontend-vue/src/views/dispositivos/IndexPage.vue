@@ -55,7 +55,7 @@
                             </p>
                         </div>
                         <div v-else class="mt-2" v-for="item in componentes" :key="item.id">
-                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp" :value="25"
+                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp"
                                 :image="item.tipoComponenteImage" :selected="deviceSelected &&
                                     deviceSelected.id == item.id
                                     " @onSelect="handleSelectedDevice(item)"></CardDevice>

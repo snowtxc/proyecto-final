@@ -116,10 +116,10 @@
             </div>
 
         </div>
-        <Modal :show="showModal" @closeModal="showModal = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Nuevo Proceso'" :show="showModal" @closeModal="showModal = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Nuevo Proceso</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -130,16 +130,16 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFields(0)">
-                    Crear
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEditar" @closeModal="showModalEditar = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Editar Proceso'" :show="showModalEditar" @closeModal="showModalEditar = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Editar Proceso</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -150,16 +150,13 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFields(1)">
-                    Editar
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEtapas" @closeModal="showModalEtapas = false">
-            <div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">Nuevo Etapa</p>
-            </div>
+        <Modal :title="'Nueva Etapa'" :show="showModalEtapas" @closeModal="showModalEtapas = false">
             <div class="space-y-4 mb-8">
                 <input v-model="nombreEtapa" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -170,16 +167,16 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFieldsEtapa(0)">
-                    Crear
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEditarEtapas" @closeModal="showModalEditarEtapas = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Editar Etapa'" :show="showModalEditarEtapas" @closeModal="showModalEditarEtapas = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Editar Etapa</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombreEtapa" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -190,9 +187,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFieldsEtapa(1)">
-                    Editar
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>

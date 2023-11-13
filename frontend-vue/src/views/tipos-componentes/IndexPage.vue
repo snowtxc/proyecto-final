@@ -114,16 +114,32 @@ const edit = (tipoComponente) => {
 
 
 <template>
-    <div class="flex justify-between items-center">
+    <div class="card-header flex justify-between items-center">         
+        <div class="card-title">
+            <p class="text-xl font-semibold "> Tipos de Dispositivo </p>
+        </div>
+        <BaseBtn
+            @click="addNewTypeComponent">
+            <i class="fa-solid fa-plus mr-2"></i>
+            Nuevo Tipo
+        </BaseBtn>
+    </div>
+    <!--div class="flex justify-between items-center">
         <Breadcrumbs parentTitle="Tipo de Componentes"></Breadcrumbs>
         <BaseBtn @click="addNewTypeComponent">
             Agregar
         </BaseBtn>
-    </div>
-    <input class="focus:outline-none text-2xl mb-7 bg-gray-200 p-2 w-full" type="text" placeholder="Buscar"
-        @input="handleSearch" />
+    </div-->
+    
 
     <div>
+        <input
+            class="min-w-[50vh] p-2 m-4 text-sm text-gray-900 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+            type="text"
+            placeholder="Buscar"
+            @input="handleSearch"
+                        
+        />
 
         <div class="max-h-[70vh] overflow-y-auto">
             <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="tiposComponentesEmpty && !loading">
