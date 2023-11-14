@@ -53,12 +53,25 @@
                             <!--a class="hover:text-primary" href=""></a-->
                             <div class="flex">
                                 <img class="w-20 object-fill" :src="item.tipoComponenteImagen" alt="" />
+                                <div class="ml-4 flex flex-col justify-center items-start">
+                                    <p>{{ item.componenteNombre }}</p>
+                                    <p>{{ item.tipoComponente }}</p>
+                                </div>
                             </div>
-                            <p>{{ item.componenteNombre }}</p>
-                            <p>{{ item.tipoComponente }}</p>
-                            <p>{{ item.procesoNombre }}</p>
-                            <p>{{ formattedDate(item.fechaHora) }}
-                            </p>
+                            
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Proceso</p>
+                                <p>{{ item.procesoNombre }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Motivo</p>
+                                <p>{{ item.motivo }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Fecha</p>
+                                <p>{{ formattedDate(item.fechaHora) }}</p>
+                            </div>
+                            
                             <i class="fa-solid fa-users m-4 text-2xl hover:text-primary"
                                 @click="this.selectedAlarma = item.id, this.showModalUsuarios = true"></i>
                         </div>
@@ -126,6 +139,7 @@ export default {
             const fecha2 = this.filtroFechaFin ? dayjs(this.filtroFechaFin).format("DD-MM-YYYY") : null;
             AlarmaController.listaAlarmas(this.actualPage, this.filtroProceso, this.filtroComponente, fecha1, fecha2).then((response) => {
                 if (response.status == 200) {
+                    console.log(response);
                     const { data, countRows } = response.data;
                     this.alarmas = [...this.alarmas, ...data]
                     this.hasMoreData = this.alarmas.length < countRows;

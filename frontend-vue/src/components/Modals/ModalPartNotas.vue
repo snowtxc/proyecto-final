@@ -42,13 +42,7 @@
                 </div>
                 
             </div>
-            
-            <!--div class="flex justify-end items-center">
-                <button class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="show = false">  
-                    <i class="fas fa-times"></i>
-                </button>
-            </div-->
-        
+       
             
             <div class="px-5 py-5 mt-2 ">
                 <div class="flex justify-center" v-if="loading">

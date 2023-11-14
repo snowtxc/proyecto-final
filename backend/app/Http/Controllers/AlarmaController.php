@@ -58,7 +58,8 @@ class AlarmaController extends Controller
                         "tipoComponente" => $tipoComponente->Nombre,
                         "procesoNombre" => $proceso->Nombre,
                         "fechaHora"  => $alarma->created_at,
-                        "tipoComponenteImagen" => $urlPath
+                        "tipoComponenteImagen" => $urlPath,
+                        "motivo" => $alarma->Motivo
                     ]
                 );
 
@@ -155,7 +156,8 @@ class AlarmaController extends Controller
                         "tipoComponente" => $tipoComponente->Nombre,
                         "procesoNombre" => $proceso->Nombre,
                         "fechaHora"  => $alarma->created_at,
-                        "tipoComponenteImagen" => $urlPath
+                        "tipoComponenteImagen" => $urlPath,
+                        "motivo" => $alarma->Motivo
                     ]
                 );
         }
