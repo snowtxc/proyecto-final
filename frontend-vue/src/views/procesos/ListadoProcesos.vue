@@ -1,23 +1,32 @@
 <template>
-    <Breadcrumb parentTitle='Procesos' />
-    <div class="flex justify-between ">
-        <input v-model="searchTerm" class=" bg-gray-100 h-10 w-72 px-5 rounded-full text-sm focus:outline-none mb-4 ml-12"
-            type="search" name="search" placeholder="Buscar" @input="filterProcesos">
+    
+    <div class="card-header flex justify-between items-center">
+        <div class="card-title">
+            <p class="text-xl font-semibold mr-2"> Procesos </p>
+        </div>
+        <BaseBtn v-if="rol == 'Administrador'"
+            @click="showModal = true"
+        >
+            <i class="fa-solid fa-plus mr-2"></i>
+            Nuevo Proceso
+        </BaseBtn>
     </div>
-    <div class="h-full w-auto flex flex-col md:flex-row space-y-2 ">
-        <div class="md:w-1/4 h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
-            <div class="w-full">
-                <Card v-if="rol == 'Administrador'"
-                    class="w-full h-17 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
 
-                    @click="showModal = true">
-                    <div class="flex flex-row items-center justify-center ">
-                        <p class="font-bold text-xl">
-                            Agregar
-                        </p>
-                    </div>
-                </Card>
-            </div>
+    <div class="flex gap-10 mt-4">
+        <div class="min-w-[350px]">
+            <BaseCard>
+                <input
+                    class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
+                    type="text"
+                    placeholder="Buscar"
+                    v-model="searchTerm"
+                    @input="filterProcesos"                        
+                />
+       
+
+    <div class="h-full w-full flex flex-col md:flex-row space-y-2 ">
+        <div class="h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
+            
             <spinner :show="showSpinnerProcesos"></spinner>
             <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
                 class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
@@ -36,6 +45,10 @@
                 </div>
             </Card>
         </div>
+    </div>
+    </BaseCard>
+                </div>
+    
         <div class="w-full flex flex-col">
 
             <div class="md:ml-5 h-20 md:border-l-[1px] md:border-gray-300">

@@ -5,7 +5,8 @@ export default{
     async list(componenteId, page, maxRows,filters) {
         let url = `componentes/${componenteId}/registros?page=${page}&maxRows=${maxRows}`;
         
-        const { startDate , endDate } = filters;
+        const { startDate , endDate , unidadId} = filters;
+        
         if(startDate){
             const fechaInicio =  dayjs(startDate).format("DD/MM/YYYY HH:mm");
             url =  url + `&fechaInicio=${fechaInicio}`;
@@ -14,6 +15,10 @@ export default{
             const fechaFin =  dayjs(endDate).format("DD/MM/YYYY HH:mm");
             url = url + `&fechaFin=${fechaFin}`;
         }
+        if(unidadId){
+            url = url + `&unidadId=${unidadId}`;
+        }
+        
         const response = await axios.get(url);
         const { data } = response;
         return data;

@@ -1,10 +1,14 @@
 <template>
     <div>
-        <div class="flex justify-between items-start">
-            <Breadcrumb parentTitle="Dispositivos" />
-
-            <BaseBtn maxWidth="500px" @click="$router.push({ name: 'nuevoDispositivo' })">Agregar
-                <i class="fa-solid fa-plus"></i>
+        <div class="card-header flex justify-between items-center">           
+            <div class="card-title ">
+                <p class="text-xl font-semibold mr-2"> Dispositivos </p>
+            </div>
+            <BaseBtn 
+                @click="$router.push({name: 'nuevoDispositivo'})"
+                >
+                <i class="mr-2 fa-solid fa-plus"></i>
+                Nuevo Dispositivo
             </BaseBtn>
         </div>
         <div class="flex flex-col gap-10 mt-4 md:flex-row">
@@ -52,7 +56,7 @@
                         </div>
                         <div v-else class="mt-2" v-for="item in componentes" :key="item.id">
                             <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp" :value="25"
-                                :image="item.tipoComponenteImage" :selected="deviceSelected &&
+                                :image="item.tipoComponenteImage"  :unidades="item.unidades" :selected="deviceSelected &&
                                     deviceSelected.id == item.id
                                     " @onSelect="handleSelectedDevice(item)"></CardDevice>
                         </div>
@@ -129,7 +133,6 @@ const filters = ref({
 
 onBeforeMount(async () => {
     const tiposComponentesData = await TipoComponenteController.getAll();
-    console.log(tiposComponentesData);
     tiposComponentes.value = tiposComponentesData;
 })
 
@@ -166,7 +169,7 @@ const getComponentes = async () => {
         filters.value
     )
     const { data, countRows } = result
-    componentes.value = [...componentes.value, ...data]
+    componentes.value = [...componentes.value, ...data];
     hasMoreData.value = componentes.value.length < countRows
    // $appStore.setGlobalLoading(false)
     loading.value = false;

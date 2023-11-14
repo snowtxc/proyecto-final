@@ -37,6 +37,7 @@ export const appStore = defineStore('appStore', {
                 profileImage: pathUrl
             }
         },
+      
 
         setAlarmsNotifications(alarmas){
             this.alarmsNotifications = alarmas;

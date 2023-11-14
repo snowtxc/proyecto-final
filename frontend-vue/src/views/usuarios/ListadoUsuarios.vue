@@ -3,14 +3,15 @@
         <BaseCard>
             <template v-slot:cardHeader>
                 <div class="card-header">
-                    <div class="card-title pt-3">
-                        <div class="end-align flex flex-row justify-between items-center ">
-                            <p>Usuarios</p>
-                            <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white"
-                                @click="this.selectedUser = 0, this.showModalUsuario = true">
-                                Nuevo
-                            </BaseBtn>
-                        </div>
+                    <div class="card-title pt-3">Usuarios 
+                    <div class="end-align">
+                    <BaseBtn 
+                        @click="this.selectedUser = 0, this.showModalUsuario = true"
+                    >
+                        <i class="mr-2 fa-solid fa-plus"></i>
+                        Nuevo Usuario 
+                    </BaseBtn>
+                    </div>
                     </div>
                 </div>
 
@@ -76,6 +77,7 @@ import UsuarioController from '../../services/UsuarioController'
 import DetalleUsuario from './DetalleUsuario.vue'
 import ConfirmationModal from '../../components/ConfirmationModal.vue';
 import { appStore } from "@/store/app.js";
+import BaseBtn from '../../components/Base/BaseBtn.vue';
 
 const $appStore = appStore();
 
@@ -143,7 +145,8 @@ export default {
     },
     components: {
         DetalleUsuario,
-        ConfirmationModal
+        ConfirmationModal,
+        BaseBtn
     }
 
 

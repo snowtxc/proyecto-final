@@ -88,15 +88,15 @@
                 <div class="mt-3">
                     <BaseCard>
                         <template v-slot:cardHeader>
-                            <div class="card-header flex justify-between">
-                                <div class="card-title py-3">Partes</div>
-                                <BaseBtn rounded @click="
-                                                                                                                                                                                                                                                                                                                                        ; (showModalPart = true),
-                                    (actionPart = Action.CREAR)
-                                    "
-                                    class="border border-primary text-primary hover:bg-primary hover:text-white flex items-center">
-                                    Agregar
-                                    <i class="fa-solid fa-plus ml-2"></i>
+                            <div class="card-header flex justify-between items-center">
+                                <div class="card-title">
+                                    <p class="text-xl font-semibold mr-2"> Partes </p>
+                                </div>
+                                <BaseBtn
+                                    @click=";(showModalPart = true), (actionPart = Action.CREAR)"
+                                >
+                                    <i class="fa-solid fa-plus mr-2"></i>
+                                    Nueva Parte
                                 </BaseBtn>
                             </div>
                         </template>
@@ -395,7 +395,7 @@ const emptyParts = computed(() => {
 })
 
 const title = computed(() => {
-    return `Informacion del componente:  "${props.deviceInfo.Nombre}" `
+    return `Información del dispositivo:  "${props.deviceInfo.Nombre}" `
 })
 
 const deviceIsActive = computed(() => {

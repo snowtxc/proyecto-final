@@ -152,7 +152,7 @@
                     </div>
 
                     <div
-                        class="w-full gap-2 flex flex-col items-center mt-2 max-h-[300px] overflow-y-auto"
+                        class="w-full gap-2 flex flex-col  mt-2 max-h-[300px] overflow-y-auto"
                     >
                         <div
                             v-for="(unidad, index) in $v.unidades.$each
@@ -182,7 +182,7 @@
                                             </span>
                                         </div>
                                         <input
-                                            class="h-11 px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
+                                            class="h-11  w-full px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
                                             v-model="
                                                 dataDevice.unidades[index].min
                                             "
@@ -209,7 +209,7 @@
                                             </span>
                                         </div>
                                         <input
-                                            class="h-11 px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
+                                            class="w-full h-11 px-4 w-72 px-4 py-3 text-sm font-normal rounded-2xl block border-2 focus:ring focus:ring-primary-200 focus:ring-opacity-50 bg-white dark:focus:ring-primary-6000 dark:focus:ring-opacity-25 dark:bg-neutral-900 disabled:bg-neutral-200 dark:disabled:bg-neutral-800"
                                             v-model="
                                                 dataDevice.unidades[index].max
                                             "

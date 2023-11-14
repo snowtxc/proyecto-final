@@ -16,13 +16,12 @@ const props = defineProps({
     <button
         @click="emit('click')"
         type="button"
-        class="btn  border  transition-all text-white  hover:bg-white hover:text-black   dark:hover:bg-red-800"
+        class="btn rounded-lg border transition-all bg-primary text-white  hover:bg-white hover:text-primary hover:border-primary  dark:hover:bg-red-800"
         :class="[
             props.bgColor ? props.bgColor :  'bg-primary',
             props.block ? 'block w-full' : 'inline-block',
             props.sm ? 'sm' : '',
             props.xl ? 'xl' : '',
-            props.rounded ? 'rounded-full' : '',
             props.icon ? 'p-2 flex items-center justify-center' : 'py-2 px-5',
             maxWidth ? `max-w-[${maxWidth}]` : '' 
         ]"
@@ -34,7 +33,7 @@ const props = defineProps({
 // loop colors
 
 .btn {
-    font-size: 0.813rem;
+    font-size: medium;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
         border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
         -webkit-box-shadow 0.15s ease-in-out;

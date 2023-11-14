@@ -5,6 +5,7 @@
             <div class="w-2/6">
                 <CardDevice :nombre="props.dispositivoData.Nombre" :value="25"
                     :image="props.dispositivoData.tipoComponenteImage" :selected="false"
+                    :unidades="props.dispositivoData.unidades"
                     :ipAddress="dispositivoData.DireccionIp" />
             </div>
             <div class="w-full">

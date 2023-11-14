@@ -1,17 +1,22 @@
 <script setup>
-    import { onBeforeMount,ref ,computed} from "vue";
+    import { onBeforeMount,ref ,computed,onMounted,onUnmounted} from "vue";
     import { MenuItem,MenuItems,Menu ,MenuButton} from "@headlessui/vue";
     import UsuarioController from "@/services/UsuarioController";
+    import  { pushAlarmaNotificationChannel } from "@/shared/helpers/channels";
+    import { appStore } from "@/store/app";
     import spinner from "../../views/components/spinner/spinner.vue";
     import dayjs from "dayjs"; 
 
+    const $appStore = appStore();
     const myNotifications = ref([]);
+    const countNotifications = ref([]);
+    const userId = $appStore.getUserData.id;
     onBeforeMount(()=>{
         UsuarioController.getMyAlarmsNotifications().then(alarms =>{
             myNotifications.value = alarms;
+            countNotifications.value = alarms.length;
         })
     })
-
 
     const listNotifications = computed(()=>{
         return myNotifications.value.map(item =>{
@@ -23,8 +28,20 @@
         })
     })
 
-    const countNotifications = computed(()=>{
-        return myNotifications.value.length;
+    const onReadNotifications = ()=>{
+        countNotifications.value = 0;
+        UsuarioController.readMyAlarmsNotifations().then();
+    }
+
+    onMounted(()=>{
+        window.Echo.channel(pushAlarmaNotificationChannel(userId)).listen('PushAlarmaNotificacion', (data) =>{
+            myNotifications.value.unshift(data);
+            countNotifications.value++;
+        })
+    })
+
+    onUnmounted(()=>{
+        window.Echo.leave(pushAlarmaNotificationChannel(userId));
     })
 </script>
 
@@ -45,8 +62,10 @@
                             text-sm
                             font-medium
                         "
+                        @click="onReadNotifications"
                     >
                         <span class="badge-count text-white bg-primary"
+                            v-if="countNotifications > 0"
                             >{{ countNotifications }}</span
                         >
                         <i class="i-Bell text-xl header-icon text-gray-800"></i>
@@ -57,17 +76,23 @@
                     class="
                         absolute
                         right-0
-                        w-96	
+                        w-[600px]	
+                        max-h-[900px]
                         mt-2
-                        overflow-hidden
+                        overflow-y-auto
                         origin-top-right
                         bg-white
                         rounded-md
                         custom-box-shadow
                         focus:outline-none
+                        
                     "
                 >
                     <div class="">
+                        <div class="p-5 flex items-center justify-center" v-if="countNotifications <= 0 && myNotifications.length <= 0">
+                             <p>No tienes nuevas notificaciones de alarmas</p>
+                            <i class="fa-regular fa-bell ml-5"></i>
+                        </div>
                         <MenuItem
                             v-for="(item) in listNotifications"
                             :key="item.id"
@@ -85,20 +110,21 @@
                                     
                                     <div class="flex ">
                                         <img
-                                            class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
+                                            class="w-10 h-10 m-4 shadow-lg avatar-md object-fill"
                                             :src= "item.componente.tipoComponenteImage"
                                             alt=""
                                         />
                                         <div class="flex flex-col">   
-                                            <h6 class="text-red-700">El Dispositivo Sensor K26232 ha generado una alarma!!</h6>
+                                            <h6 class="text-red-700">Atencion!</h6>
                                                 <p
+                                                    class="text-xs"
                                                     :class="[
                                                         active
                                                             ? 'text-gray-300'
                                                             : 'text-gray-500',
                                                     ]"
                                                 >
-                                                   Se ha registrado una marca de 50&
+                                                   {{ item.motivo }}
 =                                               </p>
 
                                         </div>
