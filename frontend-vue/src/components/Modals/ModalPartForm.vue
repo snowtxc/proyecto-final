@@ -1,8 +1,5 @@
 <template>
-     <Modal :show="true" @closeModal="emit('onClose')">
-            <div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">{{ props.action == Action.CREAR ? 'Nueva parte para el dispositivo' : props.action == Action.EDITAR ?  `Editar parte "${partName}"` : ''}}</p>
-            </div>
+     <Modal :title="props.action == Action.CREAR ? 'Nueva parte para el dispositivo' : titulo " :show="true" @closeModal="emit('onClose')">
             <div class="space-y-4 mb-8">
                 <input v-model="form.Nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -12,9 +9,8 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn  @click="onSubmit"   rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
-                    >
-                    Crear
+                <BaseBtn  @click="onSubmit">
+                    Guardar
                     <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>
@@ -49,6 +45,7 @@
     const emit = defineEmits(['onProcessed','onClose'])
     const processing = ref(false);
     const partName = ref("");
+    const titulo = ref("");
 
     const rules = {
         Nombre: {required},
@@ -61,6 +58,7 @@
            form.value.id = props.partData.id;
            form.value.Nombre = props.partData.Nombre;
            partName.value = props.partData.Nombre;  
+           titulo.value = 'Editar parte "' + props.partData.Nombre + '"';
         }
     })
 

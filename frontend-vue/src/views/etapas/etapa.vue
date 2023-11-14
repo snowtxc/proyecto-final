@@ -1,6 +1,6 @@
 <template>
   <div class="h-[750px] w-full ">
-    <Breadcrumb parentTitle='Procesos' subParentTitle="Etapa" />
+    <Breadcrumb :parentTitle=titulo />
     <div class="h-full w-full flex flex-col md:flex-row justify-between ">
       <div class="h-full md:w-1/5 p-4 space-y-4">
         <p class="font-bold text-xl mb-4">
@@ -38,6 +38,7 @@ import CardDevice from '../../components/Cards/CardDevice.vue'
 import spinner from '../components/spinner/spinner.vue';
 import Diagrama from '../../components/Diagrama/Diagrama.vue';
 import MiniPanelDevice from '../../components/Panel/MiniPanelDevice.vue';
+import EtapaController from '../../services/EtapaController';
 
 const $appstore = appStore();
 
@@ -51,6 +52,7 @@ const listaComponentesPromise = ComponenteController.listDispositivosSinNodo();
 const disableInteractions = ref(false);
 const nodeData = ref()
 const dispositivoData = ref(null)
+const titulo = ref("");
 
 const setNodeData = (data) => {
   nodeData.value = data;
@@ -124,9 +126,19 @@ const cardClicked = (dataComponente) => {
 onBeforeMount(() => {
   procesoId.value = route.params.procesoId;
   etapaId.value = route.params.etapaId;
+  EtapaController.buscarEtapa(route.params.etapaId).then((response) =>{
+    console.log(response);
+    if(response.status == 200){
+      titulo.value = 'Etapa ' + response.data.Nombre + ' del proceso ' + response.data.proceso;
+    }
+    else{
+      titulo.value = 'Etapa';
+    }
+  })
   window.Echo.channel('update-nodo-position.' + etapaId.value + '.' + 'procesoId.value').listen('Hello', (e) => {
     console.log(e);
-  })
+  });
+  
 })
 
 </script>

@@ -40,7 +40,7 @@
                         
                     />
                     <div
-                        class="flex flex-col overflow-y-scroll max-h-[60vh]"
+                        class="flex flex-col overflow-y-auto max-h-[60vh]"
                     >
                         <div class="bg-white p-8 rounded-md shadow-md max-w-md"
                         v-if="componentesIsEmpty && !loading"
@@ -55,7 +55,7 @@
                             </p>
                         </div>
                         <div v-else class="mt-2" v-for="item in componentes" :key="item.id">
-                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp" :value="25"
+                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp"
                                 :image="item.tipoComponenteImage" :selected="deviceSelected &&
                                     deviceSelected.id == item.id
                                     " @onSelect="handleSelectedDevice(item)"></CardDevice>
@@ -75,7 +75,7 @@
                         Por favor, selecciona un dispositivo de la lista.
                     </p>
                  </div>
-                <PanelDeviceInfo v-if="deviceSelected && !loading" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></PanelDeviceInfo>
+                <paneldeviceinfo v-if="deviceSelected && !loading" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></paneldeviceinfo>
             </div>
         </div>
     </div>
@@ -87,7 +87,7 @@ import { useRouter } from 'vue-router';
 import { computed, onBeforeMount, ref } from 'vue';
 import Breadcrumb from '@/components/Breadcrumbs.vue'
 import CardDevice from '../../components/Cards/CardDevice.vue'
-import PanelDeviceInfo from '../../components/Panel/PanelDeviceInfo.vue'
+import paneldeviceinfo from '../../components/Panel/PanelDeviceInfo.vue'
 import ComponenteController from '@/services/ComponenteController'
 import TipoComponenteController from '../../services/TipoComponenteController';
 

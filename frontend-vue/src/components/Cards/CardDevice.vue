@@ -5,9 +5,8 @@
             <div class="flex align-center">
                 <img :src="props.image" alt="Image" class=" w-16 h-16 object-fill" />
                 <div class="m-auto">
-                    <p :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.nombre }}</p>
-                    <p class="text-xl" :class="props.selected ? 'text-white' : 'text-primary'">{{ props.value }}</p>
-                    <p class="text-sm" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
+                    <p class="text-xl ml-3" :class="props.selected ? 'text-white' : 'text-primary'">{{ props.nombre }}</p>
+                    <p class="text-sm ml-3 mt-3" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
 
                 </div>
             </div>

@@ -3,9 +3,16 @@
 <template>
   <div class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center" style="background-image: url('/images/LoginBackground.jpg');">
         <div class="container-session-v1 max-w-2xl">
-            <BaseCard noPadding class="overflow-hidden md:p-10 ">
-                <div class="p-5 flex flex-col">
-                    <h1 class="mb-3 text-2xl">Inicio de sesion</h1>
+          <BaseCard noPadding class="overflow-hidden p-5">
+            <div class="card-header flex justify-center items-center">         
+              <div class="card-title">
+                <p class="text-xl font-semibold "> Inicio de sesión </p>
+              </div>
+            </div>
+            
+                <div class="p-5 flex flex-col md:p-5">
+                  
+                    <!--h1 class="mb-3 text-2xl">Inicio de sesion</h1-->
                     <form @submit.prevent="login">
                       <div v-if="showErrorBanner" class="error-banner bg-red-100 p-2 rounded-md mb-4 text-red-500 text-center ">
                         <p>Credenciales incorrectas.</p>
@@ -21,7 +28,7 @@
                           <span v-if="errors.password" class="text-red-500 text-xs " >{{ errors.password }}</span>
                       </div>
                       <div class="mb-4">
-                          <BaseBtn block class="bg-[#25CEDE] mb-2 text-white  rounded-full" @click="signIn">Iniciar</BaseBtn>
+                          <BaseBtn block @click="signIn">Iniciar</BaseBtn>
                       </div>
                       <div class="text-center">
                         <a class="hover:text-[#25CEDE] underline text-gray-600" href="/forgot-password">Olvidaste tu contraseña?</a>

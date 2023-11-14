@@ -4,11 +4,11 @@
             <spinner :show="true"></spinner>
         </div>
         <BaseCard v-else>
-            <Breadcrumbs :parentTitle="title"></Breadcrumbs>
-
-            <div class="flex flex-col">
-                <div class="flex justify-end">
-                    <div class="flex gap-4">
+            <div class="card-header flex justify-between items-center">           
+                <div class="card-title ">
+                    <p class="text-xl font-semibold mr-2"> {{ title }} </p>
+                </div>
+                <div class="flex gap-4">
                         <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" @click="
                             $router.push({
                                 name: 'editarDispositivo',
@@ -19,15 +19,13 @@
                         <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
                             class="w-5 h-5 m-4 hover:text-primary" />
                     </div>
-                </div>
+            </div>
+            <div class="flex flex-col">
                 <div
                     class="bg-white p-4 rounded-lg shadow-md flex justify-between items-start"
                 >
                     <div>
-                        <div class="text-lg font-semibold mb-2">
-                            Información Operativa
-                        </div>
-
+                        
                         <div class="mb-2">
                             Estado:
                             <BaseBadge
@@ -80,8 +78,8 @@
                         @click="handleViewHistoricos"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
                     >
-                        <i class="fas fa-file-excel mr-2"></i> Visualizar
-                        Historicos
+                        <i class="fas fa-history mr-2"></i> 
+                        Ver Histórico
                     </BaseBtn>
                 </div>
 
@@ -117,8 +115,8 @@
                                     <div class="max-h-[50vh] overflow-y-auto" v-else>
                                         <table
                                             class="table-3 dataTable-table max-w-full w-full max-h-[50vh] overflow-y-auto">
-                                            <thead>
-                                                <tr class="">
+                                            <thead >
+                                                <tr >
                                                     <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
                                                         Fecha
                                                     </th>
@@ -126,8 +124,8 @@
                                                         Nombre de la parte
                                                     </th>
 
-                                                    <th class="text-left border-b pb-3 mb-3 text-gray-500 font-semibold">
-                                                        Acciones
+                                                    <th class=" border-b pb-3 mb-3 text-gray-500 font-semibold">
+                                                        
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -135,7 +133,7 @@
                                             <tbody>
                                                 <tr class="hover:bg-gray-100 cursor-pointer"
                                                     v-for="parte in partesFormatted" :key="parte.id">
-                                                    <td class="text-xs py-5 px-4">
+                                                    <td class="text-xs py-2 px-4">
                                                         {{ parte.Fecha }}
                                                     </td>
 
@@ -143,12 +141,13 @@
                                                         {{ parte.Nombre }}
                                                     </td>
 
-                                                    <td class="py-5">
-                                                        <div class="flex gap-2">
-                                                            <ModalPartNotas :parteNombre="parte.Nombre
-                                                                " :componenteId="props.deviceInfo.id"
-                                                                :parteId="parte.id"></ModalPartNotas>
-
+                                                    <td class="py-2 flex justify-end">
+                                                        <div>
+                                                            <ModalPartNotas 
+                                                                :parteNombre="parte.Nombre" 
+                                                                :componenteId="props.deviceInfo.id"
+                                                                :parteId="parte.id">
+                                                            </ModalPartNotas>
                                                             <font-awesome-icon :icon="[
                                                                 'far',
                                                                 'pen-to-square',

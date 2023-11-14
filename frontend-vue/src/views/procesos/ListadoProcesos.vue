@@ -36,10 +36,10 @@
                     </p>
                     <div class="space-x-3" v-if="rol == 'Administrador'" >
                         <font-awesome-icon :icon="['far', 'pen-to-square']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="edit"
+                            :class="{ 'white-icon': index === selectedCardIndex }" class="ml-2 h-5 hover:text-primary" 
                             @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
                         <font-awesome-icon :icon="['far', 'trash-can']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="delete"
+                            :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 hover:text-primary" 
                             @click.stop="openModalProcesosConfirm(proceso.id)" />
                     </div>
                 </div>
@@ -69,29 +69,25 @@
                         <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
-                            <Card
-                                class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
-                                @click="showModalEtapas = true">
-                                <div class="flex flex-row items-center justify-center ">
-                                    <p class="font-bold text-xl">
-                                        Agregar
-                                    </p>
-                                </div>
-                            </Card>
+                            <BaseBtn 
+                                @click="showModalEtapas = true"
+                                :block="true"
+                                >
+                                <i class="mr-2 fa-solid fa-plus"></i>
+                                Nueva Etapa
+                            </BaseBtn>
                             <spinner :show="showSpinnerEtapas"></spinner>
                             <p v-if="showSpinnerEtapas == false">No hay etapas para este proceso.</p>
                         </div>
                         <div v-else
                             class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center ">
-                            <Card
-                                class="w-full h-14 text-white bg-primary hover:text-dark hover:bg-white hover:border hover:border-primary transition-colors duration-150"
-                                @click="showModalEtapas = true">
-                                <div class="flex flex-row items-center justify-center ">
-                                    <p class="font-bold text-xl">
-                                        Agregar Nueva Etapa
-                                    </p>
-                                </div>
-                            </Card>
+                            <BaseBtn 
+                                @click="showModalEtapas = true"
+                                :block="true"
+                                >
+                                <i class="mr-2 fa-solid fa-plus"></i>
+                                Nueva Etapa
+                            </BaseBtn>
                             <spinner :show="showSpinnerEtapas"></spinner>
                             <Card v-if="showSpinnerEtapas == false" v-for="etapa in listaEtapas" :key="etapa.id"
                                 @click="navigateToEtapas(etapa.id);"
@@ -99,11 +95,11 @@
                                 <div class="flex flex-row items-center justify-between">
                                     <p class="font-bold text-xl">{{ etapa.Nombre }}</p>
                                     <div class="space-x-3">
-                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="edit"
+                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" 
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
                                         <font-awesome-icon 
                                             v-if="rol == 'Administrador'"
-                                            :icon="['far', 'trash-can']" class="delete"
+                                            :icon="['far', 'trash-can']" class="w-5 h-5 m-4 hover:text-primary" 
                                             @click.stop="openModalConfirm(etapa.id)" 
                                         />
                                     </div>
@@ -120,10 +116,10 @@
             </div>
 
         </div>
-        <Modal :show="showModal" @closeModal="showModal = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Nuevo Proceso'" :show="showModal" @closeModal="showModal = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Nuevo Proceso</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -134,16 +130,16 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFields(0)">
-                    Crear
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEditar" @closeModal="showModalEditar = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Editar Proceso'" :show="showModalEditar" @closeModal="showModalEditar = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Editar Proceso</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -154,16 +150,13 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFields(1)">
-                    Editar
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEtapas" @closeModal="showModalEtapas = false">
-            <div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">Nuevo Etapa</p>
-            </div>
+        <Modal :title="'Nueva Etapa'" :show="showModalEtapas" @closeModal="showModalEtapas = false">
             <div class="space-y-4 mb-8">
                 <input v-model="nombreEtapa" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -174,16 +167,16 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFieldsEtapa(0)">
-                    Crear
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <Modal :show="showModalEditarEtapas" @closeModal="showModalEditarEtapas = false">
-            <div class="flex flex-col items-start mb-8">
+        <Modal :title="'Editar Etapa'" :show="showModalEditarEtapas" @closeModal="showModalEditarEtapas = false">
+            <!--div class="flex flex-col items-start mb-8">
                 <p class="font-bold text-xl">Editar Etapa</p>
-            </div>
+            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombreEtapa" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -194,9 +187,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
+                <BaseBtn 
                     @click="validateFieldsEtapa(1)">
-                    Editar
+                    Guardar
                 </BaseBtn>
             </div>
         </Modal>
@@ -538,14 +531,6 @@ const addUsers = async (users) => {
 
 
 <style scoped>
-.delete:hover {
-    color: #ef4444;
-}
-
-.edit:hover {
-    color: #f59e0b;
-}
-
 .selected-card {
     background-color: #25CEDE;
     /* Color de fondo seleccionado */

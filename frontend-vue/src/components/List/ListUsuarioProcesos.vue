@@ -39,7 +39,7 @@
                     <font-awesome-icon
                         v-if="rol == 'Administrador'"
                         :icon="['far', 'trash-can']"
-                        class="delete"
+                        class="w-5 h-5 m-4 hover:text-primary"
                         @click="removeUser(user)"
                     />
                 </div>

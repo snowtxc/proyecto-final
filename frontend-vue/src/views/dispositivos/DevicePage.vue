@@ -80,10 +80,10 @@
                 <div
                     class="grid grid-cols-12 w-full gap-2 flex items-center mt-2"
                 >
-                    <div class="col-span-6 mb-3 flex flex-col col-">
+                    <div class="col-span-6 mb-3 flex flex-col">
                         <div>
                             <label class="text-xs text-gray-600" for="nombre"
-                                >Tipo de Componente *</label
+                                >Tipo de Dispositivo *</label
                             >
                             <span
                                 v-if="submit && $v.tipo_componente_id.$invalid"
@@ -107,27 +107,27 @@
                             </option>
                         </select>
                     </div>
-                    <div class="flex items-center">
+                    <div class="col-span-3 flex items-center mb-3">
                         <img
                             v-if="tipoComponenteSelected"
                             :src="tipoComponenteSelected.Imagen"
-                            alt="Imagen del tipo de componente"
+                            alt="Imagen del tipo de dispositivo"
                             class="w-12 h-12 ml-2"
                         />
                     </div>
-                    <div class="col-span-3 ml-2">
+                    <div class="col-span-3 flex items-center ml-2 mb-3">
                         <BaseBtn
-                            :rounded="true"
                             @click="showModalNewTipoComponente = true"
                         >
-                            <i class="fa-solid fa-plus"></i>
+                            <i class="mr-2 fa-solid fa-plus"></i>
+                            Nuevo
                         </BaseBtn>
                     </div>
                 </div>
 
                 <BaseCard>
                     <div class="flex gap-2">
-                        <p>Elegir unidades que utiliza el dispositivo</p>
+                        <p>Seleccionar unidades que utiliza el dispositivo</p>
                         <span
                             class="text-red-500 q-ml-sm"
                             v-if="submit && $v.unidades.$invalid"
@@ -265,7 +265,8 @@
         </div>
         <div class="flex justify-end mt-5">
             <BaseBtn @click="onSubmit">
-                {{ action == Action.CREAR ? 'CREAR' : 'EDITAR' }}
+<!--{{ action == Action.CREAR ? 'CREAR' : 'EDITAR' }} -->
+                Guardar
             </BaseBtn>
         </div>
     </BaseCard>
@@ -438,10 +439,10 @@ onBeforeMount(async () => {
         dataDevice.value.procesoId = componenteData.proceso_id
         loadEtapasByProceso(componenteData.proceso_id)
         $appStore.setGlobalLoading(false)
-        title.value = `Editar Componente "${componenteData.Nombre}"`
+        title.value = `Editar Dispositivo "${componenteData.Nombre}"`
     } else {
         $appStore.setGlobalLoading(false)
-        title.value = `Nuevo Componente`
+        title.value = `Nuevo Dispositivo`
     }
 })
 
