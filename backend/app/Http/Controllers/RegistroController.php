@@ -19,6 +19,7 @@ class RegistroController extends Controller
         $offset = $page == 1 ? 0 : (($page - 1) * $maxRows);
         $fechaInicio = $request->query('fechaInicio') != null ? $request->query('fechaInicio') : null;
         $fechaFin =  $request->query('fechaFin') != null ? $request->query('fechaFin') : null;
+        $unidadId = ($request->query('unidadId') != null && $request->query('unidadId') != 0) ? $request->query('unidadId') : null;
 
 
         $componente = Componente::find($componenteId);
@@ -32,6 +33,8 @@ class RegistroController extends Controller
         })->when(isset($fechaFin), function($query) use ($fechaFin){
             $end = Carbon::createFromFormat('d/m/Y H:i', $fechaFin);
             $query->whereDate('created_at', "<=" , $end);
+        })->when(isset($unidadId), function ($query) use ($unidadId){
+            $query->where("unidad_id", "=" ,$unidadId);
         })->orderBy('created_at','desc');
 
         $countRows =  $query->count();
@@ -52,6 +55,7 @@ class RegistroController extends Controller
                 "fechaHora" => $registro->created_at,
                 "marca"  => $registro->Marca,
                 "unidad" => $unidad->unidad,
+                "unidadNombre" => $unidad->nombre,
                 "proceso" => $procesoNombre,
                 "etapa"  => $etapaNombre
                 ]

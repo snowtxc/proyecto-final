@@ -334,16 +334,20 @@ class UsuarioController extends Controller
            array_push($result, [
             "id" => $alarmaNoLeida->id,
             "componente" => $componenteInfo,
+            "motivo"  => $alarmaNoLeida->Motivo,
             "create_at" => $alarmaNoLeida->created_at,
             "proceso"  => $proceso
            ]);
         }
         return response()->json($result,200);
-
-
-
-
     }
 
+    function readNotificacionesAlarmas(){
+        $userInfo = Auth::user();
+        $userId = $userInfo->id;
+        $user  = User::find($userId);
+        AlarmaUser::where(["user_id" => $user->id, "leida" => false])->update(["leida" => true]);
+        return response()->json(["message" => "Alarmas leidas"],200);
+    }
 
 }

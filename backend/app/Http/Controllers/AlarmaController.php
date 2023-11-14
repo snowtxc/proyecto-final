@@ -136,10 +136,10 @@ class AlarmaController extends Controller
         $id = $request->query('id');
         $page = $request->query('page');
         $user = User::findOrFail($id);
-        $rows = 10; 
+        $rows = 10;
         $alarmas = $user->alarmas()->orderBy('created_at','desc')->paginate($rows, ['*'], 'page', $page);
 
-   
+
         $result = array();
         foreach($alarmas as $alarma){
               $componente = $alarma->componente;
@@ -152,6 +152,7 @@ class AlarmaController extends Controller
                     [
                         "id" => $alarma->id,
                         "componenteNombre" => $componente->Nombre,
+                        "Motivo"  => $alarma->Motivo,
                         "tipoComponente" => $tipoComponente->Nombre,
                         "procesoNombre" => $proceso->Nombre,
                         "fechaHora"  => $alarma->created_at,
