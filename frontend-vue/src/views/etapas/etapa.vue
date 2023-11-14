@@ -2,14 +2,14 @@
   <div class="h-[750px] w-full ">
     <Breadcrumb :parentTitle=titulo />
     <div class="h-full w-full flex flex-col md:flex-row justify-between ">
-      <div class="h-full md:w-1/5 p-4 space-y-4">
+      <div class="h-full md:w-1/4 p-4 space-y-4">
         <p class="font-bold text-xl mb-4">
           Dispositivos
         </p>
-        <div class="flex flex-col items-center w-full ">
+        <div class="flex flex-col items-center w-full">
           <spinner :show="showSpinnerComponentes"></spinner>
         </div>
-        <div v-if="listaComponentes.length > 0" class="space-y-4 max-h-72 md:max-h-full overflow-y-auto w-full" :style="{ 'pointer-events': disableInteractions ? 'none' : 'auto' }">
+        <div v-if="listaComponentes.length > 0" class="space-y-4 max-h-72 md:max-h-[670px] overflow-y-auto w-full" :style="{ 'pointer-events': disableInteractions ? 'none' : 'auto' }">
           <CardDevice v-for="item in listaComponentes" :key="item.id" :nombre="item.Nombre" :ipAddress="item.DireccionIp"
             :value="25" :image="item.tipoComponenteImage" id="agregarNodoButton" @click="cardClicked(item)" :selected="false">
           </CardDevice>
