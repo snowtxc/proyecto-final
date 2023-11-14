@@ -133,7 +133,7 @@
                                             <tbody>
                                                 <tr class="hover:bg-gray-100 cursor-pointer"
                                                     v-for="parte in partesFormatted" :key="parte.id">
-                                                    <td class="text-xs py-5 px-4">
+                                                    <td class="text-xs py-2 px-4">
                                                         {{ parte.Fecha }}
                                                     </td>
 
@@ -141,12 +141,13 @@
                                                         {{ parte.Nombre }}
                                                     </td>
 
-                                                    <td class="py-5 flex justify-end">
-                                                        <div class="">
-                                                            <ModalPartNotas :parteNombre="parte.Nombre
-                                                                " :componenteId="props.deviceInfo.id"
-                                                                :parteId="parte.id"></ModalPartNotas>
-
+                                                    <td class="py-2 flex justify-end">
+                                                        <div>
+                                                            <ModalPartNotas 
+                                                                :parteNombre="parte.Nombre" 
+                                                                :componenteId="props.deviceInfo.id"
+                                                                :parteId="parte.id">
+                                                            </ModalPartNotas>
                                                             <font-awesome-icon :icon="[
                                                                 'far',
                                                                 'pen-to-square',

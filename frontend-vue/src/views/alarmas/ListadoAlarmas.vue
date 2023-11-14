@@ -1,12 +1,13 @@
 <template>
     <div class="col-span-12">
-        <BaseCard>
-            <template v-slot:cardHeader>
-                <div class="card-title m-5">Alarmas </div>
-                <div class="card-header flex justify-between items-center ">
+        <div class="card-header flex justify-between items-center">           
+            <div class="card-title ">
+                <p class="text-xl font-semibold"> Alarmas </p>
+            </div>
+        </div>
 
 
-                    <div class="flex flex-col md:flex-row md:items-end">
+                    <div class="flex flex-col md:flex-row md:items-end py-5 px-2">
                         <div class="mb-2">
                             <label for="filtroProceso" class="block text-sm text-gray-700">Proceso:</label>
                             <select id="filtroProceso" v-model="filtroProceso" @change="filter"
@@ -40,10 +41,10 @@
                         </div>
 
                     </div>
-                </div>
-            </template>
+                
+            <!--/template-->
             <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
-            <div v-if="alarmas.length > 0">
+            <div v-if="alarmas.length > 0" class="max-h-[70vh] overflow-y-auto w-full">
                 <div v-for="(item, index) in alarmas" :key="index"
                     class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
 
@@ -68,7 +69,7 @@
                 <infinite-loading @infinite="loadMoreData" v-if="hasMoreData"></infinite-loading>
             </div>
 
-        </BaseCard>
+        <!--/BaseCard-->
     </div>
 
     <ModalUsersAlarma v-if="showModalUsuarios" :show="showModalUsuarios" :alarmaId="selectedAlarma"

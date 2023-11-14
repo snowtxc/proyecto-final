@@ -1,16 +1,20 @@
 <template>
-  <button v-tooltip.bottom-start="'Ver notas'">
-  <font-awesome-icon
-    :icon="[
-        'far',
-        'sticky-note',
-    ]"
-    class="w-5 h-5 m-4 hover:text-primary"
-    @click="openModal"
-    
-/>
-</button>
+    <div v-if="mostrarMensaje" class="mensaje-descriptivo bg-gray-100">
+        Ver notas
+    </div>
 
+    <font-awesome-icon
+        :icon="[
+            'far',
+            'sticky-note',
+        ]"
+        class="w-5 h-5 m-4 hover:text-primary"
+        @click="openModal"
+        @mouseover="mostrarMensaje = true" 
+        @mouseout="mostrarMensaje = false"
+    />
+
+    
 
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
 
@@ -46,20 +50,13 @@
             </div-->
         
             
-            <div class="px-5 py-5 mt-5 ">
+            <div class="px-5 py-5 mt-2 ">
                 <div class="flex justify-center" v-if="loading">
                     <spinner :show="true" :width="12" height="12" ></spinner>
 
                 </div>
                 <div class="w-full" v-else>
-                    <!--div class="flex justify-between items-center">
-                    <Breadcrumb :parentTitle="title"/>
-                    <BaseBtn @click="showModalFormNota = true">
-                            Agregar nota
-                            <i class="fa-solid fa-plus ml-2"></i>
-                    </BaseBtn>
-                    </div-->
-                    <div class="flex flex-wrap gap-5 max-h-[50vh] overflow-y-auto mt-5">
+                    <div class="flex flex-wrap gap-5 max-h-[50vh] overflow-y-auto ">
                         <div class="w-full bg-white p-8 rounded-md shadow-md "
                         v-if="notasEmpty && !loading"
 >
@@ -143,6 +140,7 @@
         parteId: {  required: true, type: Number},
     });
 
+    const mostrarMensaje = ref(false);
     const show = ref(false);
     const showModalFormNota = ref(false);
     const creatingNota = ref(false);
@@ -254,6 +252,19 @@
             getNotas();
     }
 
-
-
 </script>
+
+<style scoped>
+/* Estilo para el mensaje descriptivo */
+.mensaje-descriptivo {
+  position: absolute;
+  /*background-color: rgb(148, 146, 146);*/
+  color: #080808;
+  padding: 2px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-top: -8px; /* Ajusta según sea necesario para la posición */
+  margin-left: -5px; /* Ajusta según sea necesario para la posición */
+  z-index: 999; /* Asegura que esté en la parte superior */
+}
+</style>

@@ -1,26 +1,23 @@
 <template>
     <div class="col-span-12">
-        <BaseCard>
-            <template v-slot:cardHeader>
-                <div class="card-header flex justify-between items-center">           
-                    <div class="card-title ">
-                        <p class="text-xl font-semibold mr-2"> Usuarios </p>
-                    </div>
-                    <BaseBtn 
-                        @click="this.selectedUser = 0, this.showModalUsuario = true"
-                    >
-                        <i class="mr-2 fa-solid fa-plus"></i>
-                        Nuevo Usuario 
-                    </BaseBtn>
-                </div>
+        <div class="card-header flex justify-between items-center">           
+            <div class="card-title ">
+                <p class="text-xl font-semibold"> Usuarios </p>
+            </div>
+            <BaseBtn 
+                 @click="this.selectedUser = 0, this.showModalUsuario = true"
+            >
+                <i class="mr-2 fa-solid fa-plus"></i>
+                Nuevo Usuario 
+            </BaseBtn>
+        </div>
 
-            </template>
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
-                    <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
+                    <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover max-h-[70vh] overflow-y-auto">
                         <ul v-if="usuarios.length > 1">
                             <li v-for="(user, index) in usuarios" :key="index">
-                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center  mb-4 md:flex-row">
+                                <div v-if="user.id != userLogged.id" class="flex flex-col items-center  mb-4 md:flex-row overflow-hidden flex-row mb-6 shadow-md rounded-xl px-5 h-24" >
                                     <img class="w-14 h-14 m-4 shadow-lg avatar-md rounded-full object-fill"
                                         :src="user.profileImage ? user.profileImage : imageProfileDefault" alt="" />
                                     <div class="flex-grow md:text-left">
@@ -35,7 +32,7 @@
                                     </div>
                                     <div>
                                          <font-awesome-icon :icon="['far', 'pen-to-square']"
-                                        @click="this.selectedUser = user.id, this.showModalUsuario = true"
+                                        @click="this.selectedUser = user, this.showModalUsuario = true"
                                         class="w-5 h-5 m-4 hover:text-primary" />
                                     <font-awesome-icon :icon="['far', 'trash-can']"
                                         @click="this.userDelete = user.id, this.showConfirmationModal = true"
@@ -50,20 +47,12 @@
                         <p class="px-4 py-3" v-if="usuarios.length <= 1"> No se encontraron usuarios</p>
 
                     </div>
-                    <div class="dataTable-bottom">
-                        <div class="dataTable-info">
-
-                        </div>
-                        <nav class="dataTable-pagination">
-                            <ul class="dataTable-pagination-list"></ul>
-                        </nav>
-                    </div>
                 </div>
             </div>
-        </BaseCard>
+        <!--/BaseCard-->
     </div>
 
-    <DetalleUsuario v-if="showModalUsuario" :show="showModalUsuario" :userId="selectedUser"
+    <DetalleUsuario v-if="showModalUsuario" :show="showModalUsuario" :userData="selectedUser"
         @onClose="showModalUsuario = false" @onConfirm="onConfirmEvent">
     </DetalleUsuario>
     <ConfirmationModal v-if="showConfirmationModal" :show="showConfirmationModal" :title="modalTitle"
@@ -85,7 +74,7 @@ export default {
     data() {
         return {
             usuarios: [],
-            selectedUser: 0,
+            selectedUser: null,
             showModalUsuario: false,
             showConfirmationModal: false,
             modalTitle: "Confirmación",

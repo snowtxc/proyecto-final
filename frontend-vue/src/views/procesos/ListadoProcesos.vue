@@ -36,10 +36,10 @@
                     </p>
                     <div class="space-x-3" v-if="rol == 'Administrador'" >
                         <font-awesome-icon :icon="['far', 'pen-to-square']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="edit"
+                            :class="{ 'white-icon': index === selectedCardIndex }" class="ml-2 h-5 hover:text-primary" 
                             @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
                         <font-awesome-icon :icon="['far', 'trash-can']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="delete"
+                            :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 hover:text-primary" 
                             @click.stop="openModalProcesosConfirm(proceso.id)" />
                     </div>
                 </div>
@@ -95,11 +95,11 @@
                                 <div class="flex flex-row items-center justify-between">
                                     <p class="font-bold text-xl">{{ etapa.Nombre }}</p>
                                     <div class="space-x-3">
-                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="edit"
+                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" 
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
                                         <font-awesome-icon 
                                             v-if="rol == 'Administrador'"
-                                            :icon="['far', 'trash-can']" class="delete"
+                                            :icon="['far', 'trash-can']" class="w-5 h-5 m-4 hover:text-primary" 
                                             @click.stop="openModalConfirm(etapa.id)" 
                                         />
                                     </div>
@@ -531,14 +531,6 @@ const addUsers = async (users) => {
 
 
 <style scoped>
-.delete:hover {
-    color: #ef4444;
-}
-
-.edit:hover {
-    color: #f59e0b;
-}
-
 .selected-card {
     background-color: #25CEDE;
     /* Color de fondo seleccionado */

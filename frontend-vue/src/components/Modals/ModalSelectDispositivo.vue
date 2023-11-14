@@ -4,26 +4,26 @@
         <div class="modal-container bg-white w-1/3 mx-auto rounded shadow-lg z-50 overflow-y-auto h-[70vh]" >
             <div class="modal-content py-4 text-left px-6">
                 
-                    <div class="card-header">
-                        <div class="col-2 flex justify-end items-center">
-                            <button
-                                class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                @click="$emit('onClose')"
-                            >
-                                <i class="fas fa-times"></i>
-                            </button>
+                    <div class="card-header flex justify-between items-center">         
+                        <div class="card-title">
+                            <p class="text-xl font-semibold "> Seleccionar Dispositivo </p>
                         </div>
-                        <div class="col-10">                       
-                            <div class="card-title">Dispositivos</div>                   
-                        </div>
+                        <BaseBtn
+                            sm
+                            @click="$emit('onClose')">
+                            <i class="fas fa-times"></i>
+                        </BaseBtn>
                     </div>
+
+
                     <input
-                        class="w-full px-4 py-1 bg-gray-100 focus:outline-none border border-gray-400"
+                        class="w-full p-2 mt-4 text-sm text-gray-900 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
                         type="text"
                         placeholder="Buscar"
                         v-model="filter.search"
-                        @input="handleSearch"
+                        @input="handleSearch"         
                     />
+                    
                     <div class="w-full text-center mt-4">
                         <spinner v-if="loading" :show="loading"></spinner>
                     </div>
@@ -31,27 +31,29 @@
                         <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
                     </template>
                     <template v-if="componentes.length > 0 && !loading">
-                        <div class="mt-2">
-                        <CardDevice 
-                            :selected="selected == null"
-                            :key="null" 
-                            :nombre="'Todos'" 
-                            :ipAddress="''"
-                            :value="null" 
-                            :image="'/src/assets/images/none.png'" 
-                            @click="handleSelectedDevice(null)">
-                        </CardDevice>
-                        </div>
-                        <div class="mt-2" v-for="item in componentes" >
-                        <CardDevice 
-                            :selected="selected == item.id"
-                            :key="item.id" 
-                            :nombre="item.Nombre" 
-                            :ipAddress="item.DireccionIp"
-                            :value="null" 
-                            :image="item.tipoComponenteImage" 
-                            @click="handleSelectedDevice(item)">
-                        </CardDevice>
+                        <div class="max-h-[70vh] overflow-y-auto">
+                            <div class="mt-2">
+                                <CardDevice 
+                                    :selected="selected == null"
+                                    :key="null" 
+                                    :nombre="'Todos'" 
+                                    :ipAddress="''"
+                                    :value="null" 
+                                    :image="'/src/assets/images/none.png'" 
+                                    @click="handleSelectedDevice(null)">
+                                </CardDevice>
+                            </div>
+                            <div class="mt-2" v-for="item in componentes" >
+                                <CardDevice 
+                                    :selected="selected == item.id"
+                                    :key="item.id" 
+                                    :nombre="item.Nombre" 
+                                    :ipAddress="item.DireccionIp"
+                                    :value="null" 
+                                    :image="item.tipoComponenteImage" 
+                                    @click="handleSelectedDevice(item)">
+                                </CardDevice>
+                            </div>
                         </div>
                     </template>
                     

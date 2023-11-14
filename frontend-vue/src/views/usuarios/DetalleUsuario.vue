@@ -2,7 +2,6 @@
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="modal-overlay fixed inset-0 bg-black opacity-50" @click="$emit('onClose')"></div>
         <div class="modal-container bg-white mx-auto rounded shadow-lg z-50 overflow-y-auto">
-    <!--div v-if="show" class="modal col-span-12"-->
         <BaseCard style="width: 600px;">
             
             <div class="card-header flex justify-between items-center">         
@@ -16,16 +15,7 @@
                 </BaseBtn>
             </div>
             <div class="modal-content py-4 text-left px-4">
-            <!--template v-slot:cardHeader>
-                <div class="card-header">
-                    <div class="col-2 end-align">
-                        <i class="i-Close-Window" @click="$emit('onClose')"></i>
-                    </div>
-                    <div class="col-10">                       
-                        <div class="card-title">Usuario</div>                   
-                    </div>
-                </div>
-            </template-->
+            
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                     <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover">
                         <form @submit.prevent="guardarUsuario">
@@ -86,6 +76,7 @@ export default{
         return {
             name: '',
             email: '',
+            userId: 0,
             errorEmail: '',
             selectedRol: "Observador",
             errorName: ''
@@ -93,26 +84,18 @@ export default{
     },
     props: {
         show: Boolean,
-        userId: Number
+        userData: Object
     },
-    created() {
-        if (this.userId != 0) {
-            $appStore.setGlobalLoading(true);
-            this.getUsuario();
+    beforeMount() {
+        if (this.userData != null) {
+            this.userId = this.userData.id;
+            this.name = this.userData.name;
+            this.email = this.userData.email;
+            this.selectedRol = this.userData.rol;
         }
     },
     methods: {
-        getUsuario() {
-            UsuarioController.buscarUsuario(this.userId).then((response) => {
-                if (response.status == 200) {
-                    const data = response.data;
-                    this.name = data.name;
-                    this.email = data.email;
-                    this.selectedRol = data.rol;
-                }
-                $appStore.setGlobalLoading(false);
-            });
-        },
+        
         guardarUsuario() {
             if (this.formInvalid) {
                 return;
