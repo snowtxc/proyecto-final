@@ -1,12 +1,13 @@
 <template>
     <div class="col-span-12">
-        <BaseCard>
-            <template v-slot:cardHeader>
-                <div class="card-title m-5">Alarmas </div>
-                <div class="card-header flex justify-between items-center ">
+        <div class="card-header flex justify-between items-center">           
+            <div class="card-title ">
+                <p class="text-xl font-semibold"> Alarmas </p>
+            </div>
+        </div>
 
 
-                    <div class="flex flex-col md:flex-row md:items-end">
+                    <div class="flex flex-col md:flex-row md:items-end py-5 px-2">
                         <div class="mb-2">
                             <label for="filtroProceso" class="block text-sm text-gray-700">Proceso:</label>
                             <select id="filtroProceso" v-model="filtroProceso" @change="filter"
@@ -40,10 +41,10 @@
                         </div>
 
                     </div>
-                </div>
-            </template>
+                
+            <!--/template-->
             <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
-            <div v-if="alarmas.length > 0">
+            <div v-if="alarmas.length > 0" class="max-h-[70vh] overflow-y-auto w-full">
                 <div v-for="(item, index) in alarmas" :key="index"
                     class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
 
@@ -52,12 +53,25 @@
                             <!--a class="hover:text-primary" href=""></a-->
                             <div class="flex">
                                 <img class="w-20 object-fill" :src="item.tipoComponenteImagen" alt="" />
+                                <div class="ml-4 flex flex-col justify-center items-start">
+                                    <p>{{ item.componenteNombre }}</p>
+                                    <p>{{ item.tipoComponente }}</p>
+                                </div>
                             </div>
-                            <p>{{ item.componenteNombre }}</p>
-                            <p>{{ item.tipoComponente }}</p>
-                            <p>{{ item.procesoNombre }}</p>
-                            <p>{{ formattedDate(item.fechaHora) }}
-                            </p>
+                            
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Proceso</p>
+                                <p>{{ item.procesoNombre }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Motivo</p>
+                                <p>{{ item.motivo }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Fecha</p>
+                                <p>{{ formattedDate(item.fechaHora) }}</p>
+                            </div>
+                            
                             <i class="fa-solid fa-users m-4 text-2xl hover:text-primary"
                                 @click="this.selectedAlarma = item.id, this.showModalUsuarios = true"></i>
                         </div>
@@ -68,7 +82,7 @@
                 <infinite-loading @infinite="loadMoreData" v-if="hasMoreData"></infinite-loading>
             </div>
 
-        </BaseCard>
+        <!--/BaseCard-->
     </div>
 
     <ModalUsersAlarma v-if="showModalUsuarios" :show="showModalUsuarios" :alarmaId="selectedAlarma"
@@ -125,6 +139,7 @@ export default {
             const fecha2 = this.filtroFechaFin ? dayjs(this.filtroFechaFin).format("DD-MM-YYYY") : null;
             AlarmaController.listaAlarmas(this.actualPage, this.filtroProceso, this.filtroComponente, fecha1, fecha2).then((response) => {
                 if (response.status == 200) {
+                    console.log(response);
                     const { data, countRows } = response.data;
                     this.alarmas = [...this.alarmas, ...data]
                     this.hasMoreData = this.alarmas.length < countRows;

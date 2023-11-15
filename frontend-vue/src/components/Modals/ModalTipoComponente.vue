@@ -102,10 +102,8 @@
 </script>
 
 <template>
-    <Modal :show="showModal" @closeModal="emit('onClose')">
-            <div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">{{ props.action == Action.CREAR ? 'Nuevo tipo de componente' : props.action == Action.EDITAR ?  `Editar tipo de componente` : ''}}</p>
-            </div>
+    <Modal :title="props.action == Action.CREAR ? 'Nuevo tipo de Dispositivo' :  `Editar tipo de Dispositivo`"  :show="showModal" @closeModal="emit('onClose')">
+            
             <div class="space-y-4 mb-8">
                 <input v-model="form.Nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -119,9 +117,9 @@
             </div>
             
             <div class="flex justify-end">
-                <BaseBtn  @click="onSubmit"   rounded class="border border-primary text-primary hover:bg-primary hover:text-white h-10"
-                    >
-                      {{  $props.action == Action.CREAR ?   'Crear' : 'Editar' }}
+                <BaseBtn  @click="onSubmit" >
+                      <!--{{  $props.action == Action.CREAR ?   'Crear' : 'Editar' }}-->
+                      Guardar
                     <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>

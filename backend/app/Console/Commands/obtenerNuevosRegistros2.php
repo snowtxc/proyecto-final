@@ -117,8 +117,8 @@ class obtenerNuevosRegistros2 extends Command
             $xml = simplexml_load_string($xmlString);
             array_push($xmlsFiles,$xml);
             Storage::delete($file);
-
          }
+
          $alarmas = array();
          foreach($xmlsFiles as $deviceRow){
             $deviceId = $deviceRow->device->id;

@@ -17,6 +17,7 @@ let store = useStore();
 const inputFile = ref(null);
 
 const $appStore = appStore();
+const rol = $appStore.getUserData?.rol;
 
 const $router = useRouter();
 
@@ -37,6 +38,10 @@ const onLogout = () => {
 
 const myProfile = () => {
     $router.push({ name: 'profile' });
+}
+
+const aDiagrama = () => {
+    $router.push('/diagrama');
 }
 
 const changeProfileImage = () => {
@@ -82,9 +87,11 @@ const userProfileDefault = computed(() => {
     <div class="header-wrapper flex bg-white justify-between px-4">
         <div class="flex items-center">
             <div class="logo flex justify-center w-10 h-14 ">
-                <img src="/images/LogoScada.png" alt="Logo">
+            <button @click="aDiagrama">
+                <img src="/images/LogoScada.png" alt="Logo" >
+            </button>
             </div>
-            <div class="mx-0 sm:mx-3">
+            <div class="mx-0 sm:mx-3" v-if="rol != 'Observador'">
                 <button @click="sideBarToggle" class="
                         menu-toggle
                         cursor-pointer

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Etapa;
 use Validator;
 use App\Http\Middleware\JwtMiddleware;
+use App\Models\Proceso;
 
 class EtapaController extends Controller
 {
@@ -25,6 +26,13 @@ class EtapaController extends Controller
         $etapas = Etapa::where('proceso_id', $procesoId)->get();
 
         return response()->json($etapas);
+    }
+
+    public function find($id){
+        $e = Etapa::where('id', $id)->get();
+        $etapa = $e[0];
+        $etapa->proceso = Proceso::where('id', $etapa['proceso_id'])->get()[0]->Nombre;
+        return response()->json($etapa);
     }
 
     public function create(Request $request){

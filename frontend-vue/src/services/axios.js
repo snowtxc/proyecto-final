@@ -29,6 +29,7 @@ instance.interceptors.response.use(
   },
   error => {
       const { response  } = error;
+      console.log(response);
       const { status } = response;
       if(status == 401){
         router.push("/signIn");

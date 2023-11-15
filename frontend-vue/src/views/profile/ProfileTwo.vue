@@ -181,9 +181,9 @@
       <div class="col-span-12">
         <BaseCard class="h-auto">
           <Breadcrumb parentTitle='Procesos' />
-          <div class="h-auto max-h- flex flex-col items-center space-y-2 overflow-y-auto p-3 ">
+          <div class="h-auto flex flex-col items-center space-y-2 p-3 max-h-[70vh] overflow-y-auto">
             
-            <spinner :show="showSpinnerProcesos"></spinner>
+            <!--spinner :show="showSpinnerProcesos"></spinner-->
 
             <Card v-if="listaProcesos.length == 0 && !showSpinnerProcesos"
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
@@ -215,9 +215,9 @@
       <div class="col-span-12">
         <BaseCard class="h-auto">
           <Breadcrumb parentTitle='Historial de notificaciones de alarmas' />
-          <div class="h-auto max-h- flex flex-col items-center space-y-2 overflow-y-auto p-3 ">
-            
-            <spinner :show="showSpinnerAlarmas"></spinner>
+          <div class="h-auto max-h- flex flex-col items-center space-y-2  max-h-[70vh] overflow-y-auto p-3 ">
+
+            <!--spinner :show="showSpinnerAlarmas"></spinner-->
 
             
 

@@ -72,9 +72,5 @@ class TipoComponenteSeeder extends Seeder
             'Imagen' => "public/tipos-componentes/temperature.png",
         ]);
 
-
-
-
-
     }
 }

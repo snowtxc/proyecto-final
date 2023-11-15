@@ -5,58 +5,52 @@
             <div class="modal-content py-4 text-left px-6">
                 <div class="flex flex-col">
 
-                    <div class="card-header">
-                        <div class="col-2 flex justify-end items-center">
-                            <button
-                                class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                @click="$emit('onClose')"
-                            >
-                                <i class="fas fa-times"></i>
-                            </button>
+                    <div class="card-header flex justify-between items-center">         
+                        <div class="card-title">
+                            <p class="text-xl font-semibold "> Usuarios </p>
                         </div>
-                        <div class="col-10">                       
-                            <div class="card-title">Usuarios</div>                   
-                        </div>
+                        <BaseBtn
+                            sm
+                            @click="$emit('onClose')">
+                            <i class="fas fa-times"></i>
+                        </BaseBtn>
                     </div>
-                    <div class="px-5 ">
-                        <div class="w-full">                          
-                            <div class="flex flex-wrap gap-5  mt-5 text-center">
-                                <div class="w-full text-center mt-4">
-                                    <spinner v-if="loading" :show="loading"></spinner>
-                                </div>
-                                <div
-                                    class="w-full bg-white p-8 rounded-md shadow-md"
-                                    v-if="users.length == 0 && !loading"
-                                >
-                                    <h2 class="text-2xl font-semibold mb-4">
-                                        No se encontraron usuarios
-                                    </h2>
-                                    <p class="text-gray-600">
-                                        Ningun usuario recibio esta alarma
-                                    </p>
-                                </div>
-                                <div v-else class="w-full flex flex-col gap-10">
-                                    <Card v-for="user in users" :key="user.id" class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-1 rounded-md	cursor-pointer">
-                                        <div class="flex flex-row items-center justify-between">
-                                            <div class="flex items-center">
-                                            <img :src="user.profileImage ? user.profileImage : imageProfileDefault" alt="User Image" class="w-12 h-12 rounded-full mr-2 object-cover" />
+                         
+                    <div class="flex flex-wrap mt-2 text-center">
+                        <div class="w-full text-center mt-4">
+                            <spinner v-if="loading" :show="loading"></spinner>
+                        </div>
+                        <div
+                            class="w-full bg-white rounded-md shadow-md "
+                            v-if="users.length == 0 && !loading"
+                            >
+                            <h2 class="text-2xl font-semibold mt-4">
+                                No se encontraron usuarios
+                            </h2>
+                            <p class="text-gray-600 m-4">
+                                Ningun usuario recibio esta alarma
+                            </p>
+                        </div>
+                        <div v-else class="w-full flex flex-col ">
+                            <Card v-for="user in users" :key="user.id" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
+                                <!--div class="flex flex-row items-center justify-between"-->
+                                    <div class="flex m-2">
+                                        <img :src="user.profileImage ? user.profileImage : imageProfileDefault" alt="User Image" class="w-12 h-12 rounded-full mr-4 object-cover" />
 
-                                            <div class="flex flex-col">
+                                        <div class="flex flex-col items-start">
                                                 <p class="font-bold text-xl">{{ user.name }}</p>  
                                                 <p>{{ user.email }}</p>
                                                 <p class="text-gray-500"> {{ user.rol }} </p>
-                                            </div>
-                                            </div>
                                         </div>
-                                    </Card>
-                                </div>
-                            </div>
+                                    </div>
+                                <!--/div-->
+                            </Card>
                         </div>
                     </div>
                 </div>
-                </div>
             </div>
         </div>
+    </div>
 </template>
 
 <script>
