@@ -24,7 +24,7 @@ class EtapaController extends Controller
 
     public function list($procesoId){
         $etapas = Etapa::where('proceso_id', $procesoId)->get();
-    
+
         return response()->json($etapas);
     }
 
@@ -71,18 +71,18 @@ class EtapaController extends Controller
 
     public function delete($id){
         $etapa = Etapa::find($id);
-    
+
         if(isset($etapa)){
             // Eliminar los nodos asociados a esta etapa
             $etapa->nodos()->delete();
             $etapa->links()->delete();
             // Eliminar la etapa
             $etapa->delete();
-    
+
             return response()->json(['success' => 'Etapa borrada'], 200);
         }
-        
+
         return response()->json(['error' => 'Etapa no encontrada'], 404);
     }
-    
+
 }

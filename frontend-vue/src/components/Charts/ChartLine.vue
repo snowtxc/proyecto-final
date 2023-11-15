@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted,defineProps ,watch} from 'vue';
+import { ref, onMounted, onUnmounted,defineProps ,watch, computed} from 'vue';
 import { appendRegistrosDeviceChannel } from '../../shared/helpers/channels';
 import dayjs from 'dayjs';
 
@@ -89,13 +89,26 @@ watch(() => props.unidad, (newUnidadSelected, oldValue) => {
 onUnmounted(() => {
     window.Echo.leave(appendRegistrosDeviceChannel(props.componente_id));
 });
+
+const lastMarca = computed(()=>{
+    const unidad  =  registrosByUnidades.value.find(item => item.unidad_id == props.unidad.unidad_id);
+    if(unidad.registros.length <= 0 ){
+      return "S/A";
+    }
+    return unidad.registros[unidad.registros.length -1].Marca + " " + unidadSymbol.value;
+  });
+
+  const unidadSymbol = computed(()=>{
+    return props.unidad.unidad;
+  })
+
 </script>
 
 
 <template>
     <div class="overflow-hidden flex-1 w-full ml-5">
         <div class="p-5">
-            <p class="text-primary text-2xl m-0">25 °C</p>
+            <p class="text-primary text-2xl m-0">{{ lastMarca }}</p>
         </div>
         <div id="basicArea-chart w-full">
             <apexchart

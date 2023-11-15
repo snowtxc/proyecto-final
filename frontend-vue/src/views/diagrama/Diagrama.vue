@@ -36,7 +36,8 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch ,onBeforeMount} from 'vue';
+import { useRoute } from 'vue-router';
 import { appStore } from "@/store/app.js";
 import ProcesoController from '@/services/ProcesoController.js';
 import EtapaController from '@/services/EtapaController.js';
@@ -44,12 +45,10 @@ import ComponenteController from '../../services/ComponenteController';
 import Diagrama from '../../components/Diagrama/Diagrama.vue';
 import Card from '@/components/Card/Card.vue';
 import MiniPanelDevice from '../../components/Panel/MiniPanelDevice.vue';
-import CardDevice from '../../components/Cards/CardDevice.vue';
-import ChartLine from '@/components/Charts/ChartLine.vue';
-import ChartBar from '@/components/Charts/ChartBar.vue';
 import spinner from '../components/spinner/spinner.vue';
 
 const $appstore = appStore();
+const $route = useRoute();
 const userData = $appstore.getUserData
 const listaProcesosPromise = ProcesoController.getProcesosByUser(userData.id);
 
@@ -58,7 +57,8 @@ const selectedProcess = ref("");
 const listaEtapas = ref([]);
 const nodeData = ref()
 const dispositivoData = ref(null)
-const unidades = ref([])
+
+
 const showSpinner = ref(false)
 
 const setNodeData = (data) => {
@@ -70,6 +70,12 @@ const unidad = {
   nombre: dispositivoData.Unidad
 }
 
+onBeforeMount(()=>{
+   const queryParams = $route.query;
+   if(queryParams.procesoId){
+      selectedProcess.value = queryParams.procesoId;
+   }
+})
 watch(nodeData, () => {
   showSpinner.value = true;
   const data = ComponenteController.getById(nodeData.value.mensaje.componente_id)

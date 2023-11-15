@@ -107,9 +107,7 @@ const userProfileDefault = computed(() => {
             </div>
         </div>
         <div class="flex items-center">
-
             <NotificacionsComponent></NotificacionsComponent>
-
 
             <!-- profile-dropdown  -->
             <Menu as="div" class="relative inline-block text-left">

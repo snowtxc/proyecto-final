@@ -21,6 +21,7 @@ const props = defineProps({
   reload: { type: Number, default: 0 },
 })
 
+
 let diagram = null;
 const nodeDataArray = [];
 const linkDataArray = [];
@@ -58,6 +59,7 @@ const createDiagram = async () => {
   nodeDataArray.splice(0, nodeDataArray.length);
   const [response, responseLinks] = await Promise.all([NodoController.list(props.etapaId), LinkController.list(props.etapaId)]);
 
+  console.log(responseLinks);
   await Promise.all(response.map(async (nodo) => {
     const { componente } = nodo;
     Node(nodo.id, componente.Nombre, componente.tipoComponenteImage, nodo.Posicion);

@@ -37,7 +37,9 @@ class ObtenerNuevosRegistros extends Command
      * @return int
      */
 
-    private function generarAlarma($componente,$motivo){
+
+     private function generarAlarma($componente,$motivo){
+
         $proceso = $componente->nodo->etapa->proceso;
 
         $alarma = new Alarma;
@@ -51,6 +53,7 @@ class ObtenerNuevosRegistros extends Command
                 'name' => $usuario->name,
                 'dispositivo' => $componente->Nombre,
                 'proceso' => $proceso->Nombre,
+
             ];
 
             Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
@@ -60,12 +63,16 @@ class ObtenerNuevosRegistros extends Command
             $alarmaUser = new AlarmaUser;
             $alarmaUser->alarma_id = $alarma->id;
             $alarmaUser->user_id = $usuario->id;
+            $alarmaUser->leida = false;
             $alarmaUser->save();
 
             broadcast(new PushAlarmaNotificacion($usuario->id, $data));
 
         }
+
     }
+
+
 
     public function handle()
     {
@@ -99,7 +106,7 @@ class ObtenerNuevosRegistros extends Command
                 $remoteXmlContent = stream_get_contents($memoryStream);
 
                 array_push($result, simplexml_load_string($remoteXmlContent));
-                ftp_delete($ftpConnection, $remoteFilePath);
+                //ftp_delete($ftpConnection, $remoteFilePath);
                 ftruncate($memoryStream, 0);
                 ftp_close($ftpConnection);
 
@@ -109,8 +116,10 @@ class ObtenerNuevosRegistros extends Command
 
         $alarmas = array();
         foreach($result as $deviceRow){
-            $deviceId =  $deviceRow->device->id;
+            $deviceId = (int)$deviceRow->device->id;
+
             $componente = Componente::find($deviceId);
+            $componenteUnidades = $componente->unidades;
 
             $etapa =  $componente->nodo->etapa;
 
@@ -134,7 +143,15 @@ class ObtenerNuevosRegistros extends Command
                 $newRegistro->etapa->proceso;
                 array_push($registrosCreateds, $newRegistro);
 
-                if($dataValue < $componente->min ||  $dataValue > $componente->max){
+
+                $index  = array_search($dataId, array_column(json_decode(json_encode($componenteUnidades), true), 'id'));
+                $unidadFind = $componenteUnidades[$index];
+
+                $minValue  =  $unidadFind->pivot->min;
+                $maxValue  =  $unidadFind->pivot->max;
+
+
+                if($dataValue < $minValue ||  $dataValue > $maxValue){
                     $motivo = '';
                     if($dataValue < $componente->min){
                         $motivo =
@@ -162,5 +179,7 @@ class ObtenerNuevosRegistros extends Command
 
             $this->generarAlarma($alarma["componente"], $alarma["motivo"]);
         }
+
+
     }
 }

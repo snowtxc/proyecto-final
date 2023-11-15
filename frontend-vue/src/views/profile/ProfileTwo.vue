@@ -1,7 +1,7 @@
 <script setup>
   import Breadcrumb from '@/components/Breadcrumbs.vue'
   import { ref ,computed, reactive} from 'vue'
-  import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
+  import { useRouter } from 'vue-router';
   import { appStore } from '@/store/app';
   import Card from '@/components/Card/Card.vue';
   import ProcesoController from '../../services/ProcesoController';
@@ -15,6 +15,7 @@
 
   const $appStore = appStore();
   const userData = $appStore.userdata;
+  const $router = useRouter();
 
   const userProfileImage = computed(()=>{
     console.log($appStore.getUserData);
@@ -96,9 +97,7 @@
     return dayjs(fechaHora).format('DD/MM/YYYY HH:mm A');
   }
 
-  const selectCard = (index) => {
-    //redirect
-  };
+
 
   const editProfile = ()=>{
     showEdit.value = true;
@@ -140,6 +139,11 @@
     }
   };
 
+  const redirectToProcess = ({id})=>{
+      $router.push({name:"Diagrama", query: { procesoId: id }});
+  }
+  
+
 
 </script>
 
@@ -174,7 +178,7 @@
         </BaseCard>
       </div>
 
-      <div class="col-span-4">
+      <div class="col-span-12">
         <BaseCard class="h-auto">
           <Breadcrumb parentTitle='Procesos' />
           <div class="h-auto flex flex-col items-center space-y-2 p-3 max-h-[70vh] overflow-y-auto">
@@ -190,8 +194,9 @@
             </Card>
 
             <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
+               @click="redirectToProcess(proceso)"
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full"
-                :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
+                :class="{ 'selected-card': index === selectedCardIndex }">
                 <div class="flex flex-row items-center justify-between">
                     <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
                     </p>
@@ -207,12 +212,14 @@
         </BaseCard>
       </div>
 
-      <div class="col-span-8">
+      <div class="col-span-12">
         <BaseCard class="h-auto">
-          <Breadcrumb parentTitle='Alarmas' />
-          <div class="h-auto flex flex-col items-center space-y-2 p-3 max-h-[70vh] overflow-y-auto">
-            
+          <Breadcrumb parentTitle='Historial de notificaciones de alarmas' />
+          <div class="h-auto max-h- flex flex-col items-center space-y-2  max-h-[70vh] overflow-y-auto p-3 ">
+
             <!--spinner :show="showSpinnerAlarmas"></spinner-->
+
+            
 
             <Card v-if="listaAlarmas.length == 0 && !showSpinnerAlarmas"
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
@@ -223,14 +230,16 @@
             </Card>
 
             <Card v-for="(alarma, index) in listaAlarmas" :key="alarma.id"
+                   
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
                 <div class="flex flex-row items-center justify-between">
                   <div class="flex">
-                    <img class="w-10 object-fill" :src="alarma.tipoComponenteImagen" alt="" />
+                    <img class="w-10 object-fill mr-2" :src="alarma.tipoComponenteImagen" alt="" />
                   </div>
                   <p>{{alarma.componenteNombre}}</p>   
                   <p>{{alarma.tipoComponente}}</p>
                   <p>{{alarma.procesoNombre}}</p>
+                  <p>{{alarma.Motivo}}</p>
                   <p>{{ formattedDate(alarma.fechaHora) }}</p>
                 </div>
             </Card>

@@ -4,10 +4,12 @@
         <div class="card-body flex felx-row justify-between items-center w-full">
             <div class="flex align-center">
                 <img :src="props.image" alt="Image" class=" w-16 h-16 object-fill" />
-                <div class="m-auto">
-                    <p class="text-xl ml-3" :class="props.selected ? 'text-white' : 'text-primary'">{{ props.nombre }}</p>
-                    <p class="text-sm ml-3 mt-3" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
-
+                <div class="m-auto ml-5">
+                    <p :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.nombre }}</p>
+                    <p class="text-sm" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
+                    <div class="flex w-full">
+                        <BaseChip v-for="unidad in props.unidades"  :key="unidad.id"  :text="unidad.nombre"></BaseChip>
+                    </div>
                 </div>
             </div>
             <slot />
@@ -17,6 +19,8 @@
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import BaseChip from '../Base/BaseChip.vue';
+import BaseCard from "../Base/BaseCard.vue";
 
 const emit = defineEmits(['onSelect']);
 const props = defineProps({
@@ -24,7 +28,8 @@ const props = defineProps({
     value: { required: true, type: [Number, null] },
     image: { required: true, type: String },
     selected: { required: true, type: [Boolean, null] },
-    ipAddress: { required: true, type: String }
+    ipAddress: { required: true, type: String },
+    unidades: { required: true, type: Array}
 })
 </script>
 

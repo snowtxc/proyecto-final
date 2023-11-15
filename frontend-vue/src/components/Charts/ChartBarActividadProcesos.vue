@@ -1,7 +1,8 @@
 <script setup>
-    import { ref, onBeforeMount } from "vue";
+    import { ref, onBeforeMount , onMounted , onUnmounted} from "vue";
     import spinner from "../../views/components/spinner/spinner.vue";
     import EstadisticaController from "@/services/EstadisticaController";
+    import { updateActivityProcessesChannel } from "@/shared/helpers/channels";
     const  series =  ref([{
             name: 'Procesos',
             data: []
@@ -76,6 +77,12 @@
 
     const loading = ref(true);
 
+    onMounted(()=>{
+      window.Echo.channel(updateActivityProcessesChannel()).listen('UpdateProcessesActivity', (data)=>{
+         formatOptions(data)
+      });
+    })
+
     
     onBeforeMount(()=>{
         EstadisticaController.getActivityForProcessLastHour().then(data =>{
@@ -84,12 +91,17 @@
         })
     })
 
+    onUnmounted(()=>{
+      window.Echo.leave(updateActivityProcessesChannel()); 
+    })
+
     const formatOptions = (procesos)=>{
+           series.value[0].data = [];
+           chartOptions.value.xaxis.categories = [];
            procesos.map(proceso =>{
               series.value[0].data.push(proceso.CantidadRegistros);
               chartOptions.value.xaxis.categories.push(proceso.Nombre);
-
-           })
+           });
     }
 
 

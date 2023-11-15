@@ -49,6 +49,12 @@ export default{
         const response  = await  axios.get('auth/notificaciones-alarmas');
         const { data } =  response;
         return data;
+    },
+
+    async readMyAlarmsNotifations(){
+        const response  = await  axios.put('auth/read-notificaciones-alarmas');
+        const { data } =  response;
+        return data;
     }
 
 }

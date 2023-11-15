@@ -68,6 +68,8 @@ Route::prefix('api')->group(function () {
         Route::post('/setPassword', 'setPassword');
         Route::post('/forgotPassword', 'forgotPassword');
         Route::get('/auth/notificaciones-alarmas', 'getNotificacionesAlarmas');
+        Route::put('/auth/read-notificaciones-alarmas', 'readNotificacionesAlarmas');
+
     });
 
     /*USUARIO ENDPOINTS*/
@@ -186,10 +188,11 @@ Route::prefix('api')->group(function () {
      /*FTP ENDPOINTS*/
      Route::controller(FtpController::class)->group(function () {
         Route::get('/ftp/download', 'downloadFileFromFTP');
+        Route::get("/ftp/realTime","realTime");
         Route::post('/ftp/nuevosRegistros', 'generarRegistros');
         Route::post('/ftp/last', 'last24Hour');
-
-
+        Route::post("/ftp/writeXmlAlarm" ,"writeXmlAlarm");
+        Route::get("/ftp/activityProcess" ,"activityProcess");
 
     });
 

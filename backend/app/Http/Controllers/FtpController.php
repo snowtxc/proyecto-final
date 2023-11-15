@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Http\Request;
-use phpseclib\Net\SFTP;
 use App\Models\Componente;
 use App\Models\Registro;
 use App\Models\Nodo;
@@ -12,48 +11,24 @@ use App\Models\Alarma;
 use App\Models\AlarmaUser;
 use SimpleXMLElement;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\FileHelper;
+
 
 
 use App\Events\appendRegistrosDevice;
 use App\Events\PushAlarmaNotificacion;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\Mail;
+
+use App\Events\UpdateProcessesActivity;
+use App\Utils\Helper;
 
 
 class FtpController extends Controller
 {
 
-    private function generarAlarma($componente,$motivo){
 
-        $proceso = $componente->nodo->etapa->proceso;
-
-        $alarma = new Alarma;
-        $alarma->componente_id = $componente->id;
-        $alarma->proceso_id = $proceso->id;
-        $alarma->Motivo =  $motivo;
-        $alarma->save();
-        $usuarios = $proceso->users;
-        foreach ($usuarios as $usuario) {
-            $data = [
-                'name' => $usuario->name,
-                'dispositivo' => $componente->Nombre,
-                'proceso' => $proceso->Nombre,
-            ];
-
-            Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
-                $message->to($usuario->email)->subject('Nueva Alarma');
-            });
-
-            $alarmaUser = new AlarmaUser;
-            $alarmaUser->alarma_id = $alarma->id;
-            $alarmaUser->user_id = $usuario->id;
-            $alarmaUser->save();
-
-            broadcast(new PushAlarmaNotificacion($usuario->id, $data));
-
-        }
-
-    }
 
 
 
@@ -89,7 +64,7 @@ class FtpController extends Controller
                 $remoteXmlContent = stream_get_contents($memoryStream);
 
                 array_push($result, simplexml_load_string($remoteXmlContent));
-                ftp_delete($ftpConnection, $remoteFilePath);
+                //ftp_delete($ftpConnection, $remoteFilePath);
                 ftruncate($memoryStream, 0);
                 ftp_close($ftpConnection);
 
@@ -99,8 +74,11 @@ class FtpController extends Controller
 
         $alarmas = array();
         foreach($result as $deviceRow){
-            $deviceId =  $deviceRow->device->id;
+            return response()->json(["id" => $deviceRow->device->id]);
+            $deviceId = $deviceRow->device->id;
+
             $componente = Componente::find($deviceId);
+            $componenteUnidades = $componente->unidades;
 
             $etapa =  $componente->nodo->etapa;
 
@@ -124,7 +102,15 @@ class FtpController extends Controller
                 $newRegistro->etapa->proceso;
                 array_push($registrosCreateds, $newRegistro);
 
-                if($dataValue < $componente->min ||  $dataValue > $componente->max){
+
+                $index  = array_search($dataId, array_column(json_decode(json_encode($componenteUnidades), true), 'id'));
+                $unidadFind = $componenteUnidades[$index];
+
+                $minValue  =  $unidadFind->pivot->min;
+                $maxValue  =  $unidadFind->pivot->max;
+
+
+                if($dataValue < $minValue ||  $dataValue > $maxValue){
                     $motivo = '';
                     if($dataValue < $componente->min){
                         $motivo =
@@ -156,6 +142,7 @@ class FtpController extends Controller
 
     }
 
+
     private function generarXml($data){
         $xml = new SimpleXMLElement('<xml></xml>');
         $device = $xml->addChild('device');
@@ -180,29 +167,102 @@ class FtpController extends Controller
             $data1->addChild('dataunit', $marca['unidad']);
             $data1->addChild('datatime', $marca['fecha']);
         }
-        return $xml->saveXml();
+
+        return $xml->asXml();
+
     }
 
-    public function generarRegistros()
-    {
+    private function generarAlarma($componente,$motivo){
 
-        $ftpServer = env('FTP_HOST');
-        $ftpUsername = env('FTP_USERNAME');
-        $ftpPassword = env('FTP_PASSWORD');
-        $remoteDirectory = '/data-x/x-input';
+        $tipoComponente = $componente->tipoComponente;
+        $proceso = $componente->nodo->etapa->proceso;
 
-        $ftpConn = ftp_connect($ftpServer);
-        $loginResult = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
+        $alarma = new Alarma;
+        $alarma->componente_id = $componente->id;
+        $alarma->proceso_id = $proceso->id;
+        $alarma->Motivo =  $motivo;
+        $alarma->save();
+        $usuarios = $proceso->users;
 
-        if (!($ftpConn && $loginResult)) {
-            return response()->json(["Ha ocurrido un error en la conexion al servidor ftp"]);
+
+        foreach ($usuarios as $usuario) {
+            $dataMail = [
+                'name' => $usuario->name,
+                'dispositivo' => $componente->Nombre,
+                'proceso' => $proceso->Nombre,
+            ];
+
+            Mail::send('emails.alarma', $dataMail, function ($message) use ($usuario) {
+                $message->to($usuario->email)->subject('Nueva Alarma');
+            });
+            $alarmaUser = new AlarmaUser;
+            $alarmaUser->alarma_id = $alarma->id;
+            $alarmaUser->user_id = $usuario->id;
+            $alarmaUser->leida = false;
+            $alarmaUser->save();
+
+            $componenteInfo  =[
+                "tipoComponenteImage" => $pathImage,
+                "tipoComponenteNombre" => $tipoComponente->Nombre,
+                "Nombre" => $componente->Nombre,
+                "Descripcion" => $componente->Descripcion,
+                "Unidad" => $componente->Unidad,
+                "DireccionIp" => $componente->DireccionIp,
+                "tipo_componente_id" => $componente->tipo_componente_id,
+                "id" => $componente->id,
+            ];
+            $proceso = $alarma->proceso;
+            $dataAlarm = [
+                "id" => $alarma->id,
+                "componente" => $componenteInfo,
+                "motivo"  => $alarma->Motivo,
+                "created_at" => $alarma->created_at,
+                "proceso"  => $proceso
+            ];
+
+            broadcast(new PushAlarmaNotificacion($usuario->id, $dataAlarm));
+
         }
 
+    }
+
+
+
+    public function last24Hour(){
+
+        $nodos = Nodo::all();
+        foreach($nodos as $nodo){
+            $componenteId = $nodo->componente->id;
+
+            $result = Registro::select('unidad_id', DB::raw('MAX(Marca) as max_marca'), DB::raw('MIN(Marca) as min_marca'))
+            ->where('componente_id', $componenteId)
+            ->whereDate('created_at', '>=', now()->subDay())
+            ->groupBy('unidad_id')
+            ->get();
+
+            return  $result;
+        }
+    }
+
+
+
+
+
+
+    public function realTime(){
+
+        $this->generarRegistros();
+        $this->obtenerRegistros();
+
+        return response()->json(["status" => "ok"], 200);
+
+    }
+
+    private function generarRegistros(){
         $nodos = Nodo::all();
 
         foreach($nodos as $nodo){
             $componente = $nodo->componente;
-
             $unidades =  $componente->unidades;
             $marcas  = array();
             foreach($unidades as $unidad){
@@ -224,42 +284,128 @@ class FtpController extends Controller
                 "deviceIp" => $componente->DireccionIp,
                 "marcas" => $marcas
             ];
+            $fileName = "device-".$componente->id."-".time().".xml";
             $xml = $this->generarXml($data);
-            $remoteFilePath = $remoteDirectory . '/device'.$componente->id."-".time().".xml";
-
-            ftp_pasv($ftpConn,TRUE);
-            $tempFile = tempnam(sys_get_temp_dir(), 'xml_temp');
-            file_put_contents($tempFile, $xml);
-
-            $uploadResult = ftp_put($ftpConn, $remoteFilePath, $tempFile, FTP_BINARY);
-            if ($uploadResult) {
-                return response()->json(["Archivo subido con exito"]);
-            } else {
-                return response()->json(["Ha ocurrido un error"]);
-
-            }
-            unlink($tempFile);
+            $filePath = 'xmls/'.$fileName;
+            Storage::put($filePath, $xml);
 
         }
+    }
+
+    private  function obtenerRegistros(){
+         $files  = Storage::files("xmls");
+         $xmlsFiles = array();
+         foreach($files as $file){
+            $xmlString = Storage::get($file);
+            $xml = simplexml_load_string($xmlString);
+            array_push($xmlsFiles,$xml);
+            Storage::delete($file);
+
+         }
+         $alarmas = array();
+         foreach($xmlsFiles as $deviceRow){
+            $deviceId = $deviceRow->device->id;
+
+            $componente = Componente::find($deviceId);
+            $componenteUnidades = $componente->unidades;
+            $etapa =  $componente->nodo->etapa;
+
+            $registrosCreateds = array();
+            foreach ($deviceRow->device->data as $data) {
+                $dataId = (int) $data['id'];
+                $dataValue = (float) $data->datavalue;
+                $dataUnit = (string) $data->dataunit;
+                $dataTime = (string) $data->datatime;
+
+                $newRegistroBody = [
+                    "Marca" => $dataValue,
+                    "etapa_id"  => $etapa->id,
+                    "unidad_id" => $dataId,
+                    "componente_id" => $componente->id,
+                ];
+
+                $newRegistro = $componente->registros()->create($newRegistroBody);
+                $newRegistro->unidad;
+                $newRegistro->etapa;
+                $newRegistro->etapa->proceso;
+                array_push($registrosCreateds, $newRegistro);
 
 
+                $index  = array_search($dataId, array_column(json_decode(json_encode($componenteUnidades), true), 'id'));
+                $unidadFind = $componenteUnidades[$index];
+
+                $minValue  =  $unidadFind->pivot->min;
+                $maxValue  =  $unidadFind->pivot->max;
+
+
+                if($dataValue < $minValue ||  $dataValue > $maxValue){
+                    $motivo = '';
+                    if($dataValue < $componente->min){
+                        $motivo =
+                        "El Dispositivo $componente->Nombre ha marcado " . $dataValue . " " .
+                         $newRegistro->unidad->unidad . "(" . $newRegistro->unidad->nombre . ") por debajo del rango de " . $componente->min . " " .
+                          $newRegistro->unidad->unidad . " a " . $componente->max . " " . $newRegistro->max;
+                    }else{
+                        $motivo = "El Dispositivo $componente->Nombre ha marcado " . $dataValue . " " .
+                         $newRegistro->unidad->unidad . "(" . $newRegistro->unidad->nombre . ") por debajo del rango de " . $componente->min . " " .
+                          $newRegistro->unidad->unidad . " a " . $componente->max . " " . $newRegistro->max;
+                    }
+                    array_push($alarmas, [
+                        "componente" =>$componente,
+                        "motivo" => $motivo
+                    ]);
+                }
+            }
+            broadcast(new appendRegistrosDevice($componente->id, $registrosCreateds));
+
+
+
+         }
+
+        foreach($alarmas as $alarma){
+
+            $this->generarAlarma($alarma["componente"], $alarma["motivo"]);
+        }
 
     }
 
-    public function last24Hour(){
 
-        $nodos = Nodo::all();
-        foreach($nodos as $nodo){
-            $componenteId = $nodo->componente->id;
+    //esta funcion escribira un xml con un valor de una medida por encima del rango especificado , por lo que el sistema luego debera generar una alarma.
+    public function writeXmlAlarm(){
+            $componente = Componente::find(38);
+            $unidades =  $componente->unidades;
+            $marcas  = array();
+            foreach($unidades as $unidad){
+                $min =  $unidad->pivot->min;
+                $max = $unidad->pivot->max;
+                $fecha = $unidad->pivot->created_at;
+                array_push($marcas , [
+                    "unidadId" => $unidad->id,
+                    "unidadNombre" => $unidad->nombre,
+                    "marca" => $max + 20,
+                    "unidad" => $unidad->unidad,
+                    "fecha" => $unidad->fecha
+                ]);
+            }
+            $data = [
+                "deviceId" => $componente->id,
+                "deviceName" => $componente->Nombre,
+                "deviceDescription" => $componente->Descripcion,
+                "deviceIp" => $componente->DireccionIp,
+                "marcas" => $marcas
+            ];
+            $fileName = "device-".$componente->id."-".time().".xml";
+            $xml = $this->generarXml($data);
+            $filePath = 'xmls/'.$fileName;
+            Storage::put($filePath, $xml);
+    }
 
-            $result = Registro::select('unidad_id', DB::raw('MAX(Marca) as max_marca'), DB::raw('MIN(Marca) as min_marca'))
-            ->where('componente_id', $componenteId)
-            ->whereDate('created_at', '>=', now()->subDay())
-            ->groupBy('unidad_id')
-            ->get();
 
-            return  $result;
-        }
+    public function activityProcess(){
+        $data = (array)Helper::processesActivityLastHour();
+        broadcast(new UpdateProcessesActivity($data));
+        return response()->json($data,200);
+
     }
 
 }

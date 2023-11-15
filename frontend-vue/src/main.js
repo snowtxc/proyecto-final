@@ -29,9 +29,9 @@ import Echo from "laravel-echo";
 
 import Pusher from "pusher-js";
 
-import VTooltip from 'v-tooltip';
 
 window.Pusher = Pusher;
+
 window.Echo  = new Echo({
     broadcaster: 'pusher',
     key: "ASDASD2121",
@@ -56,5 +56,4 @@ createApp(App)
     .use(router)
     .use(pinia)
     .use(Notifications)
-    .use(VTooltip)
     .mount('#app')

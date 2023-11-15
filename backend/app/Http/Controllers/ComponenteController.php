@@ -47,6 +47,7 @@ class ComponenteController extends Controller
         foreach($componentes as $componente){
             $tipoComponente = $componente->tipoComponente;
             $pathImage =  FileHelper::getRealPath($tipoComponente->Imagen);
+            $unidades = $componente->unidades;
             array_push($result,
                [
                 "tipoComponenteImage" => $pathImage,
@@ -57,7 +58,8 @@ class ComponenteController extends Controller
                 "DireccionIp" => $componente->DireccionIp,
                 "etapa_id" => $componente->etapa_id,
                 "tipo_componente_id" => $componente->tipo_componente_id,
-                "id" => $componente->id
+                "id" => $componente->id,
+                "unidades" => $unidades
                ]
             );
         }

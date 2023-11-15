@@ -55,8 +55,8 @@
                             </p>
                         </div>
                         <div v-else class="mt-2" v-for="item in componentes" :key="item.id">
-                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp"
-                                :image="item.tipoComponenteImage" :selected="deviceSelected &&
+                            <CardDevice :nombre="item.Nombre" :ipAddress="item.DireccionIp" 
+                                :image="item.tipoComponenteImage"  :unidades="item.unidades" :selected="deviceSelected &&
                                     deviceSelected.id == item.id
                                     " @onSelect="handleSelectedDevice(item)"></CardDevice>
                         </div>
@@ -133,7 +133,6 @@ const filters = ref({
 
 onBeforeMount(async () => {
     const tiposComponentesData = await TipoComponenteController.getAll();
-    console.log(tiposComponentesData);
     tiposComponentes.value = tiposComponentesData;
 })
 
@@ -170,7 +169,7 @@ const getComponentes = async () => {
         filters.value
     )
     const { data, countRows } = result
-    componentes.value = [...componentes.value, ...data]
+    componentes.value = [...componentes.value, ...data];
     hasMoreData.value = componentes.value.length < countRows
    // $appStore.setGlobalLoading(false)
     loading.value = false;
