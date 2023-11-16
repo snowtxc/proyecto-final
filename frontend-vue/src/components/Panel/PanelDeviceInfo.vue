@@ -9,23 +9,31 @@
                     <p class="text-xl font-semibold mr-2"> {{ title }} </p>
                 </div>
                 <div class="flex gap-4">
-                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" @click="
+                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 my-4  hover:text-primary" @click="
                             $router.push({
                                 name: 'editarDispositivo',
                                 params: { id: props.deviceInfo.id },
                             })
                             " />
-
                         <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
-                            class="w-5 h-5 m-4 hover:text-primary" />
-                    </div>
+                            class="w-5 h-5 my-4 mr-8 ml-2 hover:text-primary" />
+
+                            <BaseBtn
+                                @click="handleViewHistoricos"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
+                            >
+                                <i class="fas fa-history mr-2"></i> 
+                                Ver Histórico
+                            </BaseBtn>
+                </div>
             </div>
             <div class="flex flex-col">
-                <div
-                    class="bg-white p-4 rounded-lg shadow-md flex justify-between items-start"
-                >
+                <div class="bg-white p-4 rounded-lg shadow-md flex justify-between items-start">
                     <div>
-                        
+                        <div class="mb-2">
+                            Descripción:
+                            {{ props.deviceInfo.Descripcion }}
+                        </div>
                         <div class="mb-2">
                             Estado:
                             <BaseBadge
@@ -41,7 +49,9 @@
                         </div>
                         <div class="mb-2 flex">
                             Proceso:
-                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2">
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
+                                @click="redirectToProcess(props.deviceInfo.nodoInfo.procesoId)"
+                            >
                                 {{
                                     deviceIsActive
                                         ? props.deviceInfo.nodoInfo.proceso
@@ -52,7 +62,9 @@
                         
                         <div class="mb-2">
                             Etapa:
-                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2">
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
+                                @click="redirectToEtapa(props.deviceInfo.nodoInfo.procesoId, props.deviceInfo.nodoInfo.etapaId)"
+                            >
                                 {{
                                 deviceIsActive
                                     ? props.deviceInfo.nodoInfo.etapa
@@ -74,13 +86,9 @@
                             }}
                         </div>
                     </div>
-                    <BaseBtn
-                        @click="handleViewHistoricos"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
-                    >
-                        <i class="fas fa-history mr-2"></i> 
-                        Ver Histórico
-                    </BaseBtn>
+
+                    <Carousel :fotos="props.deviceInfo.imagenes" ></Carousel>
+                    
                 </div>
 
                 <div class="mt-3">
@@ -194,7 +202,7 @@
                             :parentTitle="unidadSelected.nombre"
                         ></Breadcrumbs>
                         
-                        <div class="flex mt-3 gap-10">
+                        <div class="flex mt-3">
                             <ChartBar
                                 class="flex-1"
                                 :componente_id="props.deviceInfo.id"
@@ -214,6 +222,8 @@
                     El dispositivo no se encuentra operativo ya que no está asociado a una etapa de un Proceso
                 </div>
             </div>
+
+            
         </BaseCard>
     </div>
 
@@ -253,6 +263,8 @@ import Breadcrumbs from '../Breadcrumbs.vue'
 import ChartLine from '../Charts/ChartLine.vue'
 import ChartBar from '../Charts/ChartBar.vue'
 
+import Carousel from '../../views/dispositivos/Carousel.vue'
+
 const $appStore = appStore()
 const $router = useRouter()
 
@@ -284,6 +296,7 @@ onBeforeMount(async () => {
         ParteController.list(props.deviceInfo.id),
     ])
     componenteInfo.value = componente
+    console.log(componenteInfo)
     componenteUnidades.value = componente.unidades
     unidadSelected.value = componenteUnidades.value[0]
     partes.value = partesData
@@ -408,4 +421,13 @@ const onSelectUnidadDeMedida = (e) => {
         (unidad) => unidad.unidad_id == value
     )
 }
+
+const redirectToProcess = (id) =>{
+      $router.push("Diagrama?procesoId="+id );
+}
+
+const redirectToEtapa = (proceso, etapa) =>{
+      $router.push("Etapas/"+proceso+'/'+etapa );
+}
+
 </script>

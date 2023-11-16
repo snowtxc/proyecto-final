@@ -5,7 +5,7 @@
                 <p class="text-xl font-semibold"> Usuarios </p>
             </div>
             <BaseBtn 
-                 @click="this.selectedUser = 0, this.showModalUsuario = true"
+                 @click="this.selectedUser = null, this.showModalUsuario = true"
             >
                 <i class="mr-2 fa-solid fa-plus"></i>
                 Nuevo Usuario 

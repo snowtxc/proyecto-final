@@ -5,7 +5,7 @@
             <p class="text-xl font-semibold mr-2"> Procesos </p>
         </div>
         <BaseBtn v-if="rol == 'Administrador'"
-            @click="showModal = true"
+            @click="showModalProceso"
         >
             <i class="fa-solid fa-plus mr-2"></i>
             Nuevo Proceso
@@ -34,9 +34,9 @@
                 <div class="flex flex-row items-center justify-between">
                     <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
                     </p>
-                    <div class="space-x-3" v-if="rol == 'Administrador'" >
+                    <div class="ml-2 w-20 flex justify-end" v-if="rol == 'Administrador'" >
                         <font-awesome-icon :icon="['far', 'pen-to-square']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="ml-2 h-5 hover:text-primary" 
+                            :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 mr-2 hover:text-primary" 
                             @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
                         <font-awesome-icon :icon="['far', 'trash-can']"
                             :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 hover:text-primary" 
@@ -70,7 +70,7 @@
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
                             <BaseBtn 
-                                @click="showModalEtapas = true"
+                                @click="showModalEtapa"
                                 :block="true"
                                 >
                                 <i class="mr-2 fa-solid fa-plus"></i>
@@ -82,7 +82,7 @@
                         <div v-else
                             class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center ">
                             <BaseBtn 
-                                @click="showModalEtapas = true"
+                                @click="showModalEtapa"
                                 :block="true"
                                 >
                                 <i class="mr-2 fa-solid fa-plus"></i>
@@ -91,15 +91,15 @@
                             <spinner :show="showSpinnerEtapas"></spinner>
                             <Card v-if="showSpinnerEtapas == false" v-for="etapa in listaEtapas" :key="etapa.id"
                                 @click="navigateToEtapas(etapa.id);"
-                                class="h-14 w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white">
+                                class=" w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white">
                                 <div class="flex flex-row items-center justify-between">
                                     <p class="font-bold text-xl">{{ etapa.Nombre }}</p>
-                                    <div class="space-x-3">
-                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 m-4 hover:text-primary" 
+                                    <div class="ml-2 w-20 flex justify-end">
+                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 mr-2 hover:text-primary" 
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
                                         <font-awesome-icon 
                                             v-if="rol == 'Administrador'"
-                                            :icon="['far', 'trash-can']" class="w-5 h-5 m-4 hover:text-primary" 
+                                            :icon="['far', 'trash-can']" class="w-5 h-5 hover:text-primary" 
                                             @click.stop="openModalConfirm(etapa.id)" 
                                         />
                                     </div>
@@ -117,9 +117,6 @@
 
         </div>
         <Modal :title="'Nuevo Proceso'" :show="showModal" @closeModal="showModal = false">
-            <!--div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">Nuevo Proceso</p>
-            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -137,9 +134,6 @@
             </div>
         </Modal>
         <Modal :title="'Editar Proceso'" :show="showModalEditar" @closeModal="showModalEditar = false">
-            <!--div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">Editar Proceso</p>
-            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombre" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -174,9 +168,6 @@
             </div>
         </Modal>
         <Modal :title="'Editar Etapa'" :show="showModalEditarEtapas" @closeModal="showModalEditarEtapas = false">
-            <!--div class="flex flex-col items-start mb-8">
-                <p class="font-bold text-xl">Editar Etapa</p>
-            </div-->
             <div class="space-y-4 mb-8">
                 <input v-model="nombreEtapa" class="w-full px-4 py-1 border border-gray focus:outline-none rounded-full"
                     type="text" placeholder="Nombre" />
@@ -288,6 +279,18 @@ const openModalProcesosConfirm = (Id) => {
     showModalProcesosConfirm.value = true;
 };
 
+const showModalProceso = () => {
+    nombre.value = '';
+    descripcion.value = '';
+    showModal.value = true;
+};
+
+const showModalEtapa = () => {
+    nombreEtapa.value = '';
+    descripcionEtapa.value = '';
+    showModalEtapas.value = true;
+};
+
 const loadUsuariosByProceso = async (procesoId) => {
     loadingUsers.value = true;
     try {
@@ -355,11 +358,14 @@ const validateFields = (editar) => {
 const validateFieldsEtapa = (editar) => {
     errors.value.nombre = nombreEtapa.value ? '' : 'Ingrese un Nombre';
 
+    if(!descripcionEtapa.value){
+        errors.value.descripcion = 'La descripción debe tener al menos 10 caracteres';
+    }else{
     if (descripcionEtapa.value.trim().length < 10 || descripcionEtapa.value == '') {
         errors.value.descripcion = 'La descripción debe tener al menos 10 caracteres';
     } else {
         errors.value.descripcion = '';
-    }
+    }}
 
     if (!errors.value.nombre && !errors.value.descripcion) {
         if (editar == 0) {

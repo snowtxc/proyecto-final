@@ -308,6 +308,7 @@ import { useRoute } from 'vue-router'
 import ConfirmationModal from '../../components/ConfirmationModal.vue'
 import ModalTipoComponente from '../../components/Modals/ModalTipoComponente.vue'
 import Multiselect from '@vueform/multiselect'
+import router from '../../router'
 
 const { notify } = useNotification()
 
@@ -567,6 +568,12 @@ const onSubmit = async () => {
             ? changeTitulo(`Editar Componente "${componente.Nombre}"`)
             : null
         $appStore.setGlobalLoading(false)
+
+        if (action.value == Action.EDITAR) {
+            setTimeout(() => {
+                router.back();
+            }, 1000);
+        }
         if (action.value == Action.CREAR) {
             tipoComponenteSelected.value = null
             resetForm()

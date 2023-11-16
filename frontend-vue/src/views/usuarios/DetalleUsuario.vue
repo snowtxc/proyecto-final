@@ -111,6 +111,7 @@ export default{
                 }
                 else {
                     UsuarioController.nuevoUsuario(this.name, this.email, this.selectedRol).then((response) => {
+                        console.log(response);
                         if (response.status == 201) {
                             this.resetForm();
                             this.$emit('onConfirm', this.userId);

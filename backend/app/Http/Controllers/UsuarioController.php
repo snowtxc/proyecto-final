@@ -249,6 +249,7 @@ class UsuarioController extends Controller
         }
 
         $user->password = Hash::make($request->password);
+        $user->email_verified_at = now();
         $user->save();
 
         DB::table('password_resets')->where('email', $user->email)->delete();

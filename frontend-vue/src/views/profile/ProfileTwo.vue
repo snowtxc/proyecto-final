@@ -229,18 +229,30 @@
                 </div>
             </Card>
 
-            <Card v-for="(alarma, index) in listaAlarmas" :key="alarma.id"
+            <Card v-for="(item, index) in listaAlarmas" :key="item.id"
                    
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
                 <div class="flex flex-row items-center justify-between">
                   <div class="flex">
-                    <img class="w-10 object-fill mr-2" :src="alarma.tipoComponenteImagen" alt="" />
-                  </div>
-                  <p>{{alarma.componenteNombre}}</p>   
-                  <p>{{alarma.tipoComponente}}</p>
-                  <p>{{alarma.procesoNombre}}</p>
-                  <p>{{alarma.Motivo}}</p>
-                  <p>{{ formattedDate(alarma.fechaHora) }}</p>
+                                <img class="w-20 object-fill" :src="item.tipoComponenteImagen" alt="" />
+                                <div class="ml-4 flex flex-col justify-center items-start">
+                                    <p>{{ item.componenteNombre }}</p>
+                                    <p>{{ item.tipoComponente }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Proceso</p>
+                                <p>{{ item.procesoNombre }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Motivo</p>
+                                <p>{{ item.motivo }}</p>
+                            </div>
+                            <div class="flex flex-col justify-between items-start">
+                                <p class="text-sm text-gray-400">Fecha</p>
+                                <p>{{ formattedDate(item.fechaHora) }}</p>
+                            </div>
                 </div>
             </Card>
             <div class="flex justify-center mt-2">

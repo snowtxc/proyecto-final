@@ -40,7 +40,7 @@
                         
                     />
                     <div
-                        class="flex flex-col overflow-y-auto max-h-[60vh]"
+                        class="flex flex-col overflow-y-auto h-auto max-h-[70vh]"
                     >
                         <div class="bg-white p-8 rounded-md shadow-md max-w-md"
                         v-if="componentesIsEmpty && !loading"
@@ -67,7 +67,7 @@
                 </BaseCard>
             </div>
             <div class="w-full">
-                <div v-if="!deviceSelected" class="w-full bg-white p-8 rounded-md shadow-md">
+                <div v-if="!deviceSelected && !loadingData" class="w-full bg-white p-8 rounded-md shadow-md">
                     <h2 class="text-2xl font-semibold mb-4">
                         No hay dispositivo seleccionado
                     </h2>
@@ -75,7 +75,7 @@
                         Por favor, selecciona un dispositivo de la lista.
                     </p>
                  </div>
-                <paneldeviceinfo v-if="deviceSelected && !loading" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></paneldeviceinfo>
+                <paneldeviceinfo v-if="deviceSelected && !loadingData" :deviceInfo="deviceSelected" @onDelete="handleDeleteDevice"></paneldeviceinfo>
             </div>
         </div>
     </div>
@@ -124,6 +124,7 @@ const page = ref(0)
 const maxRows = ref(10)
 const componentes = ref([]);
 const loading = ref(true);
+const loadingData = ref(false);
 const tiposComponentes = ref([]);
 
 const filters = ref({
@@ -139,12 +140,12 @@ onBeforeMount(async () => {
 const handleSelectedDevice = async(value) => {
     const { id}  = value;
     try{
-        $appStore.setGlobalLoading(true);
-        loading.value = true;
+        //$appStore.setGlobalLoading(true);
+        loadingData.value = true;
         const compontenteData =  await ComponenteController.getById(id);
-        $appStore.setGlobalLoading(false);
+        //$appStore.setGlobalLoading(false);
         deviceSelected.value = compontenteData;
-        loading.value = false;
+        loadingData.value = false;
 
     } catch (e) {
         notify({
