@@ -19,11 +19,17 @@
         </div>
       </div>
       <Card class="h-[1000px] md:h-full md:w-3/4 mb-4">
-        <Diagrama :proceso-id="parseInt(procesoId)" :etapa-id="parseInt(etapaId)" :read-only="false" :reload="reloadDiagram" @nodo-borrado="cargarListaComponentes" @info-nodo="setNodeData"></Diagrama>
+        <Diagrama :proceso-id="parseInt(procesoId)" :etapa-id="parseInt(etapaId)" :read-only="false" :reload="reloadDiagram" @nodo-borrado="cargarListaComponentes" @info-nodo="setNodeData" @Loading="showSpinner = true"></Diagrama>
       </Card>
 
     </div>
     <MiniPanelDevice v-if="dispositivoData != null && !showSpinner" :dispositivo-data="dispositivoData"/>
+    <div class="w-full" v-else-if="dispositivoData == null && !showSpinner">
+      <p class="text-center mt-4">Selecciona un dispositivo para ver su informacion.</p>
+    </div>
+    <div class="w-full flex justify-center" v-if="showSpinner != false">
+      <spinner :show="showSpinner"></spinner>
+    </div>
   </div>
 </template>
 <script setup>
@@ -54,6 +60,7 @@ const nodeData = ref()
 const dispositivoData = ref(null)
 const titulo = ref("");
 
+const showSpinner = ref(false)
 const setNodeData = (data) => {
   nodeData.value = data;
 };
@@ -63,7 +70,7 @@ watch(nodeData, () => {
   const data = ComponenteController.getById(nodeData.value.mensaje.componente_id)
     .then((response) => {
       dispositivoData.value = response
-      // showSpinner.value = false;
+      showSpinner.value = false;
     })
     .catch((error) => {
       console.error('Error al crear el enlace:', error);
