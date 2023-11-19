@@ -96,6 +96,14 @@ const routes = [
             },
 
             { 
+                path: '/reportes', 
+                name: 'Reportes',
+                component: ()=> import("../views/reportes/ReportesPage.vue"),
+                beforeEnter: OperadorGuard
+            },
+
+
+            { 
                 path: '/procesos', 
                 name: 'ListaProcesos',
                 component: ()=> import("../views/procesos/ListadoProcesos.vue"),
