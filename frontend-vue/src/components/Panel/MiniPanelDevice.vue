@@ -9,17 +9,23 @@
                     :ipAddress="dispositivoData.DireccionIp" />
             </div>
             <div class="w-full">
-                <div class="flex items-end flex-col w-full">
-                    <p>Unidad de medida seleccionada</p>
-                    <select id="small"
-                        class="w-20 p-2 mb-6 text-sm text-gray-900 brounded-lg border border-gray-400 min-w-[400px]"
-                        @change="onSelectUnidadDeMedida">
-                        <option v-for="unidad in unidades" :key="unidad.unidad_id" :value="unidad.unidad_id">
-                            <div class="p-5">
-                                {{ unidad.nombre }}
-                            </div>
-                        </option>
-                    </select>
+                <div class="flex justify-end items-center gap-5 w-full"> 
+                    <div class="">
+                        <ToggleDevice :componenteId="props.dispositivoData.id" :defaultValue="props.dispositivoData.On"></ToggleDevice>
+                    </div>
+                    <div class="flex flex-col">
+                        <p>Unidad de medida seleccionada</p>
+                        <select id="small"
+                            class="w-20 p-2 mb-6 text-sm text-gray-900 brounded-lg border border-gray-400 min-w-[400px]"
+                            @change="onSelectUnidadDeMedida">
+                            <option v-for="unidad in unidades" :key="unidad.unidad_id" :value="unidad.unidad_id">
+                                <div class="p-5">
+                                    {{ unidad.nombre }}
+                                </div>
+                            </option>
+                        </select>
+                    </div>
+                    
                 </div>
                 <div class="flex w-full">
                     <div class="flex-1">
@@ -43,6 +49,7 @@ import Card from '@/components/Card/Card.vue';
 import CardDevice from '@/components/Cards/CardDevice.vue';
 import ChartLine from '@/components/Charts/ChartLine.vue';
 import ChartBar from '@/components/Charts/ChartBar.vue';
+import ToggleDevice from '../Toggle/ToggleDevice.vue';
 
 const props = defineProps({
     dispositivoData: { type: Object, required: true }

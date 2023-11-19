@@ -16,6 +16,8 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\FtpController;
 use App\Http\Controllers\EstadisticaController;
 use App\Http\Controllers\UnidadController;
+use App\Http\Controllers\ReporteController;
+
 
 use App\Events\Hello;
 
@@ -133,6 +135,8 @@ Route::prefix('api')->group(function () {
         Route::delete('/componentes/{componenteId}/imagenes/{imageId}', 'removeImageById');
         Route::get('/componentes-sin-nodo', 'listarDispositivosSinNodo');
         Route::get('/componentes/{id}/marcaLast24Hours' , 'marcaLast24Hours');
+        Route::post('/componentes/{id}/toggleOn' , 'toggleOn');
+
 
     });
 
@@ -213,10 +217,20 @@ Route::prefix('api')->group(function () {
 
     });
 
+
     Route::controller(UnidadController::class)->group(function () {
         Route::get('/unidades', 'list');
+    });
 
-
+    Route::controller(ReporteController::class)->group(function(){
+        Route::get("/reportes/procesosMasActivos", 'procesosMasActivos');
+        Route::get("/reportes/alarmasPorDispositivos", "alarmasPorDispositivos");
+        Route::get("/reportes/dispositivosMasActivos", "dispositivosMasActivos");
+        Route::get("/reportes/alarmasPorProceso", "alarmasPorProceso");
+        Route::get("/reportes/dispositivosActivosEInactivos", "dispositivosActivosEInactivos");
+        Route::get("/reportes/dispositivosActivosPorProceso", "dispositivosActivosPorProceso");
+        Route::get("/reportes/cantidadDispositivosPorTipo", "cantidadDispositivosPorTipo");
+        Route::get("/reportes/cantidadAlarmasPorTipoDispositivo", "cantidadAlarmasPorTipoDispositivo");
     });
 
 

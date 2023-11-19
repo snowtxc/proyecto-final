@@ -20,7 +20,6 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Bomba de Chorro J10S",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 1
         ]);
@@ -28,7 +27,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Bomba de Agua de Paletas Giratorias Dynamo",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 1
         ]);
@@ -36,7 +35,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Bomba de Émbolo o Pistón 5CP2120W",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 1
         ]);
@@ -44,7 +43,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Bomba General Dump 5CP2120W",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 1
         ]);
@@ -53,7 +52,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Llenadora de Gravedad GPF-8",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 2
         ]);
@@ -61,7 +60,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Acasi Machinery: Modelo PF-12",
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 2
         ]);
@@ -69,7 +68,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Llenadora de Bolsas Mercury HS"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 2
         ]);
@@ -78,7 +77,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas Infrarrojo S3KUL2-XNXXSS1SS"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -86,7 +85,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas Infrarrojo Gasman IR"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -95,7 +94,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas Infrarrojo Altair 4XR"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -104,7 +103,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas Infrarrojo S3KUL2-XNXXSS1SS"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -113,7 +112,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas o Ventis MX4"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -121,7 +120,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Gas PID Minrae 300"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 3
         ]);
@@ -130,7 +129,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Horno Electrico Blodgett Zephaire-200-G"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 4
         ]);
@@ -138,7 +137,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Horno Electrico Vulcan VC5GD"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 4
         ]);
@@ -146,7 +145,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Humedad Omron  D6T"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 5
         ]);
@@ -154,7 +153,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Luz LuxSense 2000"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 6
         ]);
@@ -162,7 +161,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Sensor de Luz BrightView Elite"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 6
         ]);
@@ -170,7 +169,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Motor Electrico PowerDrive 3000"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 7
         ]);
@@ -178,7 +177,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Motor Electrico  ElectraMax X7"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 7
         ]);
@@ -186,7 +185,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Motor Electrico TurboCharge E250"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 7
         ]);
@@ -194,7 +193,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Motor Electrico TurboCharge E250"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 7
 
@@ -203,7 +202,7 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Válvula Flowguard Elite 600"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
+
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 8
 
@@ -212,36 +211,9 @@ class ComponenteSeeder extends Seeder
         DB::table('componentes')->insert([
             'Nombre' => "Válvula  TurboValve 300"            ,
             'Descripcion' => "Esto es una descripcion.",
-            'Unidad' => '',
             'DireccionIp' => '192.168.0.200',
             'tipo_componente_id' => 8
-
         ]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-
-        DB::table('componentes')->insert([
-            'Nombre' => "Llenadora de Gravedad GPF-8",
-            'Descripcion' => "Control de telares y maquinaria textil.",
-        ]);
-
-        DB::table('componentes')->insert([
-            'Nombre' => "Control de telares y maquinaria textil.",
-            'Descripcion' => "Control de telares y maquinaria textil.",
-        ]);*/
 
     }
 }

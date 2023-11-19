@@ -74,13 +74,20 @@
                             }}
                         </div>
                     </div>
-                    <BaseBtn
+                    <div class="flex gap-5 items-center">
+                        <ToggleDevice :componenteId="props.deviceInfo.id" :defaultValue="props.deviceInfo.On">
+
+                        </ToggleDevice>
+                        <BaseBtn
                         @click="handleViewHistoricos"
                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
                     >
                         <i class="fas fa-history mr-2"></i> 
                         Ver Histórico
                     </BaseBtn>
+
+                    </div>
+                    
                 </div>
 
                 <div class="mt-3">
@@ -231,13 +238,14 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, onBeforeMount, computed } from 'vue'
-import ComponenteController from '../../services/ComponenteController'
+import ComponenteController from '../../services/ComponenteController';
 import { useRouter } from 'vue-router'
-import ParteController from '../../services/ParteController'
+import ParteController from '../../services/ParteController';
 
 import ModalPartForm from '../Modals/ModalPartForm.vue'
 import ModalPartNotas from '../Modals/ModalPartNotas.vue'
 import BaseBadge from '../Base/BaseBadge.vue'
+import ToggleDevice from '../Toggle/ToggleDevice.vue';
 import MinMaxMarcaDevice from '../MinMaxMarcaDevice.vue'
 
 import ConfirmationModal from '../ConfirmationModal.vue'
@@ -252,6 +260,8 @@ import cutString from '../../shared/helpers/cutString'
 import Breadcrumbs from '../Breadcrumbs.vue'
 import ChartLine from '../Charts/ChartLine.vue'
 import ChartBar from '../Charts/ChartBar.vue'
+
+
 
 const $appStore = appStore()
 const $router = useRouter()
