@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string("Descripcion");
             $table->string("DireccionIp");
             $table->unsignedBigInteger('tipo_componente_id');
-            $table->foreign('tipo_componente_id')->references('id')->on('tipo_componentes');
+            $table->foreign('tipo_componente_id')->references('id')->on('tipo_componentes')->onDelete('cascade');
             $table->timestamps();
         });
     }

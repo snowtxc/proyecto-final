@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('unidades_id');
             $table->double('min');
             $table->double('max');
-            $table->foreign('componente_id')->references('id')->on('componentes');
+            $table->foreign('componente_id')->references('id')->on('componentes')->onDelete('cascade');
             $table->foreign('unidades_id')->references('id')->on('unidades')->onDelete('cascade');
 
         });

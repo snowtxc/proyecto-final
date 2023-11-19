@@ -176,9 +176,10 @@ const createDiagram = async () => {
 
 
   diagram.addDiagramListener('ChangedSelection', (event) => {
-    emit('Loading');
+
     const selectedNode = diagram.selection.first();
     if (selectedNode instanceof go.Node) {
+      emit('Loading');
       const nodeData = selectedNode.data;
       const node = NodoController.getById(nodeData.key)
         .then((response) => {
