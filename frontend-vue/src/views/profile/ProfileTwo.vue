@@ -1,6 +1,6 @@
 <script setup>
   import Breadcrumb from '@/components/Breadcrumbs.vue'
-  import { ref ,computed, reactive} from 'vue'
+  import { ref, computed, reactive, onMounted } from 'vue'
   import { useRouter } from 'vue-router';
   import { appStore } from '@/store/app';
   import Card from '@/components/Card/Card.vue';
@@ -10,12 +10,21 @@
   import AlarmaController from '../../services/AlarmaController';
   import dayjs from "dayjs";
   import FilePicker from "@/components/FilePicker/FilePicker.vue";
-  import spinner from '../../views/components/spinner/spinner.vue';
   import UsuarioController from '../../services/UsuarioController';
+  import PerfectScrollbar from 'perfect-scrollbar';
+  import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
   const $appStore = appStore();
   const userData = $appStore.userdata;
   const $router = useRouter();
+
+  onMounted(() => {
+      const container = document.getElementById('scrollContainer');
+      new PerfectScrollbar(container);
+
+      const container2 = document.getElementById('scrollContainer2');
+      new PerfectScrollbar(container2);
+  });
 
   const userProfileImage = computed(()=>{
     console.log($appStore.getUserData);
@@ -154,7 +163,7 @@
       <div class="col-span-12">
         <BaseCard noPadding class="flex items-center w-full">
           <div class="flex flex-col items-center justify-center pb-8" v-if="showEdit">
-            <div class="space-4 mb-8 max-w-md">
+            <div class="space-4 mb-8 mt-4 max-w-md">
               <FilePicker 
                   @onChangeFile="changeFilePicker" 
                   @onClearFile="newData.profileImage = ''" 
@@ -169,7 +178,7 @@
           </div>
 
           <div class="flex flex-col items-center justify-center pb-8" v-if="!showEdit">
-              <div class="text-center"><img class="relative z-1 w-24 h-24 m-auto rounded-full border-2 border-white object-fill" :src="userProfileImage ? userProfileImage : userProfileDefault" /></div>
+              <div class="text-center mt-4"><img class="relative z-1 w-24 h-24 m-auto rounded-full border-2 border-white object-fill" :src="userProfileImage ? userProfileImage : userProfileDefault" /></div>
               <p class="text-2xl">{{ userData.name }}</p>
               <p class="text-gray-600">{{ userData.rol }}</p>
               <p class="text-gray-600">{{ userData.email }}</p>
@@ -181,9 +190,7 @@
       <div class="col-span-12">
         <BaseCard class="h-auto">
           <Breadcrumb parentTitle='Procesos' />
-          <div class="h-auto flex flex-col items-center space-y-2 p-3 max-h-[70vh] overflow-y-auto">
-            
-            <!--spinner :show="showSpinnerProcesos"></spinner-->
+          <div class="h-auto flex flex-col items-center space-y-2 p-3 max-h-[60vh] overflow-y-auto" id="scrollContainer">
 
             <Card v-if="listaProcesos.length == 0 && !showSpinnerProcesos"
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
@@ -215,11 +222,7 @@
       <div class="col-span-12">
         <BaseCard class="h-auto">
           <Breadcrumb parentTitle='Historial de notificaciones de alarmas' />
-          <div class="h-auto max-h- flex flex-col items-center space-y-2  max-h-[70vh] overflow-y-auto p-3 ">
-
-            <!--spinner :show="showSpinnerAlarmas"></spinner-->
-
-            
+          <div class="h-auto max-h- flex flex-col items-center space-y-2  max-h-[60vh] overflow-y-auto p-3 " id="scrollContainer2">
 
             <Card v-if="listaAlarmas.length == 0 && !showSpinnerAlarmas"
                 class="hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white w-full">
@@ -268,11 +271,5 @@
     </div>
 
 </div>
-
-<!--EditProfile
-    v-if="showEdit" 
-    :show="showEdit"
-    @onClose="showEdit = false" >
-</EditProfile-->
 
 </template>

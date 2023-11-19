@@ -1,25 +1,23 @@
 <template>
 
-    <div
+    <div id="scrollContainer3"
         class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center"
     >
         <ModalSelectUserProcess v-if="rol == 'Administrador'"
             :processId="props.procesoId"
             @onAddUsers="addNewUsersToProcess"
         ></ModalSelectUserProcess>
-        <spinner v-if="loading" :show="loading"></spinner>
-        <div v-if="!loading && usersEmpty" class="w-full">
-            <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="usersEmpty && !loading">
+        <div v-if="usersEmpty" class="w-full">
+            <div class="w-full bg-white p-8 rounded-md shadow-md">
                 <h2 class="text-2xl font-semibold mb-4">
                     No se encontraron usuarios
                 </h2>
                 <p class="text-gray-600">
-                    No existe ningun usuario para agregar al grupo de este
-                    proceso
+                    No hay ningún usuario asociado a este proceso
                 </p>
             </div>
         </div>
-        <div v-if="!loading && !usersEmpty" class="w-full flex flex-col gap-4">
+        <div v-if="!usersEmpty" class="w-full flex flex-col gap-4">
             <Card v-for="user in props.usuarios" :key="user.id"
                 class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-4 rounded-md cursor-pointer">
                 <div class="flex flex-row items-center justify-between">
@@ -52,30 +50,29 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed, defineEmits, onMounted } from 'vue'
 import { appStore } from '../../store/app'
 import ConfirmationModal from '../ConfirmationModal.vue'
 import ModalSelectUserProcess from '../Modals/ModalSelectUserProcess.vue';
 import ProcesoController from '../../services/ProcesoController';
-
+import Card from '@/components/Card/Card.vue';
 import { useNotification } from '@kyvg/vue3-notification'
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
+
 
 const { notify } = useNotification()
 const $appStore = appStore()
 
 const rol = $appStore.getUserData?.rol;
 
-const loading = ref(false)
 const props = defineProps({
     procesoId: {
         type: Number,
         required: true,
     },
 
-    procesoName: {
-        type: String,
-        required: true,
-    },
     usuarios: {
         type: Array,
         required: true,
@@ -142,6 +139,11 @@ const usersEmpty = computed(() => {
     return props.usuarios.length === 0;
 });
 
+onMounted(async () => {
+    const container3 = document.getElementById('scrollContainer3');
+    new PerfectScrollbar(container3);
+    
+})
 
 </script>
 

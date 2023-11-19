@@ -9,7 +9,7 @@
         <div class="flex flex-col items-center w-full">
           <spinner :show="showSpinnerComponentes"></spinner>
         </div>
-        <div v-if="listaComponentes.length > 0" class="space-y-4 max-h-72 md:max-h-[670px] overflow-y-auto w-full" :style="{ 'pointer-events': disableInteractions ? 'none' : 'auto' }">
+        <div id="scrollContainer" v-if="listaComponentes.length > 0" class="space-y-4 max-h-72 md:max-h-[670px] overflow-y-auto w-full" :style="{ 'pointer-events': disableInteractions ? 'none' : 'auto' }">
           <CardDevice v-for="item in listaComponentes" :key="item.id" :nombre="item.Nombre" :ipAddress="item.DireccionIp"
             :value="25" :image="item.tipoComponenteImage" id="agregarNodoButton" @click="cardClicked(item)" :selected="false">
           </CardDevice>
@@ -39,6 +39,8 @@ import spinner from '../components/spinner/spinner.vue';
 import Diagrama from '../../components/Diagrama/Diagrama.vue';
 import MiniPanelDevice from '../../components/Panel/MiniPanelDevice.vue';
 import EtapaController from '../../services/EtapaController';
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const $appstore = appStore();
 
@@ -76,6 +78,10 @@ listaComponentesPromise
   .then((response) => {
     listaComponentes.value = response
     $appstore.setGlobalLoading(false)
+    setTimeout(() => {
+        const container = document.getElementById('scrollContainer');
+        new PerfectScrollbar(container);
+    }, 0);
   })
   .catch((error) => {
     console.error('Error al obtener la lista de componentes:', error);

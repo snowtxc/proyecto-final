@@ -1,12 +1,9 @@
 <template>
-    
     <div class="card-header flex justify-between items-center">
         <div class="card-title">
             <p class="text-xl font-semibold mr-2"> Procesos </p>
         </div>
-        <BaseBtn v-if="rol == 'Administrador'"
-            @click="showModalProceso"
-        >
+        <BaseBtn v-if="rol == 'Administrador'" @click="showModalProceso">
             <i class="fa-solid fa-plus mr-2"></i>
             Nuevo Proceso
         </BaseBtn>
@@ -17,38 +14,46 @@
             <BaseCard>
                 <input
                     class="w-full p-2 mb-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none border border-gray-400"
-                    type="text"
-                    placeholder="Buscar"
-                    v-model="searchTerm"
-                    @input="filterProcesos"                        
-                />
-       
+                    type="text" placeholder="Buscar" v-model="searchTerm" @input="filterProcesos" />
 
-    <div class="h-full w-full flex flex-col md:flex-row space-y-2 ">
-        <div class="h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto md:overflow-y-auto p-3">
-            
-            <spinner :show="showSpinnerProcesos"></spinner>
-            <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
-                class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
-                :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
-                <div class="flex flex-row items-center justify-between">
-                    <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{ proceso.Nombre }}
-                    </p>
-                    <div class="ml-2 w-20 flex justify-end" v-if="rol == 'Administrador'" >
-                        <font-awesome-icon :icon="['far', 'pen-to-square']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 mr-2 hover:text-primary" 
-                            @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
-                        <font-awesome-icon :icon="['far', 'trash-can']"
-                            :class="{ 'white-icon': index === selectedCardIndex }" class="h-5 hover:text-primary" 
-                            @click.stop="openModalProcesosConfirm(proceso.id)" />
+
+                <div class="h-full w-full flex flex-col md:flex-row space-y-2 ">
+                    
+                    <div class="h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto p-3"
+                        id="scrollContainer">
+                        <div v-if="loading == false && listaProcesos.length == 0" 
+                            class="w-full">
+                                <div class="w-full bg-white p-8 rounded-md shadow-md">
+                                    <h2 class="text-2xl font-semibold mb-4">
+                                        No se encontraron procesos
+                                    </h2>
+                                </div>
+                            </div>
+
+                        <spinner :show="showSpinnerProcesos"></spinner>
+                        <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
+                            class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
+                            :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
+                            <div class="flex flex-row items-center justify-between">
+                                <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{
+                                    proceso.Nombre }}
+                                </p>
+                                <div class="ml-2 w-20 flex justify-end" v-if="rol == 'Administrador'">
+                                    <font-awesome-icon :icon="['far', 'pen-to-square']"
+                                        :class="{ 'white-icon': index === selectedCardIndex }"
+                                        class="h-5 mr-2 hover:text-primary"
+                                        @click.stop="showModalEditar = true, procesoId = proceso.id, nombre = proceso.Nombre, descripcion = proceso.Descripcion" />
+                                    <font-awesome-icon :icon="['far', 'trash-can']"
+                                        :class="{ 'white-icon': index === selectedCardIndex }"
+                                        class="h-5 hover:text-primary" @click.stop="openModalProcesosConfirm(proceso.id)" />
+                                </div>
+                            </div>
+                        </Card>
                     </div>
                 </div>
-            </Card>
+            </BaseCard>
         </div>
-    </div>
-    </BaseCard>
-                </div>
-    
+
         <div class="w-full flex flex-col">
 
             <div class="md:ml-5 h-20 md:border-l-[1px] md:border-gray-300">
@@ -60,31 +65,34 @@
                 </p>
             </div>
 
-            <div class="w-full flex flex-col justify-center h-full">
+            <div class="w-full flex justify-center h-full ">
                 <p v-if="selectedCardIndex === null" class="text-center">Seleccione un proceso para ver su información.</p>
 
                 <div class="w-full h-full flex flex-col md:flex-row " v-else>
                     <div
-                        class="w-full h-auto max-h-96 md:max-h-[600px] md:ml-5 md:border-l-[1px] md:border-gray-300 overflow-y-auto flex justify-center">
-                        <!-- Mensaje cuando hay proceso seleccionado y lista de etapas vacía -->
+                        class="w-full h-auto max-h-96 md:max-h-[730px] md:ml-5 md:border-l-[1px] md:border-gray-300 overflow-y-auto flex justify-center">
                         <div v-if="selectedCardIndex !== null && listaEtapas.length === 0"
                             class="w-full flex flex-col items-center p-5 space-y-5">
-                            <BaseBtn 
-                                @click="showModalEtapa"
-                                :block="true"
-                                >
+                            <BaseBtn @click="showModalEtapa" :block="true" v-if="showSpinnerEtapas == false">
                                 <i class="mr-2 fa-solid fa-plus"></i>
                                 Nueva Etapa
                             </BaseBtn>
                             <spinner :show="showSpinnerEtapas"></spinner>
-                            <p v-if="showSpinnerEtapas == false">No hay etapas para este proceso.</p>
+                            
+                            <div v-if="showSpinnerEtapas == false" class="w-full">
+                                <div class="w-full bg-white p-8 rounded-md shadow-md">
+                                    <h2 class="text-2xl font-semibold mb-4">
+                                        No se encontraron etapas
+                                    </h2>
+                                    <p class="text-gray-600">
+                                        No hay etapas en este proceso
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div v-else
+                        <div v-else id="scrollContainer2"
                             class="w-full h-auto max-h-[730px] space-y-4 overflow-y-auto p-5 flex flex-col items-center ">
-                            <BaseBtn 
-                                @click="showModalEtapa"
-                                :block="true"
-                                >
+                            <BaseBtn @click="showModalEtapa" :block="true" v-if="showSpinnerEtapas == false">
                                 <i class="mr-2 fa-solid fa-plus"></i>
                                 Nueva Etapa
                             </BaseBtn>
@@ -95,20 +103,21 @@
                                 <div class="flex flex-row items-center justify-between">
                                     <p class="font-bold text-xl">{{ etapa.Nombre }}</p>
                                     <div class="ml-2 w-20 flex justify-end">
-                                        <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 mr-2 hover:text-primary" 
+                                        <font-awesome-icon :icon="['far', 'pen-to-square']"
+                                            class="w-5 h-5 mr-2 hover:text-primary"
                                             @click.stop="showModalEditarEtapas = true, etapaId = etapa.id, nombreEtapa = etapa.Nombre, descripcionEtapa = etapa.Descripcion" />
-                                        <font-awesome-icon 
-                                            v-if="rol == 'Administrador'"
-                                            :icon="['far', 'trash-can']" class="w-5 h-5 hover:text-primary" 
-                                            @click.stop="openModalConfirm(etapa.id)" 
-                                        />
+                                        <font-awesome-icon v-if="rol == 'Administrador'" :icon="['far', 'trash-can']"
+                                            class="w-5 h-5 hover:text-primary" @click.stop="openModalConfirm(etapa.id)" />
                                     </div>
                                 </div>
                             </Card>
                         </div>
                     </div>
                     <div class="w-full flex justify-center">
-                        <spinner :show="loadingUsers"></spinner>
+                        <div class="p-5 space-y-5"> 
+                            <spinner :show="loadingUsers"></spinner>    
+                        </div>
+                        
                         <ListUsuarioProcesos v-if="!loadingUsers" :procesoId="procesoIdSelected" :usuarios="usuariosArr"
                             @onRemoveUser="removeUserFromProcess" @onAddUsers="addUsers"></ListUsuarioProcesos>
                     </div>
@@ -127,8 +136,7 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn 
-                    @click="validateFields(0)">
+                <BaseBtn @click="validateFields(0)">
                     Guardar
                 </BaseBtn>
             </div>
@@ -144,8 +152,7 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn 
-                    @click="validateFields(1)">
+                <BaseBtn @click="validateFields(1)">
                     Guardar
                 </BaseBtn>
             </div>
@@ -161,8 +168,7 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn 
-                    @click="validateFieldsEtapa(0)">
+                <BaseBtn @click="validateFieldsEtapa(0)">
                     Guardar
                 </BaseBtn>
             </div>
@@ -178,41 +184,44 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn 
-                    @click="validateFieldsEtapa(1)">
+                <BaseBtn @click="validateFieldsEtapa(1)">
                     Guardar
                 </BaseBtn>
             </div>
         </Modal>
-        <ConfrimModal :show="showModalConfirm" :mensaje="'¿Seguro que deseas eliminar esta etapa?'"
-            @closeModal="showModalConfirm = false" @confirmModal="confirmDelete">
-            <font-awesome-icon :icon="['far', 'trash-can']" size="2xl" class="pb-8 pt-4" style="color:#ef4444" />
-        </ConfrimModal>
-        <ConfrimModal :show="showModalProcesosConfirm"
-            :mensaje="'¿Seguro que deseas eliminar este proceso?, se eliminarian las etapas asociadas'"
-            @closeModal="showModalProcesosConfirm = false" @confirmModal="confirmProcesosDelete">
-            <font-awesome-icon :icon="['far', 'trash-can']" size="2xl" class="pb-8 pt-4" style="color:#ef4444" />
-        </ConfrimModal>
+
+        <ConfirmationModal v-if="showModalConfirm" :show="showModalConfirm" title="Eliminar etapa"
+            message="Seguro deseas eliminar esta etapa?" @cancel="showModalConfirm = false" @confirm="confirmDelete">
+        </ConfirmationModal>
+
+        <ConfirmationModal v-if="showModalProcesosConfirm" :show="showModalProcesosConfirm" title="Eliminar proceso"
+            message="Seguro deseas eliminar este proceso?, se eliminarian las etapas asociadas" @cancel="showModalProcesosConfirm = false" @confirm="confirmProcesosDelete">
+        </ConfirmationModal>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { appStore } from "@/store/app.js";
-import Breadcrumb from '@/components/Breadcrumbs.vue';
 import Card from '@/components/Card/Card.vue';
 import ProcesoController from '@/services/ProcesoController.js';
 import EtapaController from '@/services/EtapaController.js';
 import Modal from '../components/Modals/Modal.vue';
 import spinner from '../components/spinner/spinner.vue';
-import ConfrimModal from '../components/Modals/ConfirmModal.vue';
+import ConfirmationModal from '../../components/ConfirmationModal.vue';
 import { useRouter } from 'vue-router';
 import { useNotification } from '@kyvg/vue3-notification'
+import ListUsuarioProcesos from '@/components/List/ListUsuarioProcesos.vue';
+
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
+onMounted(async () => {
+    const container = document.getElementById('scrollContainer');
+    new PerfectScrollbar(container);
+})
 
 const { notify } = useNotification()
-
-
-import ListUsuarioProcesos from '@/components/List/ListUsuarioProcesos.vue';
 
 const router = useRouter();
 
@@ -244,6 +253,8 @@ const searchTerm = ref('');
 
 const usuariosArr = ref([])
 const loadingUsers = ref(false);
+
+const loading = ref(true);
 
 const $appstore = appStore();
 
@@ -323,10 +334,12 @@ listaProcesosPromise
         listaProcesos.value = response.data
         listaProcesosBackup.value = response.data.reverse();
         $appstore.setGlobalLoading(false)
+        loading.value = false;
     })
     .catch((error) => {
         console.error('Error al obtener la lista de procesos:', error);
         $appstore.setGlobalLoading(false)
+        loading.value = false;
     });
 
 const validateFields = (editar) => {
@@ -358,14 +371,15 @@ const validateFields = (editar) => {
 const validateFieldsEtapa = (editar) => {
     errors.value.nombre = nombreEtapa.value ? '' : 'Ingrese un Nombre';
 
-    if(!descripcionEtapa.value){
-        errors.value.descripcion = 'La descripción debe tener al menos 10 caracteres';
-    }else{
-    if (descripcionEtapa.value.trim().length < 10 || descripcionEtapa.value == '') {
+    if (!descripcionEtapa.value) {
         errors.value.descripcion = 'La descripción debe tener al menos 10 caracteres';
     } else {
-        errors.value.descripcion = '';
-    }}
+        if (descripcionEtapa.value.trim().length < 10 || descripcionEtapa.value == '') {
+            errors.value.descripcion = 'La descripción debe tener al menos 10 caracteres';
+        } else {
+            errors.value.descripcion = '';
+        }
+    }
 
     if (!errors.value.nombre && !errors.value.descripcion) {
         if (editar == 0) {
@@ -389,6 +403,11 @@ const cargarEtapas = async (procesoId) => {
         const response = await EtapaController.listaEtapas(procesoId);
         listaEtapas.value = response.data.reverse();
         showSpinnerEtapas.value = false;
+
+        setTimeout(() => {
+            const container2 = document.getElementById('scrollContainer2');
+            new PerfectScrollbar(container2);
+        }, 0);
     } catch (error) {
         console.error('Error al cargar las etapas:', error);
         showSpinnerEtapas.value = false;
@@ -533,6 +552,8 @@ const removeUserFromProcess = async (userId) => {
 const addUsers = async (users) => {
     usuariosArr.value = [...usuariosArr.value, ...users];
 }
+
+
 </script>
 
 
@@ -550,4 +571,5 @@ const addUsers = async (users) => {
 .white-icon {
     color: white;
     /* Cambia el color de los iconos a blanco */
-}</style>
+}
+</style>

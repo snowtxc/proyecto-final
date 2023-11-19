@@ -230,8 +230,8 @@
     <ModalPartForm v-if="showModalPart" @onProcessed="handleParteModal" :action="actionPart"
         @onClose="showModalPart = false" :componente_id="props.deviceInfo.id" :partData="partSelected"></ModalPartForm>
 
-    <ConfirmationModal v-if="showModalDeleteComponent" :show="showModalDeleteComponent" title="Eliminar componente"
-        message="Seguro deseas eliminar este componente?" @cancel="showModalDeleteComponent = false" @confirm="onDelete">
+    <ConfirmationModal v-if="showModalDeleteComponent" :show="showModalDeleteComponent" title="Eliminar dispositivo"
+        message="Seguro deseas eliminar este dispositivo?" @cancel="showModalDeleteComponent = false" @confirm="onDelete">
     </ConfirmationModal>
 
     <ConfirmationModal v-if="showModalDeletePart && partSelected" :show="showModalDeletePart" title="Eliminar parte"

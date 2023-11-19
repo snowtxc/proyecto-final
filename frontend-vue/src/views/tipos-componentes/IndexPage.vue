@@ -1,6 +1,5 @@
 <script setup>
-import { ref, onBeforeMount, computed } from "vue";
-import Breadcrumbs from "../../components/Breadcrumbs.vue";
+import { ref, onBeforeMount, computed, onMounted } from "vue";
 import TipoComponenteController from "../../services/TipoComponenteController.js";
 import { appStore } from "../../store/app";
 import { Action } from "../../shared/enums/Action";
@@ -9,6 +8,14 @@ import ModalTipoComponente from "../../components/Modals/ModalTipoComponente.vue
 import ConfirmationModal from "../../components/ConfirmationModal.vue";
 import { useNotification } from "@kyvg/vue3-notification";
 
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
+onMounted(async () => {
+    const container = document.getElementById('scrollContainer');
+    new PerfectScrollbar(container);
+    
+})
 
 const { notify } = useNotification();
 const $appStore = appStore();
@@ -141,7 +148,7 @@ const edit = (tipoComponente) => {
                         
         />
 
-        <div class="max-h-[70vh] overflow-y-auto">
+        <div class="max-h-[70vh] overflow-y-auto" id="scrollContainer">
             <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="tiposComponentesEmpty && !loading">
 
                 <p class="text-gray-600 text-center">

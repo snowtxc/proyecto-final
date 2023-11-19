@@ -196,13 +196,15 @@ class obtenerNuevosRegistros2 extends Command
         $alarma->proceso_id = $proceso->id;
         $alarma->Motivo =  $motivo;
         $alarma->save();
+
         $usuarios = $proceso->users;
         foreach ($usuarios as $usuario) {
             $data = [
                 'name' => $usuario->name,
                 'dispositivo' => $componente->Nombre,
                 'proceso' => $proceso->Nombre,
-
+                'motivo' => $motivo,
+                'fecha' => $alarma->created_at
             ];
             $componenteInfo  =[
                 "tipoComponenteImage" => FileHelper::getRealPath($tipoComponente->Imagen),
@@ -224,16 +226,18 @@ class obtenerNuevosRegistros2 extends Command
                 "proceso"  => $proceso
             ];
             broadcast(new PushAlarmaNotificacion($usuario->id, $dataAlarm));
-            Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
-                $message->to($usuario->email)->subject('Nueva Alarma');
-            });
-
+            
             $alarmaUser = new AlarmaUser;
             $alarmaUser->alarma_id = $alarma->id;
             $alarmaUser->user_id = $usuario->id;
             $alarmaUser->leida = false;
             $alarmaUser->save();
 
+            if($usuario->email_verified_at != null){
+                Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
+                    $message->to($usuario->email)->subject('Nueva Alarma');
+                });
+            }
 
         }
 

@@ -44,7 +44,7 @@
                 
             <!--/template-->
             <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
-            <div v-if="alarmas.length > 0" class="max-h-[70vh] overflow-y-auto w-full">
+            <div v-if="alarmas.length > 0" class="max-h-[70vh] overflow-y-auto w-full" id="scrollContainer">
                 <div v-for="(item, index) in alarmas" :key="index"
                     class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
 
@@ -104,6 +104,9 @@ import ModalSelectDispositivo from '../../components/Modals/ModalSelectDispositi
 import dayjs from "dayjs";
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css';
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
 
 const $appStore = appStore();
 
@@ -143,6 +146,11 @@ export default {
                     const { data, countRows } = response.data;
                     this.alarmas = [...this.alarmas, ...data]
                     this.hasMoreData = this.alarmas.length < countRows;
+                    
+                    setTimeout(() => {
+                        const container = document.getElementById('scrollContainer');
+                        new PerfectScrollbar(container);
+                    }, 0);
                 }
                 $appStore.setGlobalLoading(false);
             });
@@ -175,10 +183,6 @@ export default {
             this.showModalDispositivos = false;
             this.filter();
         }
-    },
-
-    computed: {
-
     },
 
     components: { ModalUsersAlarma, InfiniteLoading, ModalSelectDispositivo }

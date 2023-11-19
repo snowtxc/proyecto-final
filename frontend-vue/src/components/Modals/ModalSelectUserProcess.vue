@@ -12,8 +12,7 @@
         <div class="modal-container bg-white md:w-1/3 mx-auto rounded shadow-lg z-50 ">
             <div class="modal-content py-4 text-left px-6">
                 <div class="flex flex-col">
-                    <!--div class="flex justify-end items-center"-->
-                        <div class="card-header flex justify-between items-center">
+                    <div class="card-header flex justify-between items-center">
                         <div class="card-title">
                             <p class="text-xl font-semibold mr-2"> Seleccionar usuarios </p>
                         </div>
@@ -22,10 +21,6 @@
                             @click="show = false">
                             <i class="fas fa-times"></i>
                         </BaseBtn>
-                        <!--button class="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                            @click="show = false">
-                            <i class="fas fa-times"></i>
-                        </button-->
                     </div>
 
                     <div class="px-5 py-5 mt-5">
@@ -33,9 +28,6 @@
                             <spinner :show="true" :width="12" height="12"></spinner>
                         </div>
                         <div class="w-full" v-else>
-                            <!--div class="w-full flex justify-between items-center">
-                                <Breadcrumb parentTitle="Seleccionar usuario" />
-                            </div-->
 
                             <div class="flex flex-wrap gap-5  mt-5">
                                 <div class="w-full bg-white p-8 rounded-md shadow-md" v-if="usersEmpty && !loading">
@@ -43,10 +35,10 @@
                                         No se encontraron usuarios
                                     </h2>
                                     <p class="text-gray-600">
-                                        No existe ningun usuario para agregar al grupo de este proceso
+                                        No hay ningún usuario disponible para asociar a este proceso
                                     </p>
                                 </div>
-                                <div v-else class="w-full flex flex-col gap-10 overflow-y-auto  h-[50vh]">
+                                <div v-else class="w-full flex flex-col gap-10 overflow-y-auto  h-[50vh]" id="scrollContainer4">
                                     <Card v-for="user in users" :key="user.id"
                                         class="w-full hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white p-1 rounded-md	cursor-pointer">
                                         <div class="flex flex-row items-center justify-between">
@@ -61,7 +53,7 @@
                                                 </div>
                                                 
                                             </div>
-                                            <div class="flex justify-end">
+                                            <div class="flex justify-end mr-4">
                                                     <input type="checkbox"
                                                         class="form-checkbox h-5 w-5 text-primary focus:ring-primary"
                                                         @change="toggleSelection(user, $event.target.checked)" />
@@ -98,9 +90,10 @@
 <script setup>
 import { ref, defineProps, computed } from 'vue'
 import spinner from '../../views/components/spinner/spinner.vue';
-import Breadcrumb from '../Breadcrumbs.vue';
 import ProcesoController from '../../services/ProcesoController';
 import { appStore } from '../../store/app';
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 
 const $appStore = appStore();
@@ -131,6 +124,12 @@ const getUsers = async () => {
         const data = await ProcesoController.getUsersNotInProcess(processID);
         users.value = data;
         loading.value = false;
+
+        setTimeout(() => {
+            const container4 = document.getElementById('scrollContainer4');
+            new PerfectScrollbar(container4);
+        }, 0);
+
     } catch (e) {
         console.log(e);
         loading.value = false;
@@ -147,6 +146,7 @@ const toggleSelection = async (user, isChecked) => {
 
 const onSubmit = () => {
     if (usersSelected.value.length === 0) {
+        show.value = false;
         return;
     }
     show.value = false;

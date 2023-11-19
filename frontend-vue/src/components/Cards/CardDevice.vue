@@ -29,7 +29,7 @@ const props = defineProps({
     image: { required: true, type: String },
     selected: { required: true, type: [Boolean, null] },
     ipAddress: { required: true, type: String },
-    unidades: { required: true, type: Array}
+    unidades: { type: Array}
 })
 </script>
 

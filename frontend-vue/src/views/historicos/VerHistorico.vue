@@ -14,6 +14,9 @@
      import { useNotification } from '@kyvg/vue3-notification'
      import spinner from "../components/spinner/spinner.vue";
 
+    import PerfectScrollbar from 'perfect-scrollbar';
+    import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
      const { notify } = useNotification()
 
      const route = useRoute();
@@ -44,6 +47,10 @@
         window.Echo.channel(channel).listen('appendRegistrosDevice', (nuevosRegistros) => {   
             appendNewRows(nuevosRegistros)
         });
+
+        const container = document.getElementById('scrollContainer');
+        new PerfectScrollbar(container);
+
      })
      
      onBeforeUnmount(()=>{
@@ -109,7 +116,7 @@
         $appStore.setGlobalLoading(true);
         const  [ componenteData ]  =  await Promise.all([ComponenteController.getById(id) ,getHistoricos()]);
         componenteInfo.value = componenteData;
-        title.value  = `Históricos del componente "${componenteData.Nombre}""`;
+        title.value  = `Histórico del componente "${componenteData.Nombre}""`;
         $appStore.setGlobalLoading(false);
     });
 
@@ -238,18 +245,24 @@
                     </BaseBtn>
              </div>
              <BaseCard class="mt-5">
-                <div class="w-full mt-5 h-screen max-h-[70vh] overflow-y-auto px-5 transition-all animate-fade-in">
+                <div class="w-full mt-5 h-screen max-h-[70vh] overflow-y-auto px-5 transition-all animate-fade-in"
+                    id="scrollContainer">
                 <div
                     class="w-full bg-white p-8 rounded-md shadow-md"
                     v-if="historicosEmpty && !loading"
                 >
-            
-                    <p class="text-gray-600 text-center">
-                        No se encontro ningun historico asociado al componente
+                
+                    <h2 class="text-2xl font-semibold mb-4">
+                        No se encontró histórico
+                    </h2>
+                    <p class="text-gray-600">
+                        No hay ningún registro asociado a este dispositivo
                     </p>
+            
                 </div>
                 <div v-else>
-                    <div v-for="(item, index) in historicosFormatted" :key="index" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl py-5">
+                    <div v-for="(item, index) in historicosFormatted" :key="index" 
+                        class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl py-5">
                     
                     <div class="historicoItem flex pl-2 flex-1 transition-all animate-fade-in">
                         <div class="flex flex-grow flex-col self-center justify-between lg:items-center lg:flex-row">

@@ -1,7 +1,7 @@
 <template>
     <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50" >
         <div class="modal-overlay fixed inset-0 bg-black opacity-50"></div>
-        <div class="modal-container bg-white w-1/3 mx-auto rounded shadow-lg z-50 overflow-y-auto h-[70vh]" >
+        <div class="modal-container bg-white md:w-1/3 mx-auto rounded shadow-lg z-50 ">
             <div class="modal-content py-4 text-left px-6">
                 
                     <div class="card-header flex justify-between items-center">         
@@ -23,15 +23,21 @@
                         v-model="filter.search"
                         @input="handleSearch"         
                     />
-                    
+                    <div id="scrollContainer2" class=" overflow-y-auto  h-[50vh]" >
                     <div class="w-full text-center mt-4">
                         <spinner v-if="loading" :show="loading"></spinner>
                     </div>
-                    <template v-if="componentes.length == 0 && !loading">
-                        <p class="w-full text-center mt-4">No hay dispositivos disponibles.</p>
-                    </template>
-                    <template v-if="componentes.length > 0 && !loading">
-                        <div class="max-h-[70vh] overflow-y-auto">
+                    <div v-if="componentes.length == 0 && !loading" class="w-full">
+                        <div class="w-full bg-white p-8 rounded-md shadow-md">
+                            <h2 class="text-2xl font-semibold mb-4">
+                                No se encontraron dispositivos
+                            </h2>
+                            <p class="text-gray-600">
+                                No hay ningún dispositivo disponible
+                            </p>
+                        </div>
+                    </div>
+                    <div v-if="componentes.length > 0 && !loading">
                             <div class="mt-2">
                                 <CardDevice 
                                     :selected="selected == null"
@@ -55,7 +61,6 @@
                                 </CardDevice>
                             </div>
                         </div>
-                    </template>
                     
                     <div class="flex justify-center mt-2">
                         <infinite-loading
@@ -63,7 +68,7 @@
                             v-if="hasMoreData"
                         ></infinite-loading>
                     </div>
-                
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,13 +77,12 @@
 <script>
 
 import ComponenteController from '../../services/ComponenteController';
-import { appStore } from '../../store/app';
 import CardDevice from '../../components/Cards/CardDevice.vue';
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css';
 import spinner from '../../views/components/spinner/spinner.vue';
-
-const $appStore = appStore();
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 export default {
     props: {
@@ -102,6 +106,10 @@ export default {
     created() {
         this.getComponentes();
     },
+    mounted(){
+        const container = document.getElementById('scrollContainer2');
+        new PerfectScrollbar(container);
+    },
     methods: {
         getComponentes(){
             console.log([this.page, this.maxRows, this.filter]);
@@ -111,6 +119,7 @@ export default {
                 this.componentes = [...this.componentes, ...data]
                 this.hasMoreData = this.componentes.length < countRows;
                 this.loading = false;
+
             });
         },
         loadMoreData(){

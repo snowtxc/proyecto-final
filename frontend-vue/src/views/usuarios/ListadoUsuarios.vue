@@ -14,7 +14,8 @@
 
             <div class="block w-full overflow-x-auto whitespace-nowrap borderless hover">
                 <div class="dataTable-wrapper dataTable-loading no-footer fixed-columns">
-                    <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover max-h-[70vh] overflow-y-auto">
+                    <div class="dataTable-container block w-full overflow-x-auto whitespace-nowrap borderless hover max-h-[70vh] overflow-y-auto"
+                        id="scrollContainer">                        
                         <ul v-if="usuarios.length > 1">
                             <li v-for="(user, index) in usuarios" :key="index">
                                 <div v-if="user.id != userLogged.id" class="flex flex-col items-center  mb-4 md:flex-row overflow-hidden flex-row mb-6 shadow-md rounded-xl px-5 h-24" >
@@ -41,11 +42,18 @@
                                    
                                 </div>
                             </li>
-
-
                         </ul>
-                        <p class="px-4 py-3" v-if="usuarios.length <= 1"> No se encontraron usuarios</p>
-
+                        <div
+                            class="w-full bg-white rounded-md shadow-md "
+                            v-if="usuarios.length == 1"> 
+                            
+                            <h2 class="text-2xl font-semibold m-4">
+                                No se encontraron usuarios
+                            </h2>
+                            <p class="text-gray-600 m-4">
+                                No hay ningún usuario registrado
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -67,6 +75,9 @@ import ConfirmationModal from '../../components/ConfirmationModal.vue';
 import { appStore } from "@/store/app.js";
 import BaseBtn from '../../components/Base/BaseBtn.vue';
 
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
 const $appStore = appStore();
 
 export default {
@@ -87,6 +98,10 @@ export default {
     created() {
         $appStore.setGlobalLoading(true);
         this.getUsuarios();
+    },
+    mounted(){
+        const container = document.getElementById('scrollContainer');
+        new PerfectScrollbar(container);
     },
 
     methods: {

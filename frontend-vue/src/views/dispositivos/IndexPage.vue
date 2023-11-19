@@ -39,8 +39,8 @@
                         @input="handleSearch"
                         
                     />
-                    <div
-                        class="flex flex-col overflow-y-auto h-auto max-h-[70vh]"
+                    <div id="scrollContainer"
+                        class="flex flex-col overflow-y-auto h-auto max-h-[65vh]"
                     >
                         <div class="bg-white p-8 rounded-md shadow-md max-w-md"
                         v-if="componentesIsEmpty && !loading"
@@ -84,17 +84,23 @@
 <script setup>
 import { appStore } from '@/store/app'
 import { useRouter } from 'vue-router';
-import { computed, onBeforeMount, ref } from 'vue';
-import Breadcrumb from '@/components/Breadcrumbs.vue'
+import { computed, onBeforeMount, ref, onMounted } from 'vue';
 import CardDevice from '../../components/Cards/CardDevice.vue'
 import paneldeviceinfo from '../../components/Panel/PanelDeviceInfo.vue'
 import ComponenteController from '@/services/ComponenteController'
 import TipoComponenteController from '../../services/TipoComponenteController';
-
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css';
-
 import { useNotification } from '@kyvg/vue3-notification'
+import PerfectScrollbar from 'perfect-scrollbar';
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
+onMounted(async () => {
+    const container = document.getElementById('scrollContainer');
+    new PerfectScrollbar(container);
+    
+})
+
 const { notify } = useNotification();
 
 

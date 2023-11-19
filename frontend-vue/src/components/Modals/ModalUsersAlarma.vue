@@ -28,12 +28,11 @@
                                 No se encontraron usuarios
                             </h2>
                             <p class="text-gray-600 m-4">
-                                Ningun usuario recibio esta alarma
+                                Ningún usuario recibió esta alarma
                             </p>
                         </div>
                         <div v-else class="w-full flex flex-col ">
                             <Card v-for="user in users" :key="user.id" class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
-                                <!--div class="flex flex-row items-center justify-between"-->
                                     <div class="flex m-2">
                                         <img :src="user.profileImage ? user.profileImage : imageProfileDefault" alt="User Image" class="w-12 h-12 rounded-full mr-4 object-cover" />
 
@@ -43,7 +42,6 @@
                                                 <p class="text-gray-500"> {{ user.rol }} </p>
                                         </div>
                                     </div>
-                                <!--/div-->
                             </Card>
                         </div>
                     </div>
