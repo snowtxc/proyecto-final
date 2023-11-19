@@ -47,10 +47,10 @@
                             class="w-full bg-white rounded-md shadow-md "
                             v-if="usuarios.length == 1"> 
                             
-                            <h2 class="text-2xl font-semibold m-4">
+                            <h2 class="text-2xl font-semibold m-4 pt-5">
                                 No se encontraron usuarios
                             </h2>
-                            <p class="text-gray-600 m-4">
+                            <p class="text-gray-600 m-4 py-5 ">
                                 No hay ningún usuario registrado
                             </p>
                         </div>
@@ -119,7 +119,8 @@ export default {
             this.showModalUsuario = false;
             this.selectedUser = 0;
         },
-        async eliminar() {
+
+        eliminar() {
             $appStore.setGlobalLoading(true);
             UsuarioController.eliminarUsuario(this.userDelete).then((response) => {
                 console.log(response);

@@ -42,8 +42,16 @@
 
                     </div>
                 
-            <!--/template-->
-            <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
+            <!--/template
+            <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>-->
+            <div
+                class="w-full bg-white rounded-md shadow-md"
+                v-if="alarmas.length == 0 && !loading"
+                >
+                <h2 class="text-2xl font-semibold px-4 py-6">
+                    No se encontraron alarmas
+                </h2>
+            </div>
             <div v-if="alarmas.length > 0" class="max-h-[70vh] overflow-y-auto w-full" id="scrollContainer">
                 <div v-for="(item, index) in alarmas" :key="index"
                     class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl">
@@ -128,7 +136,8 @@ export default {
             },
             showModalUsuarios: false,
             showModalDispositivos: false,
-            hasMoreData: false
+            hasMoreData: false,
+            loading: true
         };
     },
     created() {
@@ -152,6 +161,7 @@ export default {
                         new PerfectScrollbar(container);
                     }, 0);
                 }
+                this.loading = true
                 $appStore.setGlobalLoading(false);
             });
         },
