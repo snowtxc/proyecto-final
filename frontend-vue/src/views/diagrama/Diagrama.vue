@@ -17,7 +17,7 @@
           <div v-for="etapa in listaEtapas" :key="etapa.id" class="h-[2000px] md:h-[550px] w-5/6 md:w-[600px] md:ml-2">
             <p class="">{{ etapa.Nombre }}</p>
             <div class="h-[250px] md:h-full w-full md:w-[600px] border border-gray-300 rounded-xl">
-              <Diagrama :etapa-id="etapa.id" :proceso-id="etapa.proceso_id" :readOnly="true" @info-nodo="setNodeData">
+              <Diagrama :etapa-id="etapa.id" :proceso-id="etapa.proceso_id" :readOnly="true" @info-nodo="setNodeData" @Loading="showSpinner = true;">
               </Diagrama>
             </div>
           </div>
@@ -28,7 +28,7 @@
       <div class="w-full" v-else-if="dispositivoData == null && !showSpinner">
         <p class="text-center mt-4">Selecciona un dispositivo para ver su informacion.</p>
       </div>
-      <div class="w-full" v-if="showSpinner != false">
+      <div class="w-full flex justify-center" v-if="showSpinner != false">
         <spinner :show="showSpinner"></spinner>
       </div>
     </div>
@@ -77,7 +77,6 @@ onBeforeMount(()=>{
    }
 })
 watch(nodeData, () => {
-  showSpinner.value = true;
   const data = ComponenteController.getById(nodeData.value.mensaje.componente_id)
     .then((response) => {
       console.log(response)

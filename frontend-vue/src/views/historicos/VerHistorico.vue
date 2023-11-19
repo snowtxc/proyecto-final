@@ -181,6 +181,7 @@
      const onSelectUnidadDeMedida = (e)=>{
             const value = e.target.value;
             filters.value.unidadId = value;
+            
      }
 </script> 
 
@@ -231,7 +232,7 @@
                             </select>
                         </div>
                     </div>
-                    <label class="text-gray-600 mr-2">Desde:</label>
+                    <label class="text-gray-600 mr-2">Desde:</label> 
                     <input type="datetime-local" v-model="filters.startDate" class="border rounded px-2 py-1">
                     <label class="text-gray-600 ml-2 mr-2">Hasta:</label>
                     <input type="datetime-local" v-model="filters.endDate" class="border rounded px-2 py-1">

@@ -12,10 +12,10 @@ class Componente extends Model
     protected $fillable = [
         'Nombre',
         'Descripcion',
-        'Unidad',
         'DireccionIp',
         'etapa_id',
-        "tipo_componente_id"
+        "tipo_componente_id",
+        "On"
     ];
 
     public function partes()

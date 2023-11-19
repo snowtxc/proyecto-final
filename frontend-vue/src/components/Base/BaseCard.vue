@@ -1,10 +1,11 @@
 <script setup>
 const props = defineProps({
     noPadding: Boolean,
+    hover: Boolean
 })
 </script>
 <template>
-    <div class="card flex flex-col bg-white ">
+    <div class="card flex flex-col hover" :class="{ 'hover:bg-gray-300'  : props.hover , 'cursor-pointer': props.hover}">
         <slot name="cardHeader" />
         <div class="card-body" :class="props.noPadding ? 'noPadding' : ''">
             <slot />

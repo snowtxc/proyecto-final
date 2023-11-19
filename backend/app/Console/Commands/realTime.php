@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Mail;
 
 
 
-class obtenerNuevosRegistros2 extends Command
+class realTime extends Command
 {
     /**
      * The name and signature of the console command.
@@ -80,31 +80,35 @@ class obtenerNuevosRegistros2 extends Command
         $nodos = Nodo::all();
         foreach($nodos as $nodo){
             $componente = $nodo->componente;
-            $unidades =  $componente->unidades;
-            $marcas  = array();
-            foreach($unidades as $unidad){
-                $min =  $unidad->pivot->min;
-                $max = $unidad->pivot->max;
-                $fecha = $unidad->pivot->created_at;
-                array_push($marcas , [
-                    "unidadId" => $unidad->id,
-                    "unidadNombre" => $unidad->nombre,
-                    "marca" => rand($min,$max),
-                    "unidad" => $unidad->unidad,
-                    "fecha" => $unidad->fecha
-                ]);
-            }
-            $data = [
-                "deviceId" => $componente->id,
-                "deviceName" => $componente->Nombre,
-                "deviceDescription" => $componente->Descripcion,
-                "deviceIp" => $componente->DireccionIp,
-                "marcas" => $marcas
-            ];
-            $fileName = "device-".$componente->id."-".time().".xml";
-            $xml = $this->generarXml($data);
-            $filePath = 'xmls/'.$fileName;
-            Storage::put($filePath, $xml);
+            $componenteOn = $componente->On ==  1 ? true: false;
+            if($componenteOn){
+                $unidades =  $componente->unidades;
+                $marcas  = array();
+                foreach($unidades as $unidad){
+                    $min =  $unidad->pivot->min;
+                    $max = $unidad->pivot->max;
+                    $fecha = $unidad->pivot->created_at;
+                    array_push($marcas , [
+                        "unidadId" => $unidad->id,
+                        "unidadNombre" => $unidad->nombre,
+                        "marca" => rand($min,$max),
+                        "unidad" => $unidad->unidad,
+                        "fecha" => $unidad->fecha
+                    ]);
+                }
+                $data = [
+                    "deviceId" => $componente->id,
+                    "deviceName" => $componente->Nombre,
+                    "deviceDescription" => $componente->Descripcion,
+                    "deviceIp" => $componente->DireccionIp,
+                    "marcas" => $marcas
+                ];
+                $fileName = "device-".$componente->id."-".time().".xml";
+                $xml = $this->generarXml($data);
+                $filePath = 'xmls/'.$fileName;
+                Storage::put($filePath, $xml);
+
+                }
 
         }
     }
