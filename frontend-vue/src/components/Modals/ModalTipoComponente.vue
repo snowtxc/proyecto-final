@@ -117,9 +117,8 @@
             </div>
             
             <div class="flex justify-end">
-                <BaseBtn  @click="onSubmit" >
-                      <!--{{  $props.action == Action.CREAR ?   'Crear' : 'Editar' }}-->
-                      Guardar
+                <BaseBtn  @click="onSubmit" :disabled="processing">
+                    Guardar
                     <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>

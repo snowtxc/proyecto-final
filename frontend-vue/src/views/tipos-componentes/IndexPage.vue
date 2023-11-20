@@ -52,13 +52,14 @@ const addNewTypeComponent = () => {
 const handleTipoComponenteModal = (typeComponent) => {
     console.log(typeComponent)
     showModal.value = false;
-    if (action.value == Action.CREAR) {
+    getTiposComponentes();
+    /*if (action.value == Action.CREAR) {
         showModal.value = false;
         tiposComponentes.value.unshift(typeComponent);
         return;
     }
     const index = tiposComponentes.value.findIndex(item => item.id == typeComponent.id);
-    tiposComponentes.value[index] = typeComponent;
+    tiposComponentes.value[index] = typeComponent;*/
 
 
 }
@@ -130,14 +131,7 @@ const edit = (tipoComponente) => {
             <i class="fa-solid fa-plus mr-2"></i>
             Nuevo Tipo
         </BaseBtn>
-    </div>
-    <!--div class="flex justify-between items-center">
-        <Breadcrumbs parentTitle="Tipo de Componentes"></Breadcrumbs>
-        <BaseBtn @click="addNewTypeComponent">
-            Agregar
-        </BaseBtn>
-    </div-->
-    
+    </div>    
 
     <div>
         <input
@@ -163,11 +157,7 @@ const edit = (tipoComponente) => {
                     </div>
                     <div class="flex pl-2 flex-1">
                         <div class="flex flex-grow flex-row self-center justify-between lg:items-center lg:flex-row">
-                            <a class="hover:text-purple-500" href="">
-
-                                {{ tipoComponente.Nombre }}</a>
-
-
+                            <p class="mx-4"> {{ tipoComponente.Nombre }} </p>
                             <div class="w-24 flex flex-row">
                                 <font-awesome-icon :icon="[
                                     'far',
