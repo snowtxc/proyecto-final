@@ -50,7 +50,10 @@
                         
                         
                             <div class="flex justify-end">   
-                                <BaseBtn :disabled="formInvalid" type="submit">Guardar</BaseBtn>
+                                <BaseBtn :disabled="formInvalid || processing" type="submit">
+                                    Guardar
+                                    <spinner :show="processing" :width="4" height="4" ></spinner>
+                                </BaseBtn>
                             </div>
                         </form>
                     </div>
@@ -68,6 +71,7 @@
 
 import UsuarioController from '../../services/UsuarioController'
 import { appStore } from "@/store/app.js"; 
+import spinner from '../../views/components/spinner/spinner.vue';
 
 const $appStore = appStore();
 
@@ -79,7 +83,8 @@ export default{
             userId: 0,
             errorEmail: '',
             selectedRol: "Observador",
-            errorName: ''
+            errorName: '',
+            processing: false
         };
     },
     props: {
@@ -100,7 +105,8 @@ export default{
             if (this.formInvalid) {
                 return;
             }
-                $appStore.setGlobalLoading(true);
+            this.processing = true
+                //$appStore.setGlobalLoading(true);
                 if (this.userId != 0) {
                     UsuarioController.editarUsuario(this.userId, this.name, this.email, this.selectedRol).then((response) => {
                         if (response.status == 200) {
@@ -123,6 +129,7 @@ export default{
             this.name = '';
             this.email = '';
             this.selectedRol = "observador";
+            this.processing = false;
         },
 
         validateName() {
@@ -163,7 +170,7 @@ export default{
         }
     },
     
-
+    components: { spinner }
 }
 
 

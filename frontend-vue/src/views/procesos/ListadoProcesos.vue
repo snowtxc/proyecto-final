@@ -136,8 +136,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn @click="validateFields(0)">
+                <BaseBtn @click="validateFields(0)" :disabled="processing">
                     Guardar
+                    <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>
         </Modal>
@@ -152,8 +153,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn @click="validateFields(1)">
+                <BaseBtn @click="validateFields(1)" :disabled="processing">
                     Guardar
+                    <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>
         </Modal>
@@ -168,8 +170,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn @click="validateFieldsEtapa(0)">
+                <BaseBtn @click="validateFieldsEtapa(0)" :disabled="processing">
                     Guardar
+                    <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>
         </Modal>
@@ -184,8 +187,9 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn @click="validateFieldsEtapa(1)">
+                <BaseBtn  @click="validateFieldsEtapa(1)" :disabled="processing">
                     Guardar
+                    <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>
             </div>
         </Modal>
@@ -259,6 +263,7 @@ const loading = ref(true);
 const $appstore = appStore();
 
 const rol = $appstore.getUserData?.rol;
+const processing = ref(false);
 
 const filterProcesos = () => {
     if (searchTerm.value === '') {
@@ -352,17 +357,18 @@ const validateFields = (editar) => {
     }
 
     if (!errors.value.nombre && !errors.value.descripcion) {
+        processing.value = true;
         if (editar == 0) {
             crearNuevoProceso();
             errors.value.nombre = false;
             errors.value.descripcion = false;
         }
         if (editar == 1) {
-            procesoId.value = listaProcesos.value[selectedCardIndex.value].id;
+            //procesoId.value = listaProcesos.value[selectedCardIndex.value].id;
             console.log(procesoId)
             EditarProceso(procesoId.value);
-            errors.value.nombre = false;
-            errors.value.descripcion = false;
+            errors.value.nombre = '';
+            errors.value.descripcion = '';
         }
     }
 
@@ -382,6 +388,7 @@ const validateFieldsEtapa = (editar) => {
     }
 
     if (!errors.value.nombre && !errors.value.descripcion) {
+        processing.value = true;
         if (editar == 0) {
             crearNuevaEtapa();
             errors.value.nombre = false;
@@ -417,14 +424,17 @@ const cargarEtapas = async (procesoId) => {
 const crearNuevoProceso = () => {
     ProcesoController.nuevoProceso(nombre.value, descripcion.value)
         .then((response) => {
+            selectedCardIndex.value = null;
             cargarListaProcesos(0);
-            cargarEtapas(selectedCardIndex.value)
+            //cargarEtapas(selectedCardIndex.value)
             showModal.value = false;
-            loadUsuariosByProceso(response.data.id)
+            //loadUsuariosByProceso(response.data.id)
+            processing.value = false;
         })
         .catch((error) => {
             console.error('Error al crear el proceso:', error);
             alert('Hubo un error al crear el proceso.');
+            processing.value = false;
         });
     nombre.value = '';
     descripcion.value = '';
@@ -435,14 +445,16 @@ const EditarProceso = (id) => {
         .then(() => {
             cargarListaProcesos(0);
             showModalEditar.value = false;
+            processing.value = false;
         })
         .catch((error) => {
-            console.error('Error al crear el proceso:', error);
-            alert('Hubo un error al crear el proceso.');
+            console.error('Error al editar el proceso:', error);
+            alert('Hubo un error al editar el proceso.');
+            processing.value = false;
         });
     nombre.value = '';
     descripcion.value = '';
-    errors = false;
+    errors.value = false;
 };
 
 const EditarEtapa = (id) => {
@@ -451,11 +463,14 @@ const EditarEtapa = (id) => {
         .then(() => {
             cargarEtapas(idProcesos);
             showModalEditarEtapas.value = false;
+            processing.value = false;
         })
         .catch((error) => {
-            console.error('Error al crear el proceso:', error);
-            alert('Hubo un error al crear el proceso.');
+            console.error('Error al editar el proceso:', error);
+            alert('Hubo un error al editar el proceso.');
+            processing.value = false;
         });
+    
     nombreEtapa.value = '';
     descripcionEtapa.value = '';
 };
@@ -467,10 +482,12 @@ const crearNuevaEtapa = () => {
 
             cargarEtapas(procesoId);
             showModalEtapas.value = false;
+            processing.value = false;
         })
         .catch((error) => {
             console.error('Error al crear el proceso:', error);
             alert('Hubo un error al crear el proceso.');
+            processing.value = false;
         });
     nombreEtapa.value = '';
     descripcionEtapa.value = '';
@@ -481,10 +498,10 @@ const cargarListaProcesos = (cardIndex) => {
     ProcesoController.listaProcesos()
         .then((response) => {
             listaProcesos.value = response.data.reverse();
-            selectedCardIndex.value = cardIndex;
+            /*selectedCardIndex.value = cardIndex;
             if (selectedCardIndex.value !== null) {
                 dataDescripcion.value = listaProcesos.value[selectedCardIndex.value].Descripcion;
-            }
+            }*/
             showSpinnerProcesos.value = false;
 
         })

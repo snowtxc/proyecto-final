@@ -9,7 +9,7 @@
 
             </div>
             <div class="flex justify-end">
-                <BaseBtn  @click="onSubmit">
+                <BaseBtn  @click="onSubmit" :disabled="processing">
                     Guardar
                     <spinner :show="processing" :width="4" height="4" ></spinner>
                 </BaseBtn>

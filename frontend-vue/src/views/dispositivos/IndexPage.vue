@@ -61,7 +61,7 @@
                                     " @onSelect="handleSelectedDevice(item)"></CardDevice>
                         </div>
                         <div class="flex justify-center mt-2">
-                            <infinite-loading @infinite="loadMoreData" v-if="hasMoreData"></infinite-loading>
+                            <infinite-loading @infinite="loadMoreData" v-if="hasMoreData || loading"></infinite-loading>
                         </div>
                     </div>
                 </BaseCard>
@@ -95,6 +95,8 @@ import { useNotification } from '@kyvg/vue3-notification'
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
+import spinner from '../../views/components/spinner/spinner.vue';
+
 onMounted(async () => {
     const container = document.getElementById('scrollContainer');
     new PerfectScrollbar(container);
@@ -108,21 +110,6 @@ const $appStore = appStore();
 const $router = useRouter();
 
 const debounceSearch = ref(null)
-
-const items = [
-    { id: 1, nombre: 'nombre', value: 20 },
-    { id: 2, nombre: 'nombre', value: 20 },
-    { id: 3, nombre: 'nombre', value: 20 },
-    { id: 4, nombre: 'nombre', value: 20 },
-    { id: 5, nombre: 'nombre', value: 20 },
-    { id: 6, nombre: 'nombre', value: 20 },
-    { id: 7, nombre: 'nombre', value: 20 },
-    { id: 8, nombre: 'nombre', value: 20 },
-    { id: 9, nombre: 'nombre', value: 20 },
-    { id: 10, nombre: 'nombre', value: 20 },
-]
-
-
 
 const deviceSelected = ref(null)
 const hasMoreData = ref(true)
@@ -168,7 +155,6 @@ const loadMoreData = async ($state) => {
 }
 
 const getComponentes = async () => {
-    //$appStore.setGlobalLoading(true)
     loading.value = true;
     const result = await ComponenteController.list(
         page.value,
@@ -178,12 +164,12 @@ const getComponentes = async () => {
     const { data, countRows } = result
     componentes.value = [...componentes.value, ...data];
     hasMoreData.value = componentes.value.length < countRows
-   // $appStore.setGlobalLoading(false)
     loading.value = false;
 
 }
 
 const handleSearch = ($event) => {
+    loading.value = true;
     const value = $event.target.value
     if (debounceSearch.value) {
         clearTimeout(debounceSearch.value)
