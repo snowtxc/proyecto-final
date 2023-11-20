@@ -29,7 +29,7 @@ const listaNodos = ref([]);
 const myDiagramDiv = ref(null);
 const showSpinner = ref(false);
 const listaComponentes = ref([]);
-const emit = defineEmits(['nodo-borrado', 'Info-Nodo'])
+const emit = defineEmits(['nodo-borrado', 'Info-Nodo', 'Loading'])
 
 function NodoBorrado() {
   emit('nodo-borrado')
@@ -176,6 +176,7 @@ const createDiagram = async () => {
 
 
   diagram.addDiagramListener('ChangedSelection', (event) => {
+    emit('Loading');
     const selectedNode = diagram.selection.first();
     if (selectedNode instanceof go.Node) {
       const nodeData = selectedNode.data;

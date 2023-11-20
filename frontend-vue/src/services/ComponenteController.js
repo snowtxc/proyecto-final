@@ -63,5 +63,13 @@ export default{
         const { data } = response;
         return data;    
 
+    },
+
+    async toggleOn(id, on){
+        const response  = await axios.post("componentes/"+id+"/toggleOn", {
+            on
+        });
+        const { data } = response;
+        return data;    
     }
 } 

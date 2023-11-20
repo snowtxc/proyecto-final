@@ -114,6 +114,18 @@ let handleWindowResize = () => {
                                 <p>Alarmas</p>
                             </div>
                         </router-link>
+
+
+                        <router-link
+                            to="/reportes"
+                            tag="li"
+                            class="nav-item"
+                        >
+                            <div class="nav-item-hold">
+                                <i class="fa-solid fa-chart-pie text-3xl"></i>                                
+                                <p>Reportes</p>
+                            </div>
+                        </router-link>
                         
                         <div v-if="userData.rol == 'Administrador'">
 
@@ -140,6 +152,8 @@ let handleWindowResize = () => {
                             </router-link>
 
                         </div>
+
+                        
                         
                     </ul>
                 </perfect-scrollbar>

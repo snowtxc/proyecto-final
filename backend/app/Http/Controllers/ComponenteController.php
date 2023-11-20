@@ -158,6 +158,7 @@ class ComponenteController extends Controller
                 "Descripcion" => $componente->Descripcion,
                 "Unidad" => $componente->Unidad,
                 "DireccionIp" => $componente->DireccionIp,
+                "On" => $componente->On == 1 ? true : false,
                 "etapa_id" => $componente->etapa_id,
                 "proceso_id" =>  isset($etapa) ?  $etapa->proceso_id : null,
                 "tipo_componente_id" => $componente->tipo_componente_id,
@@ -342,6 +343,23 @@ class ComponenteController extends Controller
 
         return $result;
 
+    }
+
+    public function toggleOn(Request $request,$id){
+        $validator = Validator::make($request->all(), [
+            'on' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        $componente = Componente::find($id);
+        if(!isset($componente)){
+            return response()->json(['error' => 'Componente no encontrado'], 404);
+        }
+        $body = $request->all();
+        $componente->On = $body['on'];
+        $componente->save();
+        return response()->json("ok", 200);
     }
 
 
