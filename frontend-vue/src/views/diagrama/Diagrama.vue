@@ -13,7 +13,7 @@
       </select>
       <Card class="h-[640px] w-full">
         <div v-if="listaEtapas && listaEtapas.length > 0"
-          class="flex items-center md:items-start flex-col h-[600px] w-full md:w-auto overflow-y-auto md:flex md:flex-row space-y-6 md:space-y-0 ">
+          class="flex items-center md:items-start flex-col h-[600px] w-full md:w-auto overflow-y-auto md:flex md:flex-row space-y-6 md:space-y-0">
           <div v-for="etapa in listaEtapas" :key="etapa.id" class="h-[2000px] md:h-[550px] w-5/6 md:w-[600px] md:ml-2">
             <p class="">{{ etapa.Nombre }}</p>
             <div class="h-[250px] md:h-full w-full md:w-[600px] border border-gray-300 rounded-xl">

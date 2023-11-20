@@ -30,7 +30,7 @@ return new class extends Migration
 
 
         $table->unsignedBigInteger('etapa_id');
-        $table->foreign('etapa_id')->references('id')->on('etapas');
+        $table->foreign('etapa_id')->references('id')->on('etapas')->onDelete('cascade');;
 
         $table->timestamps();
     });

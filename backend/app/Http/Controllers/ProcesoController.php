@@ -60,23 +60,33 @@ class ProcesoController extends Controller
         return response()->json(['error' => 'Proceso no encontrado'], 404);
     }
 
-    public function delete($id){
-        $process = Proceso::find($id);
+    public function delete($id)
+{
+    $process = Proceso::find($id);
 
-        if (!isset($process)) {
-            return response()->json(['error' => 'Proceso no encontrado'], 404);
-        }
-
-        // Elimina todas las etapas asociadas al proceso
-        $process->etapas()->delete();
-
-        // Elimina el proceso en sí
-        $process->delete();
-
-        broadcast(new procesoDeleted());
-
-        return response()->json(['success' => 'Proceso y etapas relacionadas borrados'], 200);
+    if (!isset($process)) {
+        return response()->json(['error' => 'Proceso no encontrado'], 404);
     }
+
+    // Obtener todas las etapas asociadas al proceso
+    $etapas = $process->etapas;
+
+    // Iterar sobre las etapas y eliminar nodos y enlaces asociados
+    foreach ($etapas as $etapa) {
+        $etapa->nodos()->delete();
+        $etapa->links()->delete();
+    }
+
+    // Eliminar todas las etapas asociadas al proceso
+    $process->etapas()->delete();
+
+    // Eliminar el proceso en sí
+    $process->delete();
+
+    broadcast(new procesoDeleted());
+
+    return response()->json(['success' => 'Proceso y etapas relacionadas borrados'], 200);
+}
 
 
 

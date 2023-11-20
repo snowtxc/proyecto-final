@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('componente_id');
-            $table->foreign('componente_id')->references('id')->on('componentes');
+            $table->foreign('componente_id')->references('id')->on('componentes')->onDelete('cascade');;
 
             $table->unsignedBigInteger('proceso_id');
-            $table->foreign('proceso_id')->references('id')->on('procesos');
+            $table->foreign('proceso_id')->references('id')->on('procesos')->onDelete('cascade');;
 
 
             $table->timestamps();

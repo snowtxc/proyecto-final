@@ -17,6 +17,4 @@ class TipoComponente extends Model
     {
         return $this->hasMany(Componente::class);
     }
-
-
 }
