@@ -50,7 +50,7 @@
                             </h2>
                             <p class="text-gray-600">
                                 Lo sentimos, no hemos encontrado ningún
-                                dispositivo en este momento.
+                                dispositivo.
 
                             </p>
                         </div>
@@ -133,10 +133,10 @@ onBeforeMount(async () => {
 const handleSelectedDevice = async(value) => {
     const { id}  = value;
     try{
-        //$appStore.setGlobalLoading(true);
+        $appStore.setGlobalLoading(true);
         loadingData.value = true;
         const compontenteData =  await ComponenteController.getById(id);
-        //$appStore.setGlobalLoading(false);
+        $appStore.setGlobalLoading(false);
         deviceSelected.value = compontenteData;
         loadingData.value = false;
 
@@ -170,7 +170,7 @@ const getComponentes = async () => {
 
 const handleSearch = ($event) => {
     loading.value = true;
-    const value = $event.target.value
+    const value = $event.target.value;
     if (debounceSearch.value) {
         clearTimeout(debounceSearch.value)
     }

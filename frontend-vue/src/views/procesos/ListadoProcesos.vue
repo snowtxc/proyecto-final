@@ -21,16 +21,24 @@
                     
                     <div class="h-auto max-h-96 md:max-h-[700px] flex flex-col items-center space-y-2 overflow-y-auto p-3"
                         id="scrollContainer">
-                        <div v-if="loading == false && listaProcesos.length == 0" 
+                        <div v-if="loading == false && listaProcesos.length == 0 && !showSpinnerProcesos" 
                             class="w-full">
                                 <div class="w-full bg-white p-8 rounded-md shadow-md">
                                     <h2 class="text-2xl font-semibold mb-4">
                                         No se encontraron procesos
                                     </h2>
+                                    <p class="text-gray-600">
+                                        Lo sentimos, no se ha encontrado 
+                                        ningun proceso.
+
+                                    </p>
                                 </div>
                             </div>
 
-                        <spinner :show="showSpinnerProcesos"></spinner>
+                        <div class="w-full flex justify-center">
+                            <spinner :show="showSpinnerProcesos"></spinner>
+
+                        </div>
                         <Card v-for="(proceso, index) in listaProcesos" :key="proceso.id"
                             class="w-full h-17 hover:bg-gray-100 transition-colors duration-150 ease-in-out bg-white"
                             :class="{ 'selected-card': index === selectedCardIndex }" @click="selectCard(index)">
@@ -38,7 +46,7 @@
                                 <p :class="{ 'white-text': index === selectedCardIndex }" class="font-bold text-xl">{{
                                     proceso.Nombre }}
                                 </p>
-                                <div class="ml-2 w-20 flex justify-end" v-if="rol == 'Administrador'">
+                                <div class="ml-2 flex justify-end" v-if="rol == 'Administrador'">
                                     <font-awesome-icon :icon="['far', 'pen-to-square']"
                                         :class="{ 'white-icon': index === selectedCardIndex }"
                                         class="h-5 mr-2 hover:text-primary"
@@ -266,15 +274,14 @@ const rol = $appstore.getUserData?.rol;
 const processing = ref(false);
 
 const filterProcesos = () => {
-    if (searchTerm.value === '') {
-        cargarListaProcesos(null);
-    } else {
-        listaProcesos.value = listaProcesosBackup.value.filter((proceso) =>
-            proceso.Nombre.toLowerCase().includes(searchTerm.value.toLowerCase())
-        );
+        listaProcesos.value = listaProcesosBackup.value.filter(proceso =>{
+            if(searchTerm.value.trim().length <= 0){
+                return true;
+            }
+            return proceso.Nombre.toLowerCase().includes(searchTerm.value.toLowerCase())
+        });
         selectedCardIndex.value = null
-        dataDescripcion.value = ''
-    }
+        dataDescripcion.value = '';
 };
 
 const selectCard = (index) => {
@@ -360,12 +367,10 @@ const validateFields = (editar) => {
         processing.value = true;
         if (editar == 0) {
             crearNuevoProceso();
-            errors.value.nombre = false;
-            errors.value.descripcion = false;
+            errors.value.nombre = "";
+            errors.value.descripcion = "";
         }
         if (editar == 1) {
-            //procesoId.value = listaProcesos.value[selectedCardIndex.value].id;
-            console.log(procesoId)
             EditarProceso(procesoId.value);
             errors.value.nombre = '';
             errors.value.descripcion = '';
@@ -391,13 +396,13 @@ const validateFieldsEtapa = (editar) => {
         processing.value = true;
         if (editar == 0) {
             crearNuevaEtapa();
-            errors.value.nombre = false;
-            errors.value.descripcion = false;
+            errors.value.nombre = "";
+            errors.value.descripcion = "";
         }
         if (editar == 1) {
             EditarEtapa(etapaId.value);
-            errors.value.nombre = false;
-            errors.value.descripcion = false;
+            errors.value.nombre = "";
+            errors.value.descripcion = "";
         }
 
     }
@@ -422,39 +427,54 @@ const cargarEtapas = async (procesoId) => {
 };
 
 const crearNuevoProceso = () => {
+    showModal.value = false;
+    $appstore.setGlobalLoading(true);
     ProcesoController.nuevoProceso(nombre.value, descripcion.value)
         .then((response) => {
+            const  procesoCreated = response.data;
+            notify({
+                title: 'Nuevo proceso',
+                text: `Se ha creado un nuevo proceso "${nombre.value}"`,
+                type: 'success'
+            });
+            $appstore.setGlobalLoading(false);
             selectedCardIndex.value = null;
-            cargarListaProcesos(0);
-            //cargarEtapas(selectedCardIndex.value)
-            showModal.value = false;
-            //loadUsuariosByProceso(response.data.id)
+            listaProcesos.value.push(procesoCreated);
+            //cargarListaProcesos(0);
             processing.value = false;
+            nombre.value = '';
+            descripcion.value = '';
         })
         .catch((error) => {
             console.error('Error al crear el proceso:', error);
             alert('Hubo un error al crear el proceso.');
             processing.value = false;
         });
-    nombre.value = '';
-    descripcion.value = '';
+   
 };
 
 const EditarProceso = (id) => {
     ProcesoController.editarProceso(id, nombre.value, descripcion.value)
-        .then(() => {
-            cargarListaProcesos(0);
+        .then((response) => {
+            const procesoEdited =  response.data;
+            const index  = listaProcesos.value.findIndex(item => item.id == procesoEdited.id);
+            listaProcesos.value[index] = procesoEdited;
+
+            console.log(procesoEdited)
+            notify({
+                title: 'Success',
+                text: `Proceso ${procesoEdited.Nombre} editado correctamente`,
+                type: 'success'
+            })
+            
             showModalEditar.value = false;
             processing.value = false;
+            
         })
         .catch((error) => {
-            console.error('Error al editar el proceso:', error);
-            alert('Hubo un error al editar el proceso.');
             processing.value = false;
         });
-    nombre.value = '';
-    descripcion.value = '';
-    errors.value = false;
+    
 };
 
 const EditarEtapa = (id) => {
@@ -498,10 +518,6 @@ const cargarListaProcesos = (cardIndex) => {
     ProcesoController.listaProcesos()
         .then((response) => {
             listaProcesos.value = response.data.reverse();
-            /*selectedCardIndex.value = cardIndex;
-            if (selectedCardIndex.value !== null) {
-                dataDescripcion.value = listaProcesos.value[selectedCardIndex.value].Descripcion;
-            }*/
             showSpinnerProcesos.value = false;
 
         })
@@ -523,15 +539,28 @@ const eliminarEtapa = async (etapaId) => {
 
 const eliminarProceso = async () => {
     try {
+        $appstore.setGlobalLoading(true);
         await ProcesoController.eliminarProceso(procesoId.value);
-        cargarListaProcesos(selectedCardIndex.value)
-        cargarEtapas(selectedCardIndex.value)
-        console.log(selectedCardIndex.value)
-        const idProcesos = listaProcesos.value[selectedCardIndex.value + 1].id;
-        procesoIdSelected.value = idProcesos
-        loadUsuariosByProceso(idProcesos)
+        $appstore.setGlobalLoading(false);
+        notify({
+            title: 'Success',
+            text: 'Proceso removido correctamente',
+            type: 'success'
+        })
+        listaProcesos.value.splice(listaProcesos.value.findIndex(item => item.id == procesoId.value),1);
+        listaProcesosBackup.value.splice(listaProcesosBackup.value.findIndex(item => item.id == procesoId.value), 1);
+        selectedCardIndex.value = null;
+        dataDescripcion.value = '';
+        procesoIdSelected.value = null;
+
     } catch (error) {
-        console.error('Error al eliminar la etapa:', error);
+        console.log(error)
+        notify({
+            title: 'Error',
+            text: 'No se pudo remover el proceso. intentalo de nuevo',
+            type: 'error'
+        })
+
     }
 };
 

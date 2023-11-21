@@ -2,11 +2,14 @@
     import { computed, defineProps ,ref } from 'vue';
     import ComponenteController from '@/services/ComponenteController';
     import { appStore } from '@/store/app';
-    import { useNotification } from '@kyvg/vue3-notification'
+    import { useNotification } from '@kyvg/vue3-notification';
+    import { defineEmits } from 'vue';
     
 
     const $appStore = appStore();
     const { notify } = useNotification();
+
+    const emit = defineEmits(['onToggle']);
 
     const props = defineProps({
         componenteId: { type: Number,required: true},
@@ -21,6 +24,7 @@
         $appStore.setGlobalLoading(true);
         ComponenteController.toggleOn(props.componenteId, val.value).then(data =>{
             $appStore.setGlobalLoading(false);
+            emit("onToggle", val.value);
             notify({
                 title:
                     val.value 

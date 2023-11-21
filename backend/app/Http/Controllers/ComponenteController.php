@@ -78,7 +78,7 @@ class ComponenteController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors());
         }
-        $body = $request->all();
+        $body = array_merge($request->all(),['On'=> false]);
         $unidades = $body['unidades'];
 
         $tipoComponente = TipoComponente::find($body['tipo_componente_id']);

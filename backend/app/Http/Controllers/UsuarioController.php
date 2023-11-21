@@ -239,7 +239,7 @@ class UsuarioController extends Controller
         $reset = DB::table('password_resets')->where('token', $request->token)->first();
 
         if (!$reset) {
-            return response()->json(['message' => 'Token inválido'], 400);
+            return response()->json(['message' => 'Por favor vuelve a solicitar el restablecimiento'], 400);
         }
 
         $user = User::where('email', $reset->email)->first();
@@ -259,6 +259,7 @@ class UsuarioController extends Controller
 
     public function forgotPassword(Request $request)
     {
+
         if(!isset($request->email)){
             return response()->json(['message' => 'Falta token'], 400);
         }
@@ -271,11 +272,15 @@ class UsuarioController extends Controller
 
         $token = Str::random(64);
 
-        DB::table('password_resets')->insert([
-            'email' => $user->email,
-            'token' => $token,
-            'created_at' => now(),
-        ]);
+        if(DB::table("password_resets")->where(["email" => $user->email])->first() != null){
+            DB::table("password_resets")->where(["email" => $user->email])->update(["token" => $token, "created_at" => now()]);
+        }else{
+            DB::table('password_resets')->insert([
+                'email' => $user->email,
+                'token' => $token,
+                'created_at' => now(),
+            ]);
+        }
 
         Mail::send('emails.reset_password', [ 'token' => $token, 'name' => $request->name ], function ($message) use ($user) {
             $message->to($user->email);

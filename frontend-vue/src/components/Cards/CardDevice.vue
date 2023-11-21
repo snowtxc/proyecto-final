@@ -7,7 +7,7 @@
                 <div class="m-auto ml-5">
                     <p :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.nombre }}</p>
                     <p class="text-sm" :class="props.selected ? 'text-white' : 'text-gray-400'">{{ props.ipAddress }}</p>
-                    <div class="flex w-full">
+                    <div class="flex flex-wrap w-full">
                         <BaseChip v-for="unidad in props.unidades"  :key="unidad.id"  :text="unidad.nombre"></BaseChip>
                     </div>
                 </div>

@@ -42,8 +42,7 @@
 
                     </div>
                 
-            <!--/template
-            <p class="px-4 py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>-->
+            <p class="px-4 text-2xl text-center  py-3" v-if="alarmas.length == 0"> No se encontraron alarmas</p>
             <div
                 class="w-full bg-white rounded-md shadow-md"
                 v-if="alarmas.length == 0 && !loading"

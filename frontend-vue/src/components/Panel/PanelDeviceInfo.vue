@@ -12,7 +12,7 @@
                         <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 my-4  hover:text-primary" @click="
                             $router.push({
                                 name: 'editarDispositivo',
-                                params: { id: props.deviceInfo.id },
+                                params: { id: deviceInfo.id },
                             })
                             " />
                         <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
@@ -32,7 +32,7 @@
                     <div>
                         <div class="mb-2">
                             Descripción:
-                            {{ props.deviceInfo.Descripcion }}
+                            {{ deviceInfo.Descripcion }}
                         </div>
                         <div class="mb-2">
                             Estado:
@@ -50,11 +50,11 @@
                         <div class="mb-2 flex">
                             Proceso:
                             <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
-                                @click="redirectToProcess(props.deviceInfo.nodoInfo.procesoId)"
+                                @click="redirectToProcess(deviceInfo.nodoInfo.procesoId)"
                             >
                                 {{
-                                    deviceIsActive
-                                        ? props.deviceInfo.nodoInfo.proceso
+                                    deviceInfo.nodoInfo
+                                        ? deviceInfo.nodoInfo.proceso
                                         : 'Sin Informacion'
                                 }}
                             </a>
@@ -62,12 +62,12 @@
                         
                         <div class="mb-2">
                             Etapa:
-                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
-                                @click="redirectToEtapa(props.deviceInfo.nodoInfo.procesoId, props.deviceInfo.nodoInfo.etapaId)"
+                            <a :class="deviceInfo.nodoInfo ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
+                                @click="redirectToEtapa(deviceInfo.nodoInfo.procesoId, deviceInfo.nodoInfo.etapaId)"
                             >
                                 {{
                                 deviceIsActive
-                                    ? props.deviceInfo.nodoInfo.etapa
+                                    ? deviceInfo.nodoInfo.etapa
                                     : 'Sin Informacion'
                             }}
                             </a>
@@ -77,9 +77,9 @@
                         <div>
                             Desde:
                             {{
-                                deviceIsActive
+                                deviceInfo.nodoInfo
                                     ? dayjs(
-                                          props.deviceInfo.nodoInfo
+                                          deviceInfo.nodoInfo
                                               .fechaDeIngreso
                                       ).format('DD/MM/YYYY hh:mm A')
                                     : 'Sin Informacion'
@@ -87,9 +87,9 @@
                         </div>
                     </div>
 
-                    <Carousel :fotos="props.deviceInfo.imagenes" ></Carousel>
+                    <Carousel :fotos="deviceInfo.imagenes" ></Carousel>
                     <div class="flex gap-5 items-center">
-                        <ToggleDevice :componenteId="props.deviceInfo.id" :defaultValue="props.deviceInfo.On">
+                        <ToggleDevice :componenteId="deviceInfo.id" :defaultValue="deviceInfo.On" @onToggle="changeToggleOn">
 
                         </ToggleDevice>
                         <BaseBtn
@@ -166,7 +166,7 @@
                                                         <div>
                                                             <ModalPartNotas 
                                                                 :parteNombre="parte.Nombre" 
-                                                                :componenteId="props.deviceInfo.id"
+                                                                :componenteId="deviceInfo.id"
                                                                 :parteId="parte.id">
                                                             </ModalPartNotas>
                                                             <font-awesome-icon :icon="[
@@ -218,13 +218,13 @@
                         <div class="flex mt-3">
                             <ChartBar
                                 class="flex-1"
-                                :componente_id="props.deviceInfo.id"
+                                :componente_id="deviceInfo.id"
                                 :unidad="unidadSelected"
                                 :unidades="componenteUnidades" 
                             ></ChartBar>
                             <ChartLine
                                 class="flex-1"
-                                :componente_id="props.deviceInfo.id"
+                                :componente_id="deviceInfo.id"
                                 :unidad="unidadSelected"
                                 :unidades="componenteUnidades"
                             ></ChartLine>
@@ -232,7 +232,7 @@
                     </BaseCard>
                 </div>
                 <div class="bg-gray-100   rounded-md text-center mt-5 py-5" v-else>
-                    El dispositivo no se encuentra operativo ya que no está asociado a una etapa de un Proceso
+                    El dispositivo no se encuentra operativo ya que no está asociado a una etapa de un Proceso o se encuentra apagado.
                 </div>
             </div>
 
@@ -241,7 +241,7 @@
     </div>
 
     <ModalPartForm v-if="showModalPart" @onProcessed="handleParteModal" :action="actionPart"
-        @onClose="showModalPart = false" :componente_id="props.deviceInfo.id" :partData="partSelected"></ModalPartForm>
+        @onClose="showModalPart = false" :componente_id="deviceInfo.id" :partData="partSelected"></ModalPartForm>
 
     <ConfirmationModal v-if="showModalDeleteComponent" :show="showModalDeleteComponent" title="Eliminar dispositivo"
         message="Seguro deseas eliminar este dispositivo?" @cancel="showModalDeleteComponent = false" @confirm="onDelete">
@@ -286,6 +286,8 @@ const props = defineProps({
     deviceInfo: { required: true, type: Object },
 })
 
+const deviceInfo =  ref({ ...props.deviceInfo });
+
 const { notify } = useNotification()
 
 const emit = defineEmits(['onDelete'])
@@ -306,8 +308,8 @@ const unidadSelected = ref(null);
 
 onBeforeMount(async () => {
     const [componente, partesData] = await Promise.all([
-        ComponenteController.getById(props.deviceInfo.id),
-        ParteController.list(props.deviceInfo.id),
+        ComponenteController.getById(deviceInfo.value.id),
+        ParteController.list(deviceInfo.value.id),
     ])
     componenteInfo.value = componente
     console.log(componenteInfo)
@@ -319,10 +321,13 @@ onBeforeMount(async () => {
 })
 
 const onDelete = async () => {
-    const ID = props.deviceInfo.id
+    const ID = deviceInfo.value.id
     deleting.value = true
     try {
+        showModalDeleteComponent.value = false;
+        $appStore.setGlobalLoading(true);
         const deviceDeleted = await ComponenteController.delete(ID)
+        $appStore.setGlobalLoading(false);
         deleting.value = false
         notify({
             title: 'Dispositivo eliminado',
@@ -362,7 +367,7 @@ const deletePart = (parte) => {
 }
 
 const handleViewHistoricos = () => {
-    const componentID = props.deviceInfo.id
+    const componentID = deviceInfo.value.id
     $router.push({ name: 'VerHistoricos', params: { id: componentID } })
 }
 
@@ -374,7 +379,7 @@ const onConfirmDeletePart = async () => {
 
     $appStore.setGlobalLoading(true)
 
-    const COMPONENTE_ID = props.deviceInfo.id
+    const COMPONENTE_ID = deviceInfo.value.id
     const PARTE_ID = partSelected.value.id
     try {
         const partDeleted = await ParteController.delete(
@@ -421,12 +426,14 @@ const emptyParts = computed(() => {
 })
 
 const title = computed(() => {
-    return `Información del dispositivo:  "${props.deviceInfo.Nombre}" `
+    return `Información del dispositivo:  "${deviceInfo.value.Nombre}" `
 })
 
+
 const deviceIsActive = computed(() => {
-    return props.deviceInfo.nodoInfo ? true : false
+    return deviceInfo.value.nodoInfo && deviceInfo.value.On ? true : false
 })
+
 
 const onSelectUnidadDeMedida = (e) => {
     const value = e.target.value
@@ -442,6 +449,10 @@ const redirectToProcess = (id) =>{
 
 const redirectToEtapa = (proceso, etapa) =>{
       $router.push("Etapas/"+proceso+'/'+etapa );
+}
+
+const changeToggleOn = (value)=>{
+    deviceInfo.value.On = value;
 }
 
 </script>

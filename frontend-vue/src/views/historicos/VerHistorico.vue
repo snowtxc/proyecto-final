@@ -1,5 +1,6 @@
 <script setup>
      import { computed, ref ,onBeforeMount, onMounted ,onBeforeUnmount}  from "vue";
+     import BaseCard from "@/components/Base/BaseCard.vue";
      import ModalLoading from "@/components/Modals/ModalLoading.vue";
      import dayjs from "dayjs";
      import { useRoute } from "vue-router";
@@ -44,7 +45,9 @@
 
 
      onMounted(()=>{
+        console.log("hola")
         window.Echo.channel(channel).listen('appendRegistrosDevice', (nuevosRegistros) => {   
+            console.log(nuevosRegistros)
             appendNewRows(nuevosRegistros)
         });
 
@@ -83,10 +86,9 @@
             setTimeout(()=>{
                
                 nuevosRegistros.map(row =>{
-                    console.log(row);
                     const { Marca, created_at,unidad,etapa} = row;
                     const  newRow = {
-                        "fechaHora" : dayjs(created_at).format("DD/MM/YYYY hh:mm a"),
+                        "fechaHora" : created_at,
                         "marca" : Marca,
                         "unidad": unidad.unidad,    
                         "unidadNombre" : unidad.nombre,
@@ -236,11 +238,11 @@
                     <input type="datetime-local" v-model="filters.startDate" class="border rounded px-2 py-1">
                     <label class="text-gray-600 ml-2 mr-2">Hasta:</label>
                     <input type="datetime-local" v-model="filters.endDate" class="border rounded px-2 py-1">
-                    <BaseBtn @click="applyFilters" class="bg-blue-500 text-white px-3 py-1 rounded">
+                    <BaseBtn @click="applyFilters" class="bg-blue-500 text-white px-3 py-1 rounded flex-none">
                         Aplicar Filtros
                         <i class="fa-solid fa-filter"></i>
                     </BaseBtn>
-                    <BaseBtn bgColor="bg-red-600" v-if="filterActive" @click="removeFilter">
+                    <BaseBtn bgColor="bg-red-600" v-if="filterActive" @click="removeFilter" class="flex-none">
                         Quitar filtro
                         <i class="fa-solid fa-filter-circle-xmark"></i>
                     </BaseBtn>
@@ -262,19 +264,18 @@
             
                 </div>
                 <div v-else>
-                    <div v-for="(item, index) in historicosFormatted" :key="index" 
-                        class="flex overflow-hidden flex-row mb-6 shadow-md rounded-xl py-5">
-                    
-                    <div class="historicoItem flex pl-2 flex-1 transition-all animate-fade-in">
-                        <div class="flex flex-grow flex-col self-center justify-between lg:items-center lg:flex-row">
-                            <a class="hover:text-purple-500" href="">
-                                {{item.fechaHora}}</a>
-                            <p>{{item.marca}} {{ item.unidad }}</p>
-                            <p class="mr-2 text-gray-500">{{item.proceso}} </p>
-                            <p class="mr-2 text-gray-500">{{item.etapa}} </p>
+                    <BaseCard v-for="(item, index) in historicosFormatted" :key="index" 
+                        class="flex overflow-hidden flex-col mb-6 shadow-md rounded-xl py-5">
+                        <div class="historicoItem flex pl-2 flex-1 transition-all animate-fade-in">
+                            <div class="flex flex-col self-center justify-between">
+                                <a class="hover:text-purple-500" href="">
+                                    {{item.fechaHora}}</a>
+                                <p>{{item.marca}} {{ item.unidad }}</p>
+                                <p class="mr-2 text-gray-500"><span class="font-bold">Proceso:</span> <a class="text-blue-500 underline hover:text-blue-700 cursor-pointer" @click="$router.push('Diagrama?procesoId='+id )">{{item.proceso}}</a> </p> 
+                                <p class="mr-2 text-gray-500"> <span class="font-bold">Etapa:</span>  {{item.etapa}} </p>
+                            </div>
                         </div>
-                    </div>
-                     </div>
+                    </BaseCard>
                      <div class="flex justify-center mt-2">
                             <infinite-loading
                                 @infinite="loadMoreData"

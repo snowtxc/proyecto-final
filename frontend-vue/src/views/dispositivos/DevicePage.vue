@@ -524,6 +524,16 @@ const onSubmit = async () => {
     if (dataDevice.value.unidades.length <= 0) {
         return
     }
+
+
+    if(dataDevice.value.unidades.some(item => item.min > item.max)){
+        notify({
+            title: 'Error',
+            text: 'Asegurate que el minimo de las unidades sea menor o igual que el máximo',
+            type: 'error',
+        })
+        return;
+    }
     submit.value = false
     $appStore.setGlobalLoading(true)
 

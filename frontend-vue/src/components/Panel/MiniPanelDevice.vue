@@ -3,15 +3,73 @@
         <p class="text-xl font-semibold mr-2">Informacion del dispositivo </p>
         <div class="h-auto w-full flex flex-row space-x-4">
             <div class="w-2/6">
-                <CardDevice :nombre="props.dispositivoData.Nombre" :value="25"
-                    :image="props.dispositivoData.tipoComponenteImage" :selected="false"
-                    :unidades="props.dispositivoData.unidades"
+                <CardDevice :nombre="dispositivoData.Nombre" :value="25"
+                    :image="dispositivoData.tipoComponenteImage" :selected="false"
+                    :unidades="dispositivoData.unidades"
                     :ipAddress="dispositivoData.DireccionIp" />
+
+                    <div class="mt-5">
+                        <div class="mb-2">
+                            Descripción:
+                            {{ dispositivoData.Descripcion }}
+                        </div>
+                        <div class="mb-2">
+                            Estado:
+                            <BaseBadge
+                                :bgColor="
+                                    deviceIsActive
+                                        ? 'bg-green-100'
+                                        : 'bg-red-100'
+                                "
+                                :text="
+                                    deviceIsActive ? 'Operativo' : 'Inactivo'
+                                "
+                            ></BaseBadge>
+                        </div>
+                        <div class="mb-2 flex">
+                            Proceso:
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
+                                @click="redirectToProcess(dispositivoData.nodoInfo.procesoId)"
+                            >
+                                {{
+                                    dispositivoData.nodoInfo
+                                        ? dispositivoData.nodoInfo.proceso
+                                        : 'Sin Informacion'
+                                }}
+                            </a>
+                        </div>
+                        
+                        <div class="mb-2">
+                            Etapa:
+                            <a :class="deviceIsActive ?  'text-blue-500 hover:underline  cursor-pointer' : ''" class="ml-2"
+                                @click="redirectToEtapa(props.deviceInfo.nodoInfo.procesoId, props.deviceInfo.nodoInfo.etapaId)"
+                            >
+                                {{
+                                dispositivoData.nodoInfo
+                                    ? dispositivoData.nodoInfo.etapa
+                                    : 'Sin Informacion'
+                            }}
+                            </a>
+                            
+                        </div>
+                        
+                        <div>
+                            Desde:
+                            {{
+                                dispositivoData.nodoInfo
+                                    ? dayjs(
+                                          dispositivoData.nodoInfo
+                                              .fechaDeIngreso
+                                      ).format('DD/MM/YYYY hh:mm A')
+                                    : 'Sin Informacion'
+                            }}
+                        </div>
+                    </div>
             </div>
             <div class="w-full">
                 <div class="flex justify-end items-center gap-5 w-full"> 
                     <div class="">
-                        <ToggleDevice :componenteId="props.dispositivoData.id" :defaultValue="props.dispositivoData.On"></ToggleDevice>
+                        <ToggleDevice :componenteId="dispositivoData.id" :defaultValue="dispositivoData.On" @onToggle="changeOnDevice"></ToggleDevice>
                     </div>
                     <div class="flex flex-col">
                         <p>Unidad de medida seleccionada</p>
@@ -29,10 +87,10 @@
                 </div>
                 <div class="flex w-full">
                     <div class="flex-1">
-                        <ChartLine :componente_id="props.dispositivoData.id" :unidad="unidadSelected" :unidades="unidades"/>
+                        <ChartLine :componente_id="dispositivoData.id" :unidad="unidadSelected" :unidades="unidades"/>
                     </div>
                     <div class="flex-1">
-                        <ChartBar :componente_id="props.dispositivoData.id" :unidad="unidadSelected" :unidades="unidades"/>
+                        <ChartBar :componente_id="dispositivoData.id" :unidad="unidadSelected" :unidades="unidades"/>
                     </div>
                     
                 </div>
@@ -44,19 +102,22 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, ref, watchEffect, defineEmits } from 'vue';
+import { defineProps, onMounted, ref, watchEffect, defineEmits,computed } from 'vue';
 import Card from '@/components/Card/Card.vue';
 import CardDevice from '@/components/Cards/CardDevice.vue';
 import ChartLine from '@/components/Charts/ChartLine.vue';
 import ChartBar from '@/components/Charts/ChartBar.vue';
 import ToggleDevice from '../Toggle/ToggleDevice.vue';
+import BaseBadge from '../Base/BaseBadge.vue';
+import dayjs from 'dayjs';
 
 const props = defineProps({
     dispositivoData: { type: Object, required: true }
 })
 
+const dispositivoData =  ref({ ... props.dispositivoData});
 const showSpinner = ref(false)
-const unidades = ref(props.dispositivoData.unidades)
+const unidades = ref(dispositivoData.value.unidades)
 const unidadSelected = ref(unidades.value[0])
 
 console.log(unidades)
@@ -67,4 +128,16 @@ const onSelectUnidadDeMedida = (e) => {
         (unidad) => unidad.unidad_id == value
     )
 }
+
+const deviceIsActive = computed(() => {
+    return dispositivoData.value.nodoInfo && dispositivoData.value.On ? true : false
+})
+
+
+const changeOnDevice = (on)=>{
+    dispositivoData.value.On = on;
+}
+
+
+
 </script>
