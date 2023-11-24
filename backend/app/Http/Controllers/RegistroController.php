@@ -70,6 +70,8 @@ class RegistroController extends Controller
    public function exportExcel(Request $request,$componenteId){
       $fechaInicio = $request->query('fechaInicio') != null ? $request->query('fechaInicio') : null;
       $fechaFin =  $request->query('fechaFin') != null ? $request->query('fechaFin') : null;
+
+
       return Excel::download(new RegistrosExport($componenteId,$fechaInicio,$fechaFin), 'historicos.xlsx');
    }
 }
