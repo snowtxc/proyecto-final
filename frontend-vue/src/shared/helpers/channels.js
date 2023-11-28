@@ -10,4 +10,6 @@ export const appendRegistrosDeviceChannel = (componenteId) => `componente.${comp
 export const updateMarcaLast24HourChannel = (componenteId) => `componente.${componenteId}.update-marca-last24hours`;
 export const pushAlarmaNotificationChannel = (userId) => `usuarios.${userId}.push-notification-alarma`;
 export const updateActivityProcessesChannel = () =>  'update-processes-activity';
+export const updateDeviceStateChannel = (componenteId) => `componente.${componenteId}.change-state`;
+
 

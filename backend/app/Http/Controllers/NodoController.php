@@ -13,7 +13,7 @@ use App\Models\Etapa;
 //events
 use App\Events\NodePositionUpdated;
 use App\Helpers\FileHelper;
-
+use App\Events\ChangeDeviceState;
 
 
 
@@ -47,6 +47,7 @@ class NodoController extends Controller
             return response()->json(['error' => 'Ya existe un nodo con ese componente'], 404);
         }
         $nodoCreated = Nodo::create($request->all());
+        broadcast(new ChangeDeviceState($componente->id));
         return response()->json($nodoCreated, 200);
 
     }
@@ -58,20 +59,19 @@ class NodoController extends Controller
             return response()->json(['error' => 'Nodo no encontrado'], 404);
         }
         $nodo->delete();
+        broadcast(new ChangeDeviceState($nodo->componente->id));
         return response()->json(['message' => 'Nodo eliminado'], 200);
     }
 
     public function deleteByComponentId($componenteId){
         $nodos = Nodo::where('componente_id', $componenteId)->get();
-
         if($nodos->isEmpty()){
             return response()->json(['error' => 'Nodo(s) no encontrado(s) para el componente_id especificado'], 404);
         }
-
         foreach ($nodos as $nodo) {
             $nodo->delete();
         }
-
+        broadcast(new ChangeDeviceState($componente->id));
         return response()->json(['message' => 'Nodo(s) eliminado(s) para el componente_id especificado'], 200);
     }
 
@@ -136,14 +136,14 @@ class NodoController extends Controller
 
     public function getById($nodoId) {
         $nodo = Nodo::find($nodoId);
-    
+
         if (!$nodo) {
             return response()->json(['error' => 'Nodo no encontrado'], 404);
         }
-    
+
         return response()->json($nodo, 200);
     }
-    
+
 
 
 }

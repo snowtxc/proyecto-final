@@ -16,6 +16,8 @@ use App\Helpers\FileHelper;
 
 use App\Events\componenteAdded;
 use App\Events\componenteDeleted;
+use App\Events\ChangeDeviceState;
+
 
 
 use Validator;
@@ -359,6 +361,7 @@ class ComponenteController extends Controller
         $body = $request->all();
         $componente->On = $body['on'];
         $componente->save();
+        broadcast(new ChangeDeviceState($componente->id));
         return response()->json("ok", 200);
     }
 

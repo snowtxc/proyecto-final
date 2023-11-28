@@ -1,4 +1,4 @@
-<template>
+c<template>
     <div class="w-full h-screen">
         <div class="flex justify-center" v-if="loading">
             <spinner :show="true"></spinner>
@@ -12,19 +12,13 @@
                         <font-awesome-icon :icon="['far', 'pen-to-square']" class="w-5 h-5 my-4  hover:text-primary" @click="
                             $router.push({
                                 name: 'editarDispositivo',
-                                params: { id: deviceInfo.id },
+                                params: { id: deviceInfo.id }, 
                             })
                             " />
                         <font-awesome-icon :icon="['far', 'trash-can']" @click="showModalDeleteComponent = true"
                             class="w-5 h-5 my-4 mr-8 ml-2 hover:text-primary" />
 
-                            <BaseBtn
-                                @click="handleViewHistoricos"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex-none"
-                            >
-                                <i class="fas fa-history mr-2"></i> 
-                                Ver Histórico
-                            </BaseBtn>
+                            
                 </div>
             </div>
             <div class="flex flex-col">
@@ -89,7 +83,7 @@
 
                     <Carousel :fotos="deviceInfo.imagenes" ></Carousel>
                     <div class="flex gap-5 items-center">
-                        <ToggleDevice :componenteId="deviceInfo.id" :defaultValue="deviceInfo.On" @onToggle="changeToggleOn">
+                        <ToggleDevice v-if="deviceIsAssociated" :componenteId="deviceInfo.id" :defaultValue="deviceInfo.On" @onToggle="changeToggleOn">
 
                         </ToggleDevice>
                         <BaseBtn
@@ -253,10 +247,11 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, onBeforeMount, computed } from 'vue'
+import { ref, defineProps, defineEmits, onBeforeMount, computed ,onMounted} from 'vue'
 import ComponenteController from '../../services/ComponenteController';
 import { useRouter } from 'vue-router'
 import ParteController from '../../services/ParteController';
+
 
 import ModalPartForm from '../Modals/ModalPartForm.vue'
 import ModalPartNotas from '../Modals/ModalPartNotas.vue'
@@ -277,9 +272,11 @@ import Breadcrumbs from '../Breadcrumbs.vue'
 import ChartLine from '../Charts/ChartLine.vue'
 import ChartBar from '../Charts/ChartBar.vue'
 
-import Carousel from '../../views/dispositivos/Carousel.vue'
+import Carousel from '../../views/dispositivos/Carousel.vue';
+import { updateDeviceStateChannel  } from "@/shared/helpers/channels";
 
-const $appStore = appStore()
+
+const $appStore = appStore();
 const $router = useRouter()
 
 const props = defineProps({
@@ -301,24 +298,36 @@ const loadingPartes = ref(true)
 const showModalPart = ref(false)
 const showModalDeletePart = ref(false)
 const actionPart = ref('')
-const componenteInfo = ref(null)
 const partSelected = ref(null)
 const componenteUnidades = ref([])
 const unidadSelected = ref(null); 
 
 onBeforeMount(async () => {
+    getComponenteData();
+});
+
+
+const getComponenteData = async()=>{
+    loading.value = true;
     const [componente, partesData] = await Promise.all([
         ComponenteController.getById(deviceInfo.value.id),
         ParteController.list(deviceInfo.value.id),
     ])
-    componenteInfo.value = componente
-    console.log(componenteInfo)
+    deviceInfo.value = componente
     componenteUnidades.value = componente.unidades
     unidadSelected.value = componenteUnidades.value[0]
     partes.value = partesData
-    loadingPartes.value = false
+    loadingPartes.value = false;
     loading.value = false
-})
+
+}
+
+onMounted(()=>{
+        window.Echo.channel(updateDeviceStateChannel(deviceInfo.value.id)).listen('ChangeDeviceState', () => {    
+            getComponenteData();
+        });
+}); 
+
 
 const onDelete = async () => {
     const ID = deviceInfo.value.id
@@ -429,6 +438,9 @@ const title = computed(() => {
     return `Información del dispositivo:  "${deviceInfo.value.Nombre}" `
 })
 
+const deviceIsAssociated = computed(()=>{
+    return deviceInfo.value.nodoInfo != null;
+})
 
 const deviceIsActive = computed(() => {
     return deviceInfo.value.nodoInfo && deviceInfo.value.On ? true : false

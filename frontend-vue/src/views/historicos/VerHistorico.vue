@@ -45,7 +45,6 @@
 
 
      onMounted(()=>{
-        console.log("hola")
         window.Echo.channel(channel).listen('appendRegistrosDevice', (nuevosRegistros) => {   
             console.log(nuevosRegistros)
             appendNewRows(nuevosRegistros)

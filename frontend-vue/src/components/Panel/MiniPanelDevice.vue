@@ -111,6 +111,7 @@ import ToggleDevice from '../Toggle/ToggleDevice.vue';
 import BaseBadge from '../Base/BaseBadge.vue';
 import dayjs from 'dayjs';
 
+
 const props = defineProps({
     dispositivoData: { type: Object, required: true }
 })
