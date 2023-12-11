@@ -69,7 +69,7 @@
             <div class="w-full">
                 <div class="flex justify-end items-center gap-5 w-full"> 
                     <div class="">
-                        <ToggleDevice :componenteId="dispositivoData.id" :defaultValue="dispositivoData.On" @onToggle="changeOnDevice"></ToggleDevice>
+                        <ToggleDevice v-if="deviceIsAssociated" :componenteId="dispositivoData.id" :defaultValue="dispositivoData.On" @onToggle="changeOnDevice"></ToggleDevice>
                     </div>
                     <div class="flex flex-col">
                         <p>Unidad de medida seleccionada</p>
@@ -121,7 +121,6 @@ const showSpinner = ref(false)
 const unidades = ref(dispositivoData.value.unidades)
 const unidadSelected = ref(unidades.value[0])
 
-console.log(unidades)
 
 const onSelectUnidadDeMedida = (e) => {
     const value = e.target.value
@@ -138,6 +137,10 @@ const deviceIsActive = computed(() => {
 const changeOnDevice = (on)=>{
     dispositivoData.value.On = on;
 }
+
+const deviceIsAssociated = computed(()=>{
+    return dispositivoData.value.nodoInfo != null;
+})
 
 
 

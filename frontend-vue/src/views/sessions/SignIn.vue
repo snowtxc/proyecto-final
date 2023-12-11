@@ -1,7 +1,7 @@
 
 
 <template>
-  <div class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center relative" style="background-image: url('/images/LoginBackground.jpg');">
+  <div class="auth-layout-wrap flex justify-center min-h-screen flex-col bg-cover items-center relative" style="background: linear-gradient(to bottom, white, rgba(37, 206, 222, 0.7));">
 
     <div class="container-session-v1">
       <BaseCard noPadding class="overflow-hidden p-5 bg-white relative">
