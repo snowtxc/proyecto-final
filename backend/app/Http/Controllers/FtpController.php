@@ -190,6 +190,7 @@ class FtpController extends Controller
                 'name' => $usuario->name,
                 'dispositivo' => $componente->Nombre,
                 'proceso' => $proceso->Nombre,
+                'motivo' => $motivo
             ];
 
             Mail::send('emails.alarma', $dataMail, function ($message) use ($usuario) {
@@ -251,8 +252,19 @@ class FtpController extends Controller
 
     public function realTime(){
 
-        $this->generarRegistros();
-        $this->obtenerRegistros();
+        $data = [
+            'name' => "Rodrigo Castro",
+            'dispositivo' => "Dispositivo K4",
+            'proceso' => "Hola",
+            'motivo' => "SSIISISI",
+            'fecha' => "15/02/2023 13:23 pm"
+        ];
+
+
+        Mail::send('emails.alarma', $data, function ($message) {
+            $message->to("snowitxc@gmail.com")->subject('Nueva Alarma');
+        });
+
 
         return response()->json(["status" => "ok"], 200);
 

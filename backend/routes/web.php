@@ -191,7 +191,7 @@ Route::prefix('api')->group(function () {
 
      /*FTP ENDPOINTS*/
      Route::controller(FtpController::class)->group(function () {
-        Route::get('/ftp/download', 'downloadFileFromFTP');
+        Route::get('/ftp/download', 'obtenerRegistros');
         Route::get("/ftp/realTime","realTime");
         Route::post('/ftp/nuevosRegistros', 'generarRegistros');
         Route::post('/ftp/last', 'last24Hour');

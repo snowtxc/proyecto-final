@@ -269,9 +269,7 @@ class UsuarioController extends Controller
         if(!$user){
             return response()->json(['message' => 'No se encontró el usuario'], 400);
         }
-
         $token = Str::random(64);
-
         if(DB::table("password_resets")->where(["email" => $user->email])->first() != null){
             DB::table("password_resets")->where(["email" => $user->email])->update(["token" => $token, "created_at" => now()]);
         }else{
@@ -281,7 +279,6 @@ class UsuarioController extends Controller
                 'created_at' => now(),
             ]);
         }
-
         Mail::send('emails.reset_password', [ 'token' => $token, 'name' => $request->name ], function ($message) use ($user) {
             $message->to($user->email);
             $message->subject('Restablecimiento de contraseña');

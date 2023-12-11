@@ -88,10 +88,13 @@ class realTime extends Command
                     $min =  $unidad->pivot->min;
                     $max = $unidad->pivot->max;
                     $fecha = $unidad->pivot->created_at;
+                    $minHarcode = $max / 2;
+                    $maxHarcode = $minHarcode + 3;
                     array_push($marcas , [
+
                         "unidadId" => $unidad->id,
                         "unidadNombre" => $unidad->nombre,
-                        "marca" => rand($min,$max),
+                        "marca" => rand($minHarcode,$maxHarcode),
                         "unidad" => $unidad->unidad,
                         "fecha" => $unidad->fecha
                     ]);
@@ -184,7 +187,6 @@ class realTime extends Command
          }
 
         foreach($alarmas as $alarma){
-
             $this->generarAlarma($alarma["componente"], $alarma["motivo"]);
         }
 
@@ -230,18 +232,21 @@ class realTime extends Command
                 "proceso"  => $proceso
             ];
             broadcast(new PushAlarmaNotificacion($usuario->id, $dataAlarm));
-            
+
             $alarmaUser = new AlarmaUser;
             $alarmaUser->alarma_id = $alarma->id;
             $alarmaUser->user_id = $usuario->id;
             $alarmaUser->leida = false;
             $alarmaUser->save();
 
+
             if($usuario->email_verified_at != null){
                 Mail::send('emails.alarma', $data, function ($message) use ($usuario) {
                     $message->to($usuario->email)->subject('Nueva Alarma');
                 });
             }
+
+
 
         }
 
