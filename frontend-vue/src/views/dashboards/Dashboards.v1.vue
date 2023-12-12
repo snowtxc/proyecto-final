@@ -26,12 +26,12 @@ const rowsCounts = ref([
         icon: 'fa-solid fa-industry'
     },
     {
-        title: 'Componentes',
+        title: 'Dispositivos',
         count: 0,
         icon: 'fa-solid fa-plug-circle-minus'
     },
     {
-        title: 'Tipos de Componentes',
+        title: 'Tipos de dispositivos',
         count: 0,
         icon: 'fa-solid fa-plug-circle-minus '
     }
@@ -214,7 +214,7 @@ onUnmounted(()=>{
             </div>
             
             <div class="col-span-12 flex gap-3 flex-wrap">
-                <ChartPie class="flex-1"  title="Cantidad de Componentes por Proceso" :options="chartOptionsComponenteProcesos"></ChartPie>
+                <ChartPie class="flex-1"  title="Cantidad de dispositivos por Proceso" :options="chartOptionsComponenteProcesos"></ChartPie>
                 <ChartPie class="flex-1" title="Cantidad de Etapas por Proceso" :options="chartOptionsEtapaProcesos"></ChartPie>
             </div>
 

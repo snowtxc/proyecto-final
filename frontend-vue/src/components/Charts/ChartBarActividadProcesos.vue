@@ -4,7 +4,7 @@
     import EstadisticaController from "@/services/EstadisticaController";
     import { updateActivityProcessesChannel } from "@/shared/helpers/channels";
     const  series =  ref([{
-            name: 'Procesos',
+            name: 'Datos registrados',
             data: []
     }]);
 

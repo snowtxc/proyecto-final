@@ -54,7 +54,7 @@
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
                                             Haz clic en el siguiente enlace para restablecer tu contraseña:
                                         </p>
-                                        <a href="{{ 'http://127.0.0.1:5173/reset-password/' . $token }}"
+                                        <a href="{{ 'http://localhost:5173/reset-password/' . $token }}"
                                             style="background:#25CEDE;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">
                                             Restablecer contraseña
                                         </a>

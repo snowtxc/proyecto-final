@@ -67,7 +67,7 @@ class ProcesoUserSeeder extends Seeder
         ]);
 
         DB::table('proceso_user')->insert([
-            'user_id' => 1,
+            'user_id' => 11,
             'proceso_id' => 6,
         ]);
     }
